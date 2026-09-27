@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { NextThemeProvider } from "@/providers/NextThemeProvider";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -46,6 +47,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
     <html
       lang="en"
+      suppressHydrationWarning
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
       <head>
@@ -70,7 +72,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
         <link rel="manifest" href="/site.webmanifest" />
         <meta name="theme-color" content="#090D16" />
       </head>
-      <body className="min-h-full flex flex-col">{children}</body>
+      <body className="min-h-full flex flex-col bg-background text-foreground transition-colors duration-200">
+        <NextThemeProvider>{children}</NextThemeProvider>
+      </body>
     </html>
   );
 }

@@ -5,6 +5,8 @@ import {
   FolderKanban,
   KeyRound,
   Loader2,
+  LogIn,
+  LogOut,
   Palette,
   ShieldCheck,
   X,
@@ -12,6 +14,7 @@ import {
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { authClient } from "@/lib/auth-client";
 import type { SidebarProps } from "./layout.types";
 
 const NAV_ITEMS = [
@@ -49,6 +52,8 @@ export function Sidebar({
   isAnalyzing,
 }: SidebarProps) {
   const pathname = usePathname();
+  const { data: session } = authClient.useSession();
+  const user = session?.user;
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-slate-950/95 border-r border-slate-800/80 backdrop-blur-2xl">
@@ -192,6 +197,48 @@ export function Sidebar({
               className="text-[11px] text-amber-300 hover:text-amber-200 underline block"
             >
               Configure Gemini / API Keys →
+            </Link>
+          )}
+        </div>
+
+        {/* User Account / Auth Card */}
+        <div className="pt-2 border-t border-slate-900">
+          {user ? (
+            <div className="flex items-center justify-between p-2 rounded-xl bg-slate-900/90 border border-slate-800">
+              <div className="flex items-center gap-2 truncate">
+                <div className="w-6 h-6 rounded-full bg-linear-to-br from-[#58E6F7] to-[#8A3FFC] flex items-center justify-center text-slate-950 font-black text-xs shrink-0">
+                  {user.name?.[0]?.toUpperCase() || "U"}
+                </div>
+                <div className="truncate">
+                  <p className="text-xs font-semibold text-slate-200 truncate leading-tight">
+                    {user.name}
+                  </p>
+                  <p className="text-[10px] text-slate-400 truncate leading-tight">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+              <button
+                type="button"
+                onClick={async () => {
+                  await authClient.signOut();
+                  window.location.reload();
+                }}
+                className="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                title="Sign Out"
+                aria-label="Sign out"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            </div>
+          ) : (
+            <Link
+              href="/login"
+              onClick={onClose}
+              className="flex items-center justify-center gap-2 w-full py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-xs font-semibold text-slate-200 hover:text-white transition-colors"
+            >
+              <LogIn className="w-3.5 h-3.5 text-[#58E6F7]" />
+              <span>Sign In / Register</span>
             </Link>
           )}
         </div>

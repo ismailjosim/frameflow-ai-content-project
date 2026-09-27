@@ -1,9 +1,12 @@
 "use client";
 
-import { Cpu, Menu, Sparkles } from "lucide-react";
+import { Cpu, LogIn, LogOut, Menu, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
+import ThemeToggler from "@/components/theme/ThemeToggler";
 import { AUTO_MODEL, PROVIDER_GROUPS } from "@/lib/ai/models";
+import { authClient } from "@/lib/auth-client";
 import type { TopHeaderProps } from "./layout.types";
 
 export function TopHeader({
@@ -15,6 +18,22 @@ export function TopHeader({
   availableModelsCount,
   configuredProviders,
 }: TopHeaderProps) {
+  const router = useRouter();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
+  const user = session?.user;
+
+  const handleLogout = async () => {
+    await authClient.signOut({
+      fetchOptions: {
+        onSuccess: () => {
+          router.push("/");
+          router.refresh();
+        },
+      },
+    });
+  };
+
   const activeGroups = PROVIDER_GROUPS.filter((g) =>
     configuredProviders.includes(g.provider),
   );
@@ -160,14 +179,48 @@ export function TopHeader({
           </div>
         </div>
 
+        {/* Light & Dark Theme Toggler */}
+        <ThemeToggler />
+
         {/* API Vault Shortcut Button */}
         <Link
           href="/settings"
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF1688] hover:brightness-110 text-white text-xs font-bold shadow-md shadow-[#8A3FFC]/25 transition-all hover:scale-102 cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF1688] hover:brightness-110 text-white text-xs font-bold shadow-md shadow-[#8A3FFC]/25 transition-all hover:scale-102 cursor-pointer"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Key Vault</span>
         </Link>
+
+        {/* Better-Auth User Account Badge */}
+        {!isSessionPending && user ? (
+          <div className="flex items-center gap-1.5 sm:gap-2">
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+              <div className="w-5 h-5 rounded-full bg-linear-to-br from-[#58E6F7] to-[#8A3FFC] flex items-center justify-center text-slate-950 font-black text-[10px] shrink-0">
+                {user.name?.[0]?.toUpperCase() || "U"}
+              </div>
+              <span className="font-semibold text-slate-200 hidden md:inline truncate max-w-24">
+                {user.name}
+              </span>
+            </div>
+            <button
+              type="button"
+              onClick={handleLogout}
+              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-900 border border-slate-800 transition-colors cursor-pointer"
+              title="Sign Out"
+              aria-label="Sign out"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+            </button>
+          </div>
+        ) : !isSessionPending && !user ? (
+          <Link
+            href="/login"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
+          >
+            <LogIn className="w-3.5 h-3.5 text-[#58E6F7]" />
+            <span className="hidden sm:inline">Sign In</span>
+          </Link>
+        ) : null}
       </div>
     </header>
   );
