@@ -145,7 +145,6 @@ export function Stage3Prompts({
       }, 50);
       return () => clearTimeout(timer);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoStart, lines.length, startBatchQueue, promptsText, isRunning]);
 
   const copyToClipboard = () => {

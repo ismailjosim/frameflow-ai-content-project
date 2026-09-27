@@ -17,6 +17,7 @@
     "better-auth": "^1.7.6",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
+    "jszip": "^3.10.2",
     "lucide-react": "^1.48.0",
     "mongodb": "^7.6.0",
     "mongoose": "^9.10.2",
@@ -29,6 +30,7 @@
   "devDependencies": {
     "@biomejs/biome": "^2.5.14",
     "@tailwindcss/postcss": "^4",
+    "@types/jszip": "^3.4.1",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",

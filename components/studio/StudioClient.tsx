@@ -139,6 +139,7 @@ export function StudioClient() {
                 }}
                 scriptText={scriptText}
                 promptsText={promptsText}
+                timestampInput={timestampInput}
               />
             )}
           </div>

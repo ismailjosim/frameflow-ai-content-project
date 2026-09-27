@@ -12,6 +12,7 @@ export interface Stage4PackagingProps {
   onPackagingChange: (text: string, parsed: Record<string, string>) => void;
   scriptText: string;
   promptsText: string;
+  timestampInput?: string;
   autoStart?: boolean;
 }
 
@@ -24,6 +25,7 @@ export interface PackagingCardsProps {
 
 export interface PackagingActionsProps {
   loading: boolean;
+  isZipping?: boolean;
   packagingText: string;
   onDownloadPackaging: () => void;
   onDownloadAllAssets: () => void;

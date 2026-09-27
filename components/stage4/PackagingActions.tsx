@@ -1,10 +1,11 @@
 "use client";
 
-import { Download } from "lucide-react";
+import { Archive, Download, Loader2 } from "lucide-react";
 import type { PackagingActionsProps } from "./stage4.types";
 
 export function PackagingActions({
   loading,
+  isZipping,
   packagingText,
   onDownloadPackaging,
   onDownloadAllAssets,
@@ -20,8 +21,8 @@ export function PackagingActions({
       <div className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
         <button
           onClick={onDownloadPackaging}
-          disabled={disabled}
-          className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors disabled:opacity-40 w-full sm:w-auto"
+          disabled={disabled || isZipping}
+          className="flex items-center justify-center gap-1.5 px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 text-xs font-medium border border-slate-700 transition-colors disabled:opacity-40 cursor-pointer w-full sm:w-auto"
         >
           <Download className="w-3.5 h-3.5 text-slate-400" />
           Download Packaging .txt
@@ -29,11 +30,21 @@ export function PackagingActions({
 
         <button
           onClick={onDownloadAllAssets}
-          disabled={disabled}
-          className="flex items-center justify-center gap-2 px-5 py-2 rounded-xl bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/20 transition-all hover:scale-101 disabled:opacity-40 w-full sm:w-auto"
+          disabled={disabled || isZipping}
+          className="flex items-center justify-center gap-2 px-5 py-2 rounded-xl bg-linear-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/20 transition-all hover:scale-101 disabled:opacity-40 cursor-pointer w-full sm:w-auto"
+          title="Download full project assets (script, timestamps, image prompts, packaging, metadata) as a compressed .zip file"
         >
-          <Download className="w-4 h-4" />
-          Export Full Video Bundle (.txt)
+          {isZipping ? (
+            <>
+              <Loader2 className="w-4 h-4 animate-spin text-white" />
+              <span>Packing ZIP Bundle...</span>
+            </>
+          ) : (
+            <>
+              <Archive className="w-4 h-4 text-white" />
+              <span>Export Full Video Bundle (.zip)</span>
+            </>
+          )}
         </button>
       </div>
     </div>

@@ -17,9 +17,11 @@ export function Stage4Packaging({
   onPackagingChange,
   scriptText,
   promptsText,
+  timestampInput,
   autoStart = false,
 }: Stage4PackagingProps) {
   const [loading, setLoading] = useState(false);
+  const [isZipping, setIsZipping] = useState(false);
   const [copiedField, setCopiedField] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
@@ -94,50 +96,84 @@ export function Stage4Packaging({
     URL.revokeObjectURL(url);
   };
 
-  const downloadAllAssets = () => {
-    const slug = topicTitle
-      ? topicTitle
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "_")
-          .slice(0, 30)
-      : "production";
+  const downloadAllAssets = async () => {
+    setIsZipping(true);
+    try {
+      const JSZip = (await import("jszip")).default;
+      const zip = new JSZip();
 
-    if (scriptText) {
-      const b1 = new Blob([scriptText], { type: "text/plain;charset=utf-8" });
-      const u1 = URL.createObjectURL(b1);
-      const a1 = document.createElement("a");
-      a1.href = u1;
-      a1.download = `script_${slug}.txt`;
-      a1.click();
-      URL.revokeObjectURL(u1);
-    }
+      const slug = topicTitle
+        ? topicTitle
+            .toLowerCase()
+            .replace(/[^a-z0-9]+/g, "_")
+            .slice(0, 35)
+        : "production";
 
-    if (promptsText) {
-      setTimeout(() => {
-        const b2 = new Blob([promptsText], {
-          type: "text/plain;charset=utf-8",
-        });
-        const u2 = URL.createObjectURL(b2);
-        const a2 = document.createElement("a");
-        a2.href = u2;
-        a2.download = `image_prompts_${slug}.txt`;
-        a2.click();
-        URL.revokeObjectURL(u2);
-      }, 300);
-    }
+      const folderName = `video_bundle_${slug}`;
+      const folder = zip.folder(folderName) || zip;
 
-    if (packagingText) {
-      setTimeout(() => {
-        const b3 = new Blob([packagingText], {
-          type: "text/plain;charset=utf-8",
-        });
-        const u3 = URL.createObjectURL(b3);
-        const a3 = document.createElement("a");
-        a3.href = u3;
-        a3.download = `packaging_${slug}.txt`;
-        a3.click();
-        URL.revokeObjectURL(u3);
-      }, 600);
+      // 1. Narration Script (Stage 2)
+      if (scriptText?.trim()) {
+        folder.file("01_narration_script.txt", scriptText.trim());
+      }
+
+      // 2. Chronological Timestamped Script (Stage 3 Input)
+      if (timestampInput?.trim()) {
+        folder.file("02_timestamped_script.txt", timestampInput.trim());
+      }
+
+      // 3. Image Prompts for Midjourney / Flux (Stage 3 Output)
+      if (promptsText?.trim()) {
+        folder.file("03_image_prompts.txt", promptsText.trim());
+      }
+
+      // 4. Packaging and YouTube SEO (Stage 4)
+      if (packagingText?.trim()) {
+        folder.file("04_youtube_packaging.txt", packagingText.trim());
+      }
+
+      // 5. Structured Metadata JSON
+      const metadata = {
+        projectTitle: topicTitle,
+        exportedAt: new Date().toISOString(),
+        packaging: parsedPackaging || {},
+      };
+      folder.file("metadata.json", JSON.stringify(metadata, null, 2));
+
+      // 6. Production README
+      const readme = `FRAMEFLOW / DOODLE STUDIO VIDEO PRODUCTION BUNDLE
+===================================================
+Project: ${topicTitle || "Untitled Video"}
+Exported: ${new Date().toLocaleString()}
+
+FILES IN THIS BUNDLE:
+- 01_narration_script.txt: Caption-ready voiceover script (one sentence per line, ready for ElevenLabs TTS).
+- 02_timestamped_script.txt: Sequential scene timestamps [MM:SS] with pacing pauses.
+- 03_image_prompts.txt: Complete Midjourney / Flux 2D doodle prompts with exact scene timestamps.
+- 04_youtube_packaging.txt: Viral titles, thumbnail prompt, video description, SEO tags, and hashtags.
+- metadata.json: Machine-readable JSON metadata for automation scripts.
+`;
+      folder.file("README.txt", readme);
+
+      const blob = await zip.generateAsync({
+        type: "blob",
+        compression: "DEFLATE",
+        compressionOptions: { level: 6 },
+      });
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = `video_bundle_${slug}.zip`;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+      URL.revokeObjectURL(url);
+    } catch (err) {
+      console.error("Failed to generate zip bundle:", err);
+      setError("Failed to create ZIP bundle. Please try again.");
+    } finally {
+      setIsZipping(false);
     }
   };
 
@@ -230,6 +266,7 @@ export function Stage4Packaging({
 
           <PackagingActions
             loading={loading}
+            isZipping={isZipping}
             packagingText={packagingText}
             onDownloadPackaging={downloadPackagingTxt}
             onDownloadAllAssets={downloadAllAssets}
