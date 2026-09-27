@@ -21,4 +21,6 @@ export interface CreatePresetModalProps {
 
 export interface PresetInspectorProps {
   preset: Preset | null;
+  onDelete?: (id: string, name: string) => void;
+  isDeleting?: boolean;
 }

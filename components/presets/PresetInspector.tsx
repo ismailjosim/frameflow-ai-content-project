@@ -1,8 +1,11 @@
-"use client";
-
+import { Trash2 } from "lucide-react";
 import type { PresetInspectorProps } from "./presets.types";
 
-export function PresetInspector({ preset }: PresetInspectorProps) {
+export function PresetInspector({
+  preset,
+  onDelete,
+  isDeleting,
+}: PresetInspectorProps) {
   if (!preset) {
     return (
       <div className="md:col-span-2 glass-panel p-6 rounded-2xl border border-slate-800 text-center py-16 text-slate-500 text-xs">
@@ -13,16 +16,30 @@ export function PresetInspector({ preset }: PresetInspectorProps) {
 
   return (
     <div className="md:col-span-2 glass-panel p-6 rounded-2xl border border-slate-800 space-y-4">
-      <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
         <div>
           <h3 className="text-base font-bold text-white">{preset.name}</h3>
           <p className="text-xs text-slate-400">
             {preset.description || "Preset Details"}
           </p>
         </div>
-        <span className="font-mono text-xs text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-3 py-1 rounded-lg border border-[#E51FD1]/40">
-          {preset.aspectRatio}
-        </span>
+        <div className="flex items-center gap-2 shrink-0">
+          <span className="font-mono text-xs text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-3 py-1 rounded-lg border border-[#E51FD1]/40">
+            {preset.aspectRatio}
+          </span>
+          {!preset.isDefault && onDelete && (
+            <button
+              type="button"
+              onClick={() => onDelete(preset._id, preset.name)}
+              disabled={isDeleting}
+              className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-950/40 hover:bg-rose-900/60 text-rose-300 border border-rose-800/50 text-xs font-medium transition-colors cursor-pointer disabled:opacity-50"
+              title="Delete this style preset"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              <span>{isDeleting ? "Deleting..." : "Delete Preset"}</span>
+            </button>
+          )}
+        </div>
       </div>
 
       <div className="space-y-3 text-xs">

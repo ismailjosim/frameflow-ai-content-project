@@ -1,6 +1,6 @@
 "use client";
 
-import { Palette, Plus } from "lucide-react";
+import { AlertCircle, Check, Palette, Plus, Trash2 } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import DashboardLayout from "@/components/layout/DashboardLayout";
 import { CreatePresetModal } from "./CreatePresetModal";
@@ -11,6 +11,11 @@ export function PresetsClient() {
   const [presets, setPresets] = useState<Preset[]>([]);
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null);
+  const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [toastMsg, setToastMsg] = useState<{
+    text: string;
+    type: "success" | "error";
+  } | null>(null);
 
   const fetchPresets = useCallback(async () => {
     try {
@@ -50,6 +55,39 @@ export function PresetsClient() {
     };
   }, []);
 
+  const handleDeletePreset = async (id: string, name: string) => {
+    if (!window.confirm(`Are you sure you want to delete preset "${name}"?`)) {
+      return;
+    }
+    setDeletingId(id);
+    try {
+      const res = await fetch(`/api/presets/${id}`, { method: "DELETE" });
+      const data = await res.json();
+      if (data.success) {
+        setToastMsg({ text: `Preset "${name}" deleted.`, type: "success" });
+        setPresets((prev) => {
+          const updated = prev.filter((p) => p._id !== id);
+          if (selectedPreset?._id === id) {
+            setSelectedPreset(updated.length > 0 ? updated[0] : null);
+          }
+          return updated;
+        });
+        setTimeout(() => setToastMsg(null), 3000);
+      } else {
+        setToastMsg({
+          text: data.error || "Failed to delete preset",
+          type: "error",
+        });
+        setTimeout(() => setToastMsg(null), 3500);
+      }
+    } catch {
+      setToastMsg({ text: "Network error deleting preset", type: "error" });
+      setTimeout(() => setToastMsg(null), 3500);
+    } finally {
+      setDeletingId(null);
+    }
+  };
+
   return (
     <DashboardLayout pageTitle="Style Presets">
       <div className="space-y-6">
@@ -79,6 +117,24 @@ export function PresetsClient() {
           </button>
         </div>
 
+        {/* Status Toast */}
+        {toastMsg && (
+          <div
+            className={`p-3.5 rounded-xl text-xs flex items-center gap-2 animate-fade-in ${
+              toastMsg.type === "success"
+                ? "bg-linear-to-r from-[#8A3FFC]/25 to-[#E51FD1]/25 border border-[#E51FD1]/40 text-pink-200"
+                : "bg-rose-950/40 border border-rose-800/50 text-rose-300"
+            }`}
+          >
+            {toastMsg.type === "success" ? (
+              <Check className="w-4 h-4 text-[#58E6F7]" />
+            ) : (
+              <AlertCircle className="w-4 h-4 text-rose-400" />
+            )}
+            <span>{toastMsg.text}</span>
+          </div>
+        )}
+
         {/* Modal: Add Custom Style */}
         <CreatePresetModal
           isOpen={showCreateModal}
@@ -91,10 +147,11 @@ export function PresetsClient() {
           {/* Preset List */}
           <div className="space-y-3">
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-400">
-              Available Presets
+              Available Presets ({presets.length})
             </h2>
             {presets.map((p) => {
               const isSelected = selectedPreset?._id === p._id;
+              const isDeletingThis = deletingId === p._id;
               return (
                 <div
                   key={p._id}
@@ -103,17 +160,32 @@ export function PresetsClient() {
                     isSelected
                       ? "bg-linear-to-r from-[#8A3FFC]/20 via-[#E51FD1]/15 to-transparent border-[#E51FD1] shadow-md shadow-[#8A3FFC]/20 ring-1 ring-[#E51FD1]/50"
                       : "glass-panel border-slate-800 hover:border-slate-700"
-                  }`}
+                  } ${isDeletingThis ? "opacity-50 pointer-events-none" : ""}`}
                 >
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-white">
+                    <span className="font-bold text-xs text-white truncate pr-2">
                       {p.name}
                     </span>
-                    {p.isDefault && (
-                      <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-linear-to-r from-[#8A3FFC]/25 to-[#E51FD1]/25 text-pink-300 border border-[#E51FD1]/40">
-                        Default
-                      </span>
-                    )}
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {p.isDefault ? (
+                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-linear-to-r from-[#8A3FFC]/25 to-[#E51FD1]/25 text-pink-300 border border-[#E51FD1]/40">
+                          Default
+                        </span>
+                      ) : (
+                        <button
+                          type="button"
+                          onClick={(e) => {
+                            e.stopPropagation();
+                            handleDeletePreset(p._id, p.name);
+                          }}
+                          disabled={isDeletingThis}
+                          className="p-1 rounded-lg text-slate-500 hover:text-rose-400 hover:bg-slate-800 transition-colors cursor-pointer"
+                          title={`Delete preset ${p.name}`}
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      )}
+                    </div>
                   </div>
                   {p.description && (
                     <p className="text-[11px] text-slate-400 mt-1 line-clamp-2">
@@ -129,7 +201,11 @@ export function PresetsClient() {
           </div>
 
           {/* Preset Inspector */}
-          <PresetInspector preset={selectedPreset} />
+          <PresetInspector
+            preset={selectedPreset}
+            onDelete={handleDeletePreset}
+            isDeleting={deletingId === selectedPreset?._id}
+          />
         </div>
       </div>
     </DashboardLayout>
