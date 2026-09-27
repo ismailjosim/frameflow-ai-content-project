@@ -44,7 +44,10 @@ export function StudioHeader({
             title="Click to rename project"
           />
           <p className="text-[11px] text-slate-400 px-1">
-            4-Stage Pipeline • Auto-Model Failover Active
+            <span className="text-slate-300 font-medium">
+              From Idea to Video, All in One Flow
+            </span>{" "}
+            • 4-Stage Pipeline
           </p>
         </div>
       </div>

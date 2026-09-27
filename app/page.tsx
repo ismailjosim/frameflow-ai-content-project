@@ -4,9 +4,9 @@ import { Suspense } from "react";
 import { StudioClient } from "@/components/studio";
 
 export const metadata: Metadata = {
-  title: "FrameFlow Studio - Viral Stickman Video AI Pipeline",
+  title: "FrameFlow Studio — Imagine. Generate. Create.",
   description:
-    "End-to-end 4-stage pipeline for viral YouTube stickman documentaries: algorithmic topic prioritization, 90-char narration scriptwriter, batch Flux prompts, and viral packaging.",
+    "From Idea to Video, All in One Flow. End-to-end 4-stage pipeline for viral YouTube stickman documentaries: algorithmic topic prioritization, 90-char narration scriptwriter, batch Flux prompts, and viral packaging.",
 };
 
 export default function StudioPage() {

@@ -140,7 +140,8 @@ export function Stage4Packaging({
       folder.file("metadata.json", JSON.stringify(metadata, null, 2));
 
       // 6. Production README
-      const readme = `FRAMEFLOW / DOODLE STUDIO VIDEO PRODUCTION BUNDLE
+      const readme = `FRAMEFLOW STUDIO — Imagine. Generate. Create.
+From Idea to Video, All in One Flow.
 ===================================================
 Project: ${topicTitle || "Untitled Video"}
 Exported: ${new Date().toLocaleString()}

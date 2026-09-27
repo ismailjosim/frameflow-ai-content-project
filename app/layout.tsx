@@ -14,11 +14,11 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: {
-    default: "FrameFlow Studio - Viral Stickman Video AI Pipeline",
+    default: "FrameFlow Studio — Imagine. Generate. Create.",
     template: "%s | FrameFlow",
   },
   description:
-    "Automated 4-stage AI production pipeline for high-retention 2D stickman doodle videos (Midjourney, Flux & ElevenLabs).",
+    "From Idea to Video, All in One Flow. Automated 4-stage AI production pipeline for high-retention 2D stickman doodle videos (Midjourney, Flux & ElevenLabs).",
   icons: {
     icon: [
       { url: "/favicon.ico" },

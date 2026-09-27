@@ -80,8 +80,8 @@ export function Sidebar({
                 Studio
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium">
-              AI Video Production
+            <p className="text-[11px] text-slate-400 font-medium leading-tight">
+              From Idea to Video, All in One Flow.
             </p>
           </div>
         </Link>
@@ -196,7 +196,13 @@ export function Sidebar({
           )}
         </div>
 
-        <div className="flex items-center justify-between text-[10px] text-slate-500 px-1">
+        <div className="pt-0.5 pb-1 text-center">
+          <p className="text-[11px] font-bold text-frameflow-gradient tracking-wide">
+            Imagine. Generate. Create.
+          </p>
+        </div>
+
+        <div className="flex items-center justify-between text-[10px] text-slate-500 px-1 border-t border-slate-900 pt-2">
           <span>HomoDoodle AI v2.4</span>
           <span>Zero-Leak AES-256</span>
         </div>

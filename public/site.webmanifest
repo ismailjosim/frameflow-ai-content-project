@@ -1,6 +1,7 @@
 {
   "name": "FrameFlow - AI Video Production Studio",
   "short_name": "FrameFlow",
+  "description": "From Idea to Video, All in One Flow.",
   "icons": [
     {
       "src": "/android-chrome-192x192.png",
