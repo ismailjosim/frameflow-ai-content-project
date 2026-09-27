@@ -6,20 +6,35 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "check": "biome check --write",
+    "lint": "biome lint --write",
+    "format": "biome format --write",
+    "prepare": "husky"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.128.0",
+    "@google/genai": "^2.24.0",
+    "better-auth": "^1.7.6",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.48.0",
+    "mongodb": "^7.6.0",
+    "mongoose": "^9.10.2",
     "next": "16.3.6",
+    "openai": "^7.23.0",
     "react": "19.2.8",
-    "react-dom": "19.2.8"
+    "react-dom": "19.2.8",
+    "tailwind-merge": "^3.7.0"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.14",
     "@tailwindcss/postcss": "^4",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
+    "husky": "^9.1.7",
     "tailwindcss": "^4",
     "typescript": "^5"
   },

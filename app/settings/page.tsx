@@ -1,25 +1,25 @@
 import { Loader2 } from "lucide-react";
 import type { Metadata } from "next";
 import { Suspense } from "react";
-import { StudioClient } from "@/components/studio";
+import { SettingsClient } from "@/components/settings";
 
 export const metadata: Metadata = {
-  title: "FrameFlow Studio - Viral Stickman Video AI Pipeline",
+  title: "API Key Vault & Security - FrameFlow",
   description:
-    "End-to-end 4-stage pipeline for viral YouTube stickman documentaries: algorithmic topic prioritization, 90-char narration scriptwriter, batch Flux prompts, and viral packaging.",
+    "Manage encrypted API keys for Google Gemini, Anthropic Claude, and OpenAI with AES-256-GCM zero-leak server security.",
 };
 
-export default function StudioPage() {
+export default function SettingsPage() {
   return (
     <Suspense
       fallback={
         <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 text-xs gap-2">
           <Loader2 className="w-5 h-5 animate-spin text-cyan-400" />
-          <span>Initializing FrameFlow Studio...</span>
+          <span>Opening Key Vault...</span>
         </div>
       }
     >
-      <StudioClient />
+      <SettingsClient />
     </Suspense>
   );
 }

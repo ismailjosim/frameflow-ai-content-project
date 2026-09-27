@@ -1,36 +1,52 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# FrameFlow Studio 🎬
 
-## Getting Started
+An end-to-end AI video production workstation tailored for creators and production teams. FrameFlow transforms topics into complete scripts, auto-chunked batch image prompts, and viral packaging with resilient multi-model failover and encrypted credential security.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## ⚡ Core Architecture
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+- **Framework**: Next.js 16 (App Router), React 19, TypeScript
+- **Styling**: Tailwind CSS v4, Lucide Icons, Glassmorphism dark studio aesthetic
+- **Database & ODM**: MongoDB with `mongoose` connection pooling
+- **Authentication**: `better-auth` with RBAC (`admin` and `creator`)
+- **Key Vault**: AES-256-GCM encryption at rest; keys are decrypted only in memory during AI generation
+- **AI Routing Engine**:
+  - **Auto Model Mode**: Automatically fails over across **Google Gemini ➔ Anthropic Claude ➔ OpenAI** if rate limits (HTTP 429) or token quotas are reached.
+  - **Manual Model Selection**: Lock into Gemini 2.5 Flash, Claude 3.7 Sonnet, GPT-4o Mini, etc.
+- **Master Prompt & Style Presets**:
+  - Supports uploading `.md` or `.txt` style rules.
+  - Default preset: **HomoDoodle 2D Vector Doodles**.
+  - Pipeline remains strictly fixed: `Topic ➔ Script (<90 chars/line) ➔ Timestamps ➔ Batch Prompts ➔ Packaging`.
+- **Text Format Persistence**: All stage outputs saved to MongoDB in clean, exportable text formats.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 🚀 Getting Started
 
-## Learn More
+1. **Configure Environment Variables**:
+   Copy `.env.local.example` to `.env.local`:
+   ```bash
+   cp .env.local.example .env.local
+   ```
+   Ensure your `MONGODB_URI` points to your local MongoDB instance or MongoDB Atlas.
 
-To learn more about Next.js, take a look at the following resources:
+2. **Run Development Server**:
+   ```bash
+   pnpm dev
+   ```
+   Open [http://localhost:3000](http://localhost:3000) in your browser.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+3. **Configure API Keys**:
+   - Navigate to `/settings` (Key Vault) in the top right.
+   - Enter your Google Gemini, Anthropic Claude, or OpenAI API key.
+   - Keys are immediately encrypted using AES-256-GCM and stored safely in your database.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## 📁 4-Stage Production Pipeline
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Stage 1 (Topic & Angle)**: Generates 5 high-CTR viral topic candidates with conflict hooks and visual thumbnail concepts.
+2. **Stage 2 (Voiceover Script)**: Generates complete narration pre-broken sentence-by-sentence (&lt;90 chars/line) for ElevenLabs and caption sync.
+3. **Stage 3 (Batch Image Prompts)**: Paste timestamped script; automatically executes 20-prompt batches with a live progress bar, prompt cards, and raw Midjourney / Flux text export.
+4. **Stage 4 (Viral Packaging & SEO)**: Generates title hooks, thumbnail prompt, description, 15 hashtags, and 35 SEO tags with 1-click bundle export.

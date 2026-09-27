@@ -1,26 +1,66 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+    --background: #090d16;
+    --foreground: #f1f5f9;
+    --card: #0f172a;
+    --card-foreground: #f8fafc;
+    --popover: #0f172a;
+    --popover-foreground: #f8fafc;
+    --primary: #38bdf8;
+    --primary-foreground: #020617;
+    --secondary: #1e293b;
+    --secondary-foreground: #f8fafc;
+    --muted: #1e293b;
+    --muted-foreground: #94a3b8;
+    --accent: #6366f1;
+    --accent-foreground: #f8fafc;
+    --destructive: #ef4444;
+    --destructive-foreground: #ffffff;
+    --border: #1e293b;
+    --input: #1e293b;
+    --ring: #38bdf8;
+    --radius: 0.75rem;
   }
 }
 
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  font-feature-settings:
+    "rlig" 1,
+    "calt" 1;
+  min-height: 100vh;
+}
+
+/* Custom scrollbar for prompt workstations */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #090d16;
+}
+::-webkit-scrollbar-thumb {
+  background: #1e293b;
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #334155;
+}
+
+/* Glassmorphism utility */
+.glass-panel {
+  background: rgba(15, 23, 42, 0.75);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glow-cyan {
+  box-shadow: 0 0 20px -3px rgba(56, 189, 248, 0.25);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px -3px rgba(129, 140, 248, 0.25);
 }
