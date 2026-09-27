@@ -22,7 +22,7 @@ export function Stage3BatchControl({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-xs flex items-center justify-center border border-cyan-500/30">
+            <span className="w-6 h-6 rounded-full bg-linear-to-br from-[#E51FD1]/20 to-[#FF1688]/30 text-[#FF1688] font-bold text-xs flex items-center justify-center border border-[#FF1688]/40">
               3
             </span>
             <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
@@ -38,7 +38,7 @@ export function Stage3BatchControl({
         <button
           onClick={onStartQueue}
           disabled={isRunning || linesCount === 0}
-          className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-medium text-xs shadow-md shadow-cyan-500/20 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#8A3FFC]/25 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
         >
           {isRunning ? (
             <>
@@ -71,7 +71,7 @@ export function Stage3BatchControl({
           </div>
           <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
             <div
-              className="bg-linear-to-r from-cyan-500 to-indigo-500 h-2 rounded-full transition-all duration-300"
+              className="bg-frameflow-gradient h-2 rounded-full transition-all duration-300"
               style={{ width: `${currentPercent}%` }}
             />
           </div>

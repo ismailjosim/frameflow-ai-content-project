@@ -1,6 +1,7 @@
 "use client";
 
-import { Film, Loader2, Save } from "lucide-react";
+import { Loader2, Save } from "lucide-react";
+import Image from "next/image";
 
 interface StudioHeaderProps {
   projectTitle: string;
@@ -22,8 +23,16 @@ export function StudioHeader({
   return (
     <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4">
       <div className="flex items-center gap-3">
-        <div className="w-9 h-9 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 flex items-center justify-center shrink-0">
-          <Film className="w-5 h-5" />
+        <div className="w-9 h-9 rounded-xl p-[1.5px] bg-frameflow-gradient shrink-0 shadow-md shadow-[#8A3FFC]/20">
+          <div className="w-full h-full rounded-[9px] bg-slate-950 flex items-center justify-center p-0.5">
+            <Image
+              src="/favicon-32x32.png"
+              alt="FrameFlow"
+              width={22}
+              height={22}
+              className="object-contain"
+            />
+          </div>
         </div>
         <div>
           <input

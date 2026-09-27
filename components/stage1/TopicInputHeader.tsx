@@ -18,7 +18,7 @@ export function TopicInputHeader({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2">
-            <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-xs flex items-center justify-center border border-cyan-500/30">
+            <span className="w-6 h-6 rounded-full bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#58E6F7] font-bold text-xs flex items-center justify-center border border-[#58E6F7]/40">
               1
             </span>
             <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
@@ -69,7 +69,7 @@ export function TopicInputHeader({
         <button
           onClick={onGenerate}
           disabled={loading}
-          className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-cyan-500 via-indigo-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white font-semibold text-xs shadow-lg shadow-cyan-500/20 transition-all hover:scale-102 active:scale-98 disabled:opacity-50 disabled:pointer-events-none cursor-pointer shrink-0"
+          className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-[#8A3FFC]/25 transition-all hover:scale-102 active:scale-98 disabled:opacity-50 disabled:pointer-events-none cursor-pointer shrink-0"
         >
           {loading ? (
             <>

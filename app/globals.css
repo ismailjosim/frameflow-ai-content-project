@@ -8,20 +8,54 @@
     --card-foreground: #f8fafc;
     --popover: #0f172a;
     --popover-foreground: #f8fafc;
-    --primary: #38bdf8;
+    --primary: #58e6f7;
     --primary-foreground: #020617;
     --secondary: #1e293b;
     --secondary-foreground: #f8fafc;
     --muted: #1e293b;
     --muted-foreground: #94a3b8;
-    --accent: #6366f1;
+    --accent: #8a3ffc;
     --accent-foreground: #f8fafc;
-    --destructive: #ef4444;
+    --destructive: #ff4e63;
     --destructive-foreground: #ffffff;
     --border: #1e293b;
     --input: #1e293b;
-    --ring: #38bdf8;
+    --ring: #58e6f7;
     --radius: 0.75rem;
+
+    /* Official FrameFlow Brand Logo Gradient Palette */
+    --frameflow-gradient: linear-gradient(
+      135deg,
+      #58e6f7 0%,
+      #6694ff 18%,
+      #8a3ffc 32%,
+      #e51fd1 48%,
+      #ff1688 62%,
+      #ff4e63 74%,
+      #ff7a32 87%,
+      #ffc13b 100%
+    );
+
+    --frameflow-gradient-h: linear-gradient(
+      90deg,
+      #58e6f7 0%,
+      #6694ff 18%,
+      #8a3ffc 32%,
+      #e51fd1 48%,
+      #ff1688 62%,
+      #ff4e63 74%,
+      #ff7a32 87%,
+      #ffc13b 100%
+    );
+
+    --frameflow-cyan: #58e6f7;
+    --frameflow-blue: #6694ff;
+    --frameflow-purple: #8a3ffc;
+    --frameflow-magenta: #e51fd1;
+    --frameflow-pink: #ff1688;
+    --frameflow-coral: #ff4e63;
+    --frameflow-orange: #ff7a32;
+    --frameflow-gold: #ffc13b;
   }
 }
 
@@ -57,10 +91,39 @@ body {
   border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
+/* FrameFlow Brand Gradient Utilities */
+.bg-frameflow-gradient {
+  background: var(--frameflow-gradient);
+}
+
+.bg-frameflow-gradient-h {
+  background: var(--frameflow-gradient-h);
+}
+
+.text-frameflow-gradient {
+  background: var(--frameflow-gradient-h);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  color: transparent;
+}
+
+.border-frameflow {
+  border-color: rgba(229, 31, 209, 0.4);
+}
+
+.glow-frameflow {
+  box-shadow: 0 0 25px -4px rgba(229, 31, 209, 0.35);
+}
+
+.glow-frameflow-cyan {
+  box-shadow: 0 0 20px -3px rgba(88, 230, 247, 0.3);
+}
+
 .glow-cyan {
-  box-shadow: 0 0 20px -3px rgba(56, 189, 248, 0.25);
+  box-shadow: 0 0 20px -3px rgba(88, 230, 247, 0.25);
 }
 
 .glow-purple {
-  box-shadow: 0 0 20px -3px rgba(129, 140, 248, 0.25);
+  box-shadow: 0 0 20px -3px rgba(138, 63, 252, 0.25);
 }

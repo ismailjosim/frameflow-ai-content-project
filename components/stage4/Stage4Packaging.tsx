@@ -69,7 +69,6 @@ export function Stage4Packaging({
       }, 50);
       return () => clearTimeout(timer);
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autoStart, topicTitle, packagingText, loading, generatePackaging]);
 
   const copyText = (text: string, fieldName: string) => {
@@ -184,7 +183,7 @@ FILES IN THIS BUNDLE:
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-xs flex items-center justify-center border border-cyan-500/30">
+              <span className="w-6 h-6 rounded-full bg-linear-to-br from-[#FF1688]/20 to-[#FFC13B]/30 text-[#FFC13B] font-bold text-xs flex items-center justify-center border border-[#FFC13B]/40">
                 4
               </span>
               <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
@@ -201,7 +200,7 @@ FILES IN THIS BUNDLE:
             <button
               onClick={generatePackaging}
               disabled={loading}
-              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-medium text-xs shadow-lg shadow-cyan-500/20 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#FF1688] via-[#FF4E63] to-[#FFC13B] hover:brightness-110 text-slate-950 font-bold text-xs shadow-lg shadow-[#FF1688]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
             >
               {loading ? (
                 <>

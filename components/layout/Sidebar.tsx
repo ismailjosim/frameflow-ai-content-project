@@ -9,6 +9,7 @@ import {
   ShieldCheck,
   X,
 } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import type { SidebarProps } from "./layout.types";
@@ -51,22 +52,31 @@ export function Sidebar({
 
   const sidebarContent = (
     <div className="flex flex-col h-full bg-slate-950/95 border-r border-slate-800/80 backdrop-blur-2xl">
-      {/* Brand Header */}
-      <div className="p-6 border-b border-slate-800/80 flex items-center justify-between">
+      {/* Brand Header with Official Logo */}
+      <div className="p-5 border-b border-slate-800/80 flex items-center justify-between">
         <Link
           href="/"
           onClick={onClose}
           className="flex items-center gap-3 group"
         >
-          <div className="w-10 h-10 rounded-xl bg-linear-to-tr from-cyan-500 via-indigo-500 to-purple-600 flex items-center justify-center text-white shadow-lg shadow-cyan-500/20 group-hover:scale-105 transition-transform duration-200">
-            <Film className="w-5 h-5" />
+          <div className="relative w-10 h-10 rounded-xl p-[2px] bg-frameflow-gradient shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0">
+            <div className="w-full h-full rounded-[10px] bg-slate-950 overflow-hidden flex items-center justify-center p-0.5">
+              <Image
+                src="/apple-touch-icon.png"
+                alt="FrameFlow Logo"
+                width={36}
+                height={36}
+                className="rounded-lg object-contain"
+                priority
+              />
+            </div>
           </div>
           <div>
             <div className="flex items-center gap-1.5">
-              <span className="font-bold text-lg text-white tracking-tight">
+              <span className="font-extrabold text-lg tracking-tight text-frameflow-gradient">
                 FrameFlow
               </span>
-              <span className="text-[10px] font-semibold uppercase px-1.5 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/50">
+              <span className="text-[10px] font-bold uppercase px-1.5 py-0.5 rounded bg-linear-to-r from-purple-950/80 to-pink-950/80 text-pink-300 border border-pink-500/30">
                 Studio
               </span>
             </div>
@@ -108,14 +118,14 @@ export function Sidebar({
                   onClick={onClose}
                   className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-xl text-xs transition-all duration-150 group ${
                     isActive
-                      ? "bg-linear-to-r from-cyan-500/15 via-indigo-500/10 to-transparent text-cyan-300 font-semibold border-l-2 border-cyan-400 shadow-sm"
+                      ? "bg-linear-to-r from-[#8A3FFC]/15 via-[#E51FD1]/10 to-transparent text-white font-semibold border-l-2 border-[#E51FD1] shadow-sm"
                       : "text-slate-400 hover:text-slate-200 hover:bg-slate-900/70 font-medium"
                   }`}
                 >
                   <div
                     className={`p-1.5 rounded-lg transition-colors ${
                       isActive
-                        ? "bg-cyan-500/20 text-cyan-300"
+                        ? "bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#58E6F7] border border-[#58E6F7]/30"
                         : "bg-slate-900 text-slate-400 group-hover:text-slate-200 group-hover:bg-slate-800"
                     }`}
                   >

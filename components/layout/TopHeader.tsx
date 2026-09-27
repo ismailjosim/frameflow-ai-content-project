@@ -1,6 +1,7 @@
 "use client";
 
 import { Cpu, Menu, Sparkles } from "lucide-react";
+import Image from "next/image";
 import Link from "next/link";
 import { AUTO_MODEL, PROVIDER_GROUPS } from "@/lib/ai/models";
 import type { TopHeaderProps } from "./layout.types";
@@ -23,7 +24,7 @@ export function TopHeader({
 
   return (
     <header className="sticky top-0 z-30 h-16 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
-      {/* Left: Mobile Toggle & Context Info */}
+      {/* Left: Mobile Toggle, Brand Icon & Context Info */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         <button
           type="button"
@@ -34,13 +35,31 @@ export function TopHeader({
           <Menu className="w-5 h-5" />
         </button>
 
+        <Link
+          href="/"
+          className="md:hidden flex items-center shrink-0"
+          aria-label="FrameFlow Home"
+        >
+          <div className="w-7 h-7 rounded-lg p-[1.5px] bg-frameflow-gradient shrink-0 shadow-xs">
+            <div className="w-full h-full rounded-[5px] bg-slate-950 flex items-center justify-center p-0.5">
+              <Image
+                src="/favicon-32x32.png"
+                alt="FrameFlow Logo"
+                width={20}
+                height={20}
+                className="object-contain"
+              />
+            </div>
+          </div>
+        </Link>
+
         <div className="min-w-0">
           {activeProjectTitle ? (
             <div className="flex items-center gap-1.5 sm:gap-2">
               <span className="text-[11px] font-medium text-slate-400 hidden md:inline">
                 Active Project:
               </span>
-              <span className="text-xs font-semibold text-cyan-300 bg-cyan-950/60 px-2.5 sm:px-3 py-1 rounded-lg border border-cyan-800/50 truncate max-w-30 xs:max-w-[180px] sm:max-w-xs md:max-w-md">
+              <span className="text-xs font-semibold text-white bg-linear-to-r from-[#8A3FFC]/20 via-[#E51FD1]/15 to-[#FF4E63]/15 px-2.5 sm:px-3 py-1 rounded-lg border border-[#E51FD1]/40 shadow-xs truncate max-w-28 xs:max-w-[160px] sm:max-w-xs md:max-w-md">
                 {activeProjectTitle}
               </span>
             </div>

@@ -116,7 +116,7 @@ export function Stage2Script({
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-cyan-500/20 text-cyan-400 font-bold text-xs flex items-center justify-center border border-cyan-500/30">
+              <span className="w-6 h-6 rounded-full bg-linear-to-br from-[#8A3FFC]/20 to-[#E51FD1]/30 text-[#E51FD1] font-bold text-xs flex items-center justify-center border border-[#E51FD1]/40">
                 2
               </span>
               <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
@@ -139,7 +139,7 @@ export function Stage2Script({
             <button
               onClick={generateScript}
               disabled={loading}
-              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-medium text-xs shadow-md shadow-cyan-500/20 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF1688] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#E51FD1]/25 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0"
             >
               {loading ? (
                 <>
@@ -230,7 +230,7 @@ export function Stage2Script({
               className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-xs shadow-md transition-all w-full sm:w-auto shrink-0 ${
                 loading || !scriptText.trim()
                   ? "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50 opacity-60"
-                  : "bg-linear-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white shadow-cyan-600/20 hover:scale-102 cursor-pointer"
+                  : "bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF4E63] hover:brightness-110 text-white shadow-md shadow-[#E51FD1]/25 hover:scale-102 cursor-pointer font-bold"
               }`}
             >
               {loading ? (

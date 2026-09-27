@@ -82,19 +82,19 @@ export default function GenerationSkeleton({
   }, [stageData.steps.length]);
 
   return (
-    <div className="relative overflow-hidden rounded-2xl border border-cyan-500/40 bg-slate-950/90 p-6 shadow-xl shadow-cyan-500/10 backdrop-blur-xl">
+    <div className="relative overflow-hidden rounded-2xl border border-[#8A3FFC]/40 bg-slate-950/90 p-6 shadow-xl shadow-[#8A3FFC]/10 backdrop-blur-xl">
       {/* Top Gradient Shimmer Bar */}
       <div className="absolute top-0 left-0 right-0 h-1 overflow-hidden bg-slate-900">
-        <div className="h-full w-full bg-linear-to-r from-cyan-500 via-indigo-500 to-purple-500 animate-pulse" />
+        <div className="h-full w-full bg-frameflow-gradient-h animate-pulse" />
       </div>
 
       <div className="space-y-5">
         {/* Header with Live Status and Elapsed Timer */}
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-4">
           <div className="flex items-center gap-2.5">
-            <div className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">
+            <div className="relative flex items-center justify-center w-8 h-8 rounded-xl bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#58E6F7] border border-[#58E6F7]/40">
               <BrainCircuit className="w-4 h-4 animate-spin" />
-              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-cyan-400 animate-ping" />
+              <span className="absolute -top-0.5 -right-0.5 w-2 h-2 rounded-full bg-[#E51FD1] animate-ping" />
             </div>
 
             <div>
@@ -102,13 +102,13 @@ export default function GenerationSkeleton({
                 <span className="font-bold text-sm text-white tracking-tight">
                   {stageData.title}
                 </span>
-                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-cyan-950 text-cyan-300 border border-cyan-800/60 animate-pulse">
+                <span className="text-[10px] uppercase font-bold px-2 py-0.5 rounded-full bg-linear-to-r from-purple-950/80 to-pink-950/80 text-pink-300 border border-pink-500/40 animate-pulse">
                   Live Generating
                 </span>
               </div>
               <p className="text-xs text-slate-400 mt-0.5 flex items-center gap-1.5">
-                <Activity className="w-3 h-3 text-cyan-400 animate-pulse" />
-                <span className="text-cyan-300 font-medium">
+                <Activity className="w-3 h-3 text-[#E51FD1] animate-pulse" />
+                <span className="text-slate-200 font-medium">
                   {stageData.steps[stepIndex]}
                 </span>
               </p>

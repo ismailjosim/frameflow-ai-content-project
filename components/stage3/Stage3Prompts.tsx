@@ -238,7 +238,7 @@ export function Stage3Prompts({
           className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-xs shadow-md transition-all w-full sm:w-auto shrink-0 ${
             isRunning || !promptsText.trim()
               ? "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50 opacity-60"
-              : "bg-linear-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white shadow-cyan-600/20 hover:scale-102 cursor-pointer"
+              : "bg-linear-to-r from-[#E51FD1] via-[#FF1688] to-[#FF7A32] hover:brightness-110 text-white shadow-md shadow-[#FF1688]/25 hover:scale-102 cursor-pointer font-bold"
           }`}
         >
           {isRunning ? (
