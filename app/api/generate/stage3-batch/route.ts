@@ -7,6 +7,7 @@ import {
   ensureDefaultPresets,
   HOMODOODLE_DEFAULT_PRESET,
 } from "@/lib/presets/default-presets";
+import { alignBatchPromptsWithInputTimestamps } from "@/lib/timestamps";
 import MasterPromptPreset from "@/models/MasterPromptPreset";
 import Project from "@/models/Project";
 
@@ -70,10 +71,16 @@ export async function POST(req: NextRequest) {
     const userPrompt = `VIDEO TOPIC: "${topicTitle || project?.title || "Prehistoric Survival"}"
 BATCH: ${batchIndex + 1} of ${totalBatches || 1}
 
+CRITICAL TIMESTAMP INSTRUCTIONS:
+- Each line in the list below has a chronological timestamp (e.g. [01:45]).
+- You MUST PRESERVE the exact timestamp from each line at the beginning of each generated prompt.
+- DO NOT reset timestamps to [00:00] for new batches.
+- Output exactly ONE prompt per input line, matching its exact chronological timestamp, separated by a blank line.
+
 INPUT TIMESTAMPS:
 ${batchLines.join("\n")}
 
-For each timestamp line above, output exactly ONE prompt separated by a blank line:`;
+Output the prompts now:`;
 
     const result = await executeAIRequest(
       userId,
@@ -86,10 +93,16 @@ For each timestamp line above, output exactly ONE prompt separated by a blank li
       model || project?.modelSelected || "auto",
     );
 
+    // Auto-align prompts to guarantee exact chronological timestamps matching batchLines
+    const alignedPrompts = alignBatchPromptsWithInputTimestamps(
+      result.text,
+      batchLines,
+    );
+
     return NextResponse.json({
       success: true,
       batchIndex,
-      promptsText: result.text,
+      promptsText: alignedPrompts,
       modelUsed: result.modelUsed,
       provider: result.provider,
       logs: result.logs,

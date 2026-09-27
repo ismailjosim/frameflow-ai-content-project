@@ -90,7 +90,7 @@ export async function PATCH(
     const updatedProject = await Project.findOneAndUpdate(
       { _id: id, userId },
       { $set: updateObj },
-      { new: true },
+      { returnDocument: "after" },
     );
 
     if (!updatedProject) {

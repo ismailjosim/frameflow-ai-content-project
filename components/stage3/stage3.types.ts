@@ -21,6 +21,8 @@ export interface Stage3BatchControlProps {
   timestampInput: string;
   onTimestampChange: (val: string) => void;
   onStartQueue: () => void;
+  onRecalculateTimestamps?: () => void;
+  estimatedRuntime?: string;
   error: string | null;
 }
 

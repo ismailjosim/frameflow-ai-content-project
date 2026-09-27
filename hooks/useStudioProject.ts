@@ -2,6 +2,7 @@
 
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { ensureTimestampedScript } from "@/lib/timestamps";
 import type { ParsedPackaging, StageStep, TopicCandidate } from "@/types";
 
 export function useStudioProject() {
@@ -190,9 +191,9 @@ export function useStudioProject() {
   };
 
   const handleProceedToStage3 = () => {
-    if (!timestampInput || timestampInput.trim() === "") {
-      setTimestampInput(scriptText.trim());
-    }
+    const raw = timestampInput?.trim() ? timestampInput : scriptText;
+    const timestamped = ensureTimestampedScript(raw);
+    setTimestampInput(timestamped);
     setAutoStartPrompts(true);
     setActiveStage(3);
     setTimeout(saveProjectState, 300);

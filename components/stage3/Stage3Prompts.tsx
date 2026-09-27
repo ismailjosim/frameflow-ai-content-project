@@ -3,6 +3,7 @@
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
+import { calculateTimestamps, ensureTimestampedScript } from "@/lib/timestamps";
 import { Stage3BatchControl } from "./Stage3BatchControl";
 import { Stage3PromptList } from "./Stage3PromptList";
 import type { Stage3PromptsProps } from "./stage3.types";
@@ -27,20 +28,34 @@ export function Stage3Prompts({
   const [logs, setLogs] = useState<string[]>([]);
   const batchSize = 20;
 
-  // Auto-populate timestamp input if empty but scriptText is present
+  // Auto-populate timestamp input with calculated continuous timestamps if empty
   useEffect(() => {
     if (!timestampInput && scriptText && scriptText.trim().length > 0) {
-      onTimestampChange(scriptText.trim());
+      onTimestampChange(ensureTimestampedScript(scriptText));
     }
   }, [scriptText, timestampInput, onTimestampChange]);
 
+  const timingStats = useMemo(() => {
+    const raw = timestampInput || scriptText || "";
+    return calculateTimestamps(raw);
+  }, [timestampInput, scriptText]);
+
   const lines = useMemo(() => {
     const raw = timestampInput || scriptText || "";
-    return raw
+    if (!raw.trim()) return [];
+    const timestamped = ensureTimestampedScript(raw);
+    return timestamped
       .split("\n")
       .map((l) => l.trim())
       .filter((l) => l.length > 0);
   }, [timestampInput, scriptText]);
+
+  const handleRecalculateTimestamps = useCallback(() => {
+    const raw = timestampInput || scriptText || "";
+    if (!raw.trim()) return;
+    const recalculated = calculateTimestamps(raw);
+    onTimestampChange(recalculated.result);
+  }, [timestampInput, scriptText, onTimestampChange]);
 
   const promptList = useMemo(() => {
     if (!promptsText) return [];
@@ -173,6 +188,8 @@ export function Stage3Prompts({
         timestampInput={timestampInput}
         onTimestampChange={onTimestampChange}
         onStartQueue={startBatchQueue}
+        onRecalculateTimestamps={handleRecalculateTimestamps}
+        estimatedRuntime={timingStats.formattedRuntime}
         error={error}
       />
 

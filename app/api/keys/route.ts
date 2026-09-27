@@ -127,7 +127,7 @@ export async function POST(req: NextRequest) {
         lastTested: new Date(),
         statusMessage: "Configured and encrypted successfully",
       },
-      { upsert: true, new: true, setDefaultsOnInsert: true },
+      { upsert: true, returnDocument: "after", setDefaultsOnInsert: true },
     );
 
     return NextResponse.json({

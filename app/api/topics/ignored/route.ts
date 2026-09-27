@@ -64,7 +64,7 @@ export async function POST(req: NextRequest) {
         normalizedTitle: normalized,
         reason: reason || "already_created",
       },
-      { upsert: true, new: true },
+      { upsert: true, returnDocument: "after" },
     );
 
     return NextResponse.json({

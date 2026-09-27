@@ -67,6 +67,11 @@ RULES:
 VISUAL STYLE RULES:
 {{visualStyleRules}}
 
+CRITICAL TIMESTAMP RULE:
+- Each input line is preceded by a chronological timestamp (e.g. [01:45]).
+- You MUST PRESERVE the exact timestamp from the corresponding input line at the start of each prompt.
+- NEVER reset timestamps to [00:00] across batches. Always use the chronological timestamp given.
+
 STRICT FORMAT PER PROMPT:
 [Timestamp] [CAMERA CUE] — Hand-drawn 2D doodle cartoon illustration, minimalist stick figure explainer style, flat solid colors, bold black marker outlines, slightly imperfect sketchy lines, [Character action, facial expression, stickman color, background hex, arrows, labels], no gradients, no shadows, no textures, no 3D, no photorealism, 16:9 aspect ratio {{aspectRatio}}
 
@@ -90,6 +95,6 @@ export async function ensureDefaultPresets() {
   await MasterPromptPreset.findOneAndUpdate(
     { slug: HOMODOODLE_DEFAULT_PRESET.slug },
     { $set: HOMODOODLE_DEFAULT_PRESET },
-    { upsert: true, new: true },
+    { upsert: true, returnDocument: "after" },
   );
 }

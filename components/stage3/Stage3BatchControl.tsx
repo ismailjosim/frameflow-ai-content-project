@@ -1,6 +1,6 @@
 "use client";
 
-import { AlertCircle, Loader2, Play } from "lucide-react";
+import { AlertCircle, Clock, Loader2, Play, Sparkles } from "lucide-react";
 import type { Stage3BatchControlProps } from "./stage3.types";
 
 export function Stage3BatchControl({
@@ -13,6 +13,8 @@ export function Stage3BatchControl({
   timestampInput,
   onTimestampChange,
   onStartQueue,
+  onRecalculateTimestamps,
+  estimatedRuntime,
   error,
 }: Stage3BatchControlProps) {
   return (
@@ -78,13 +80,38 @@ export function Stage3BatchControl({
 
       {/* Timestamp Script Input Area */}
       <div className="space-y-2 pt-2">
-        <div className="flex items-center justify-between text-xs">
-          <label className="font-semibold text-slate-300">
-            Timestamped Script Input:
-          </label>
-          <span className="font-mono text-cyan-400 text-[11px]">
-            {linesCount} lines detected
-          </span>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+          <div className="flex items-center gap-2">
+            <label className="font-semibold text-slate-300">
+              Timestamped Script Input:
+            </label>
+            {estimatedRuntime && (
+              <span className="inline-flex items-center gap-1 px-2 py-0.5 rounded-md bg-amber-500/10 border border-amber-500/20 text-amber-300 font-mono text-[11px]">
+                <Clock className="w-3 h-3" />
+                {linesCount} lines • {estimatedRuntime}
+              </span>
+            )}
+          </div>
+
+          <div className="flex items-center gap-2">
+            {onRecalculateTimestamps && (
+              <button
+                type="button"
+                onClick={onRecalculateTimestamps}
+                disabled={isRunning || !timestampInput?.trim()}
+                className="inline-flex items-center gap-1.5 text-[11px] text-cyan-400 hover:text-cyan-300 bg-cyan-950/60 hover:bg-cyan-900/60 border border-cyan-800/40 px-2.5 py-1 rounded-lg transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                title="Recalculate continuous timestamps based on realistic 135 WPM storytelling cadence"
+              >
+                <Sparkles className="w-3 h-3" />
+                <span>Re-time Pacing (135 WPM)</span>
+              </button>
+            )}
+            {!estimatedRuntime && (
+              <span className="font-mono text-cyan-400 text-[11px]">
+                {linesCount} lines detected
+              </span>
+            )}
+          </div>
         </div>
 
         <textarea
