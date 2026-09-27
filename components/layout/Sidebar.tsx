@@ -80,8 +80,8 @@ export function Sidebar({
                 Studio
               </span>
             </div>
-            <p className="text-[11px] text-slate-400 font-medium leading-tight">
-              From Idea to Video, All in One Flow.
+            <p className="text-[11px] font-medium tracking-wide text-slate-400 leading-tight">
+              Imagine. Generate. Create.
             </p>
           </div>
         </Link>
@@ -198,7 +198,7 @@ export function Sidebar({
 
         <div className="pt-0.5 pb-1 text-center">
           <p className="text-[11px] font-bold text-frameflow-gradient tracking-wide">
-            Imagine. Generate. Create.
+            From Idea to Video, All in One Flow.
           </p>
         </div>
 
