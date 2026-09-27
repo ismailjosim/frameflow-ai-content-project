@@ -43,11 +43,11 @@ export function TopHeader({
           <div className="w-7 h-7 rounded-lg p-[1.5px] bg-frameflow-gradient shrink-0 shadow-xs">
             <div className="w-full h-full rounded-[5px] bg-slate-950 flex items-center justify-center p-0.5">
               <Image
-                src="/favicon-32x32.png"
+                src="/apple-touch-icon.png"
                 alt="FrameFlow Logo"
-                width={20}
-                height={20}
-                className="object-contain"
+                width={22}
+                height={22}
+                className="object-contain rounded-xs"
               />
             </div>
           </div>

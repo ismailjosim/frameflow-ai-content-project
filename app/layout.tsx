@@ -48,6 +48,28 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       lang="en"
       className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
     >
+      <head>
+        <link rel="icon" href="/favicon.ico" sizes="any" />
+        <link
+          rel="icon"
+          href="/favicon-32x32.png"
+          type="image/png"
+          sizes="32x32"
+        />
+        <link
+          rel="icon"
+          href="/favicon-16x16.png"
+          type="image/png"
+          sizes="16x16"
+        />
+        <link
+          rel="apple-touch-icon"
+          href="/apple-touch-icon.png"
+          sizes="180x180"
+        />
+        <link rel="manifest" href="/site.webmanifest" />
+        <meta name="theme-color" content="#090D16" />
+      </head>
       <body className="min-h-full flex flex-col">{children}</body>
     </html>
   );
