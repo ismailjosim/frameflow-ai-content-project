@@ -40,7 +40,7 @@ export function StudioHeader({
             value={projectTitle}
             onChange={(e) => onTitleChange(e.target.value)}
             onBlur={onTitleBlur}
-            className="bg-transparent text-sm sm:text-base font-bold text-white border-b border-transparent hover:border-slate-700 focus:border-cyan-500 focus:outline-none transition-colors px-1 py-0.5"
+            className="bg-transparent text-sm sm:text-base font-bold text-white border-b border-transparent hover:border-slate-700 focus:border-[#8A3FFC] focus:outline-none transition-colors px-1 py-0.5"
             title="Click to rename project"
           />
           <p className="text-[11px] text-slate-400 px-1">
@@ -54,7 +54,7 @@ export function StudioHeader({
 
       <div className="flex items-center gap-2.5">
         {saveStatus && (
-          <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-lg border border-cyan-800/40 animate-fade-in">
+          <span className="text-xs font-mono font-bold text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-[#E51FD1]/40 animate-fade-in">
             {saveStatus}
           </span>
         )}
@@ -67,7 +67,7 @@ export function StudioHeader({
           {isSaving ? (
             <Loader2 className="w-3.5 h-3.5 animate-spin" />
           ) : (
-            <Save className="w-3.5 h-3.5 text-cyan-400" />
+            <Save className="w-3.5 h-3.5 text-[#58E6F7]" />
           )}
           <span>Save Progress</span>
         </button>

@@ -59,14 +59,17 @@ export function IgnoredTopicsBar({
                   <span className="font-medium text-slate-200 truncate block">
                     {item.topicTitle}
                   </span>
-                  <span className="text-[10px] text-slate-500">
+                  <span
+                    suppressHydrationWarning
+                    className="text-[10px] text-slate-500"
+                  >
                     Excluded {new Date(item.createdAt).toLocaleDateString()}
                   </span>
                 </div>
 
                 <button
                   onClick={() => onUnignore(item.topicTitle)}
-                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-cyan-400 text-[11px] font-medium transition-colors shrink-0 cursor-pointer"
+                  className="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-[#58E6F7] hover:text-[#E51FD1] text-[11px] font-medium transition-colors shrink-0 cursor-pointer"
                   title="Remove from exclusion list so it can appear again"
                 >
                   <RotateCcw className="w-3 h-3" />

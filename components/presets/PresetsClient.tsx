@@ -56,7 +56,7 @@ export function PresetsClient() {
         {/* Header */}
         <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-purple-500/10 text-purple-400 border border-purple-500/20 shrink-0">
+            <div className="p-2.5 rounded-xl bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#58E6F7] border border-[#58E6F7]/40 shrink-0">
               <Palette className="w-5 h-5" />
             </div>
             <div>
@@ -72,7 +72,7 @@ export function PresetsClient() {
 
           <button
             onClick={() => setShowCreateModal(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-purple-600 to-indigo-600 hover:from-purple-500 hover:to-indigo-500 text-white font-medium text-xs shadow-md shadow-purple-600/20 transition-all cursor-pointer w-full sm:w-auto shrink-0"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#8A3FFC]/25 transition-all hover:scale-101 cursor-pointer w-full sm:w-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
             Add Master Style (.md / .txt)
@@ -101,7 +101,7 @@ export function PresetsClient() {
                   onClick={() => setSelectedPreset(p)}
                   className={`p-4 rounded-2xl border cursor-pointer transition-all ${
                     isSelected
-                      ? "bg-purple-950/30 border-purple-500 shadow-md shadow-purple-500/10"
+                      ? "bg-linear-to-r from-[#8A3FFC]/20 via-[#E51FD1]/15 to-transparent border-[#E51FD1] shadow-md shadow-[#8A3FFC]/20 ring-1 ring-[#E51FD1]/50"
                       : "glass-panel border-slate-800 hover:border-slate-700"
                   }`}
                 >
@@ -110,7 +110,7 @@ export function PresetsClient() {
                       {p.name}
                     </span>
                     {p.isDefault && (
-                      <span className="text-[10px] font-semibold px-2 py-0.5 rounded bg-cyan-950 text-cyan-400 border border-cyan-800/50">
+                      <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-linear-to-r from-[#8A3FFC]/25 to-[#E51FD1]/25 text-pink-300 border border-[#E51FD1]/40">
                         Default
                       </span>
                     )}
@@ -120,7 +120,7 @@ export function PresetsClient() {
                       {p.description}
                     </p>
                   )}
-                  <span className="font-mono text-[10px] text-purple-400 block mt-2">
+                  <span className="font-mono text-[10px] text-[#58E6F7] block mt-2">
                     {p.aspectRatio}
                   </span>
                 </div>

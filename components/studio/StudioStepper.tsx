@@ -37,7 +37,7 @@ export function StudioStepper({
                   isActive
                     ? "bg-frameflow-gradient text-slate-950 font-black shadow-md shadow-[#58E6F7]/40"
                     : st.done
-                      ? "bg-emerald-950 text-emerald-400 border border-emerald-800/50"
+                      ? "bg-linear-to-br from-[#8A3FFC]/30 to-[#E51FD1]/30 text-[#58E6F7] border border-[#E51FD1]/40"
                       : "bg-slate-800 text-slate-400"
                 }`}
               >
@@ -58,7 +58,7 @@ export function StudioStepper({
             </div>
 
             {st.done && (
-              <CheckCircle2 className="w-4 h-4 text-emerald-400 shrink-0 hidden sm:block" />
+              <CheckCircle2 className="w-4 h-4 text-[#58E6F7] shrink-0 hidden sm:block" />
             )}
           </button>
         );

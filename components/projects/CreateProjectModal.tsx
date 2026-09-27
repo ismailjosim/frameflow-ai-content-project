@@ -64,7 +64,7 @@ export function CreateProjectModal({
               onChange={(e) => setNewTitle(e.target.value)}
               placeholder="e.g., How Ancient Humans Survived Without Fire"
               required
-              className="w-full bg-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-cyan-500"
+              className="w-full bg-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-[#8A3FFC]"
             />
           </div>
 
@@ -79,7 +79,7 @@ export function CreateProjectModal({
             <button
               type="submit"
               disabled={creating}
-              className="px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold cursor-pointer shadow-md shadow-[#8A3FFC]/25 transition-all"
             >
               {creating ? "Creating..." : "Create Project"}
             </button>

@@ -99,15 +99,15 @@ export function Stage3BatchControl({
                 type="button"
                 onClick={onRecalculateTimestamps}
                 disabled={isRunning || !timestampInput?.trim()}
-                className="inline-flex items-center gap-1.5 text-[11px] text-cyan-400 hover:text-cyan-300 bg-cyan-950/60 hover:bg-cyan-900/60 border border-cyan-800/40 px-2.5 py-1 rounded-lg transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                className="inline-flex items-center gap-1.5 text-[11px] text-[#58E6F7] hover:text-white bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 hover:from-[#8A3FFC]/40 hover:to-[#E51FD1]/40 border border-[#E51FD1]/40 px-2.5 py-1 rounded-lg transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-medium"
                 title="Recalculate continuous timestamps based on realistic 135 WPM storytelling cadence"
               >
-                <Sparkles className="w-3 h-3" />
+                <Sparkles className="w-3 h-3 text-[#FFC13B]" />
                 <span>Re-time Pacing (135 WPM)</span>
               </button>
             )}
             {!estimatedRuntime && (
-              <span className="font-mono text-cyan-400 text-[11px]">
+              <span className="font-mono text-[#58E6F7] text-[11px] font-semibold">
                 {linesCount} lines detected
               </span>
             )}
@@ -120,7 +120,7 @@ export function Stage3BatchControl({
           disabled={isRunning}
           placeholder={`Paste your exported script or timestamps here...\nExample:\n[00:00] It was forty below zero.\n[00:03] The fire had died two hours ago.\n[00:07] Inside the dark cave, thirty humans were freezing.`}
           rows={5}
-          className="w-full bg-slate-950/80 text-xs font-mono text-slate-200 p-3.5 rounded-xl border border-slate-800 focus:outline-none focus:border-cyan-500 leading-relaxed resize-y disabled:opacity-60"
+          className="w-full bg-slate-950/80 text-xs font-mono text-slate-200 p-3.5 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC] leading-relaxed resize-y disabled:opacity-60"
         />
       </div>
 

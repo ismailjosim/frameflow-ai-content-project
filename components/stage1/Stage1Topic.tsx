@@ -159,7 +159,7 @@ export function Stage1Topic({
       {/* Failover Execution Logs */}
       {logs.length > 1 && (
         <div className="p-3 rounded-xl bg-slate-900/70 border border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
-          <span className="text-xs font-semibold text-cyan-400">
+          <span className="text-xs font-semibold text-[#58E6F7]">
             Model Orchestrator Trace:
           </span>
           {logs.map((log, i) => (
@@ -187,7 +187,7 @@ export function Stage1Topic({
                 gap indices, and mobile CTR readability.
               </p>
             </div>
-            <span className="text-xs font-mono text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-lg border border-cyan-800/40">
+            <span className="text-xs font-mono font-bold text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-[#E51FD1]/40">
               {candidates.length} Angles Active
             </span>
           </div>

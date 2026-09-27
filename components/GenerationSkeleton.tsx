@@ -117,7 +117,7 @@ export default function GenerationSkeleton({
 
           <div className="flex items-center gap-2 shrink-0">
             {totalBatches && totalBatches > 1 && (
-              <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-indigo-950/70 text-indigo-300 border border-indigo-800/50">
+              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-linear-to-r from-[#8A3FFC]/25 to-[#E51FD1]/25 text-pink-300 border border-[#E51FD1]/40">
                 Batch {currentBatch} of {totalBatches}
               </span>
             )}
@@ -177,7 +177,7 @@ export default function GenerationSkeleton({
         {/* Micro Notice */}
         <div className="flex items-center justify-between text-[11px] text-slate-400 pt-2 border-t border-slate-800/60">
           <span className="flex items-center gap-1.5">
-            <Sparkles className="w-3.5 h-3.5 text-cyan-400" />
+            <Sparkles className="w-3.5 h-3.5 text-[#58E6F7]" />
             Zero freeze streaming pipeline active
           </span>
           <span className="text-slate-400">

@@ -132,7 +132,7 @@ export function Stage2Script({
 
           <div className="flex flex-wrap items-center gap-2">
             {modelUsed && (
-              <span className="text-[11px] font-mono text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-lg border border-cyan-800/40">
+              <span className="text-[11px] font-mono font-bold text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-[#E51FD1]/40">
                 Resolved: {modelUsed}
               </span>
             )}
@@ -160,7 +160,7 @@ export function Stage2Script({
         <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2 truncate">
             <span className="font-semibold text-slate-300">Topic:</span>
-            <span className="text-cyan-300 font-medium truncate">
+            <span className="text-[#58E6F7] font-medium truncate">
               {topicTitle || "No topic selected"}
             </span>
           </div>
@@ -185,7 +185,7 @@ export function Stage2Script({
       {/* Orchestrator Logs */}
       {logs.length > 1 && (
         <div className="p-3 rounded-xl bg-slate-900/70 border border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
-          <span className="text-xs font-semibold text-cyan-400">
+          <span className="text-xs font-semibold text-[#58E6F7]">
             Model Orchestrator Trace:
           </span>
           {logs.map((log, i) => (
@@ -215,7 +215,7 @@ export function Stage2Script({
             onChange={(e) => onScriptChange(e.target.value)}
             placeholder="Narrative script will appear here sentence by sentence, formatted under 90 characters per line..."
             rows={16}
-            className="w-full bg-slate-950/80 text-sm font-mono text-slate-200 p-3.5 sm:p-4 rounded-xl border border-slate-800 focus:outline-none focus:border-cyan-500 leading-relaxed resize-y"
+            className="w-full bg-slate-950/80 text-sm font-mono text-slate-200 p-3.5 sm:p-4 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC] leading-relaxed resize-y"
           />
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
@@ -235,7 +235,7 @@ export function Stage2Script({
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin text-cyan-400" />
+                  <Loader2 className="w-3.5 h-3.5 animate-spin text-[#58E6F7]" />
                   <span>Generating Script...</span>
                 </>
               ) : (

@@ -22,7 +22,7 @@ export function PackagingCards({
       <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2">
         <div className="flex items-center justify-between text-xs">
           <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-            <FileCheck className="w-3.5 h-3.5 text-cyan-400" />
+            <FileCheck className="w-3.5 h-3.5 text-[#58E6F7]" />
             1. Viral Video Title
           </span>
           <button
@@ -32,7 +32,7 @@ export function PackagingCards({
             className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-200"
           >
             {copiedField === "title" ? (
-              <Check className="w-3 h-3 text-emerald-400" />
+              <Check className="w-3 h-3 text-[#58E6F7]" />
             ) : (
               <Copy className="w-3 h-3" />
             )}
@@ -48,7 +48,7 @@ export function PackagingCards({
       <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2">
         <div className="flex items-center justify-between text-xs">
           <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-            <ImageIcon className="w-3.5 h-3.5 text-purple-400" />
+            <ImageIcon className="w-3.5 h-3.5 text-[#8A3FFC]" />
             2. Thumbnail Prompt (Midjourney / Flux)
           </span>
           <button
@@ -58,7 +58,7 @@ export function PackagingCards({
             className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-200"
           >
             {copiedField === "thumbnail" ? (
-              <Check className="w-3 h-3 text-emerald-400" />
+              <Check className="w-3 h-3 text-[#58E6F7]" />
             ) : (
               <Copy className="w-3 h-3" />
             )}
@@ -84,7 +84,7 @@ export function PackagingCards({
             className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-200"
           >
             {copiedField === "description" ? (
-              <Check className="w-3 h-3 text-emerald-400" />
+              <Check className="w-3 h-3 text-[#58E6F7]" />
             ) : (
               <Copy className="w-3 h-3" />
             )}
@@ -101,7 +101,7 @@ export function PackagingCards({
         <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-              <Hash className="w-3.5 h-3.5 text-indigo-400" />
+              <Hash className="w-3.5 h-3.5 text-[#E51FD1]" />
               4. Targeted Hashtags (15)
             </span>
             <button
@@ -111,14 +111,14 @@ export function PackagingCards({
               className="flex items-center gap-1 text-[11px] text-slate-400 hover:text-slate-200"
             >
               {copiedField === "hashtags" ? (
-                <Check className="w-3 h-3 text-emerald-400" />
+                <Check className="w-3 h-3 text-[#58E6F7]" />
               ) : (
                 <Copy className="w-3 h-3" />
               )}
               {copiedField === "hashtags" ? "Copied" : "Copy"}
             </button>
           </div>
-          <p className="text-xs font-mono text-cyan-300 bg-slate-950/60 p-3 rounded-xl border border-slate-800 leading-relaxed select-all">
+          <p className="text-xs font-mono text-[#58E6F7] bg-slate-950/60 p-3 rounded-xl border border-slate-800 leading-relaxed select-all">
             {parsedPackaging.hashtags || "Hashtags will appear here..."}
           </p>
         </div>
@@ -126,7 +126,7 @@ export function PackagingCards({
         <div className="glass-panel p-5 rounded-2xl border border-slate-800 space-y-2">
           <div className="flex items-center justify-between text-xs">
             <span className="font-semibold text-slate-300 flex items-center gap-1.5">
-              <Tag className="w-3.5 h-3.5 text-amber-400" />
+              <Tag className="w-3.5 h-3.5 text-[#FFC13B]" />
               5. SEO Tags (35 Comma-Separated)
             </span>
             <button

@@ -65,7 +65,7 @@ export function ProjectsClient() {
         {/* Header */}
         <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shrink-0">
+            <div className="p-2.5 rounded-xl bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#58E6F7] border border-[#58E6F7]/40 shrink-0">
               <FolderKanban className="w-5 h-5" />
             </div>
             <div>
@@ -81,7 +81,7 @@ export function ProjectsClient() {
 
           <button
             onClick={() => setShowModal(true)}
-            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-cyan-500 to-indigo-600 hover:from-cyan-400 hover:to-indigo-500 text-white font-medium text-xs shadow-md shadow-cyan-500/20 transition-all hover:scale-101 cursor-pointer w-full sm:w-auto shrink-0"
+            className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-[#8A3FFC]/25 transition-all hover:scale-101 cursor-pointer w-full sm:w-auto shrink-0"
           >
             <Plus className="w-4 h-4" />
             New Video Project
@@ -98,7 +98,7 @@ export function ProjectsClient() {
         {/* Projects Grid */}
         {loading ? (
           <div className="flex items-center justify-center py-20 text-slate-400 text-xs gap-2">
-            <Loader2 className="w-4 h-4 animate-spin text-cyan-400" />
+            <Loader2 className="w-4 h-4 animate-spin text-[#58E6F7]" />
             Loading video projects from MongoDB...
           </div>
         ) : projects.length === 0 ? (
@@ -111,7 +111,7 @@ export function ProjectsClient() {
             </p>
             <button
               onClick={() => setShowModal(true)}
-              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-medium mt-2 cursor-pointer"
+              className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#8A3FFC]/25 mt-2 cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
               Create First Project

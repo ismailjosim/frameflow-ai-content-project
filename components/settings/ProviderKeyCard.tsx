@@ -22,8 +22,8 @@ export function ProviderKeyCard({
         <div className="flex items-center gap-2.5">
           <span className="font-bold text-sm text-white">{name}</span>
           {storedKey ? (
-            <span className="inline-flex items-center gap-1 text-[10px] font-semibold uppercase px-2 py-0.5 rounded-full bg-emerald-950 text-emerald-400 border border-emerald-800/50">
-              <ShieldCheck className="w-3 h-3" />
+            <span className="inline-flex items-center gap-1 text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-linear-to-r from-[#8A3FFC]/25 to-[#E51FD1]/25 text-pink-300 border border-[#E51FD1]/40">
+              <ShieldCheck className="w-3 h-3 text-[#58E6F7]" />
               Encrypted & Active
             </span>
           ) : (
@@ -59,7 +59,7 @@ export function ProviderKeyCard({
             value={inputKey || ""}
             onChange={(e) => onKeyChange(e.target.value)}
             placeholder={storedKey ? "••••••••••••••••••••" : placeholder}
-            className="w-full bg-slate-900/90 text-xs font-mono text-slate-100 placeholder-slate-600 px-3.5 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-cyan-500"
+            className="w-full bg-slate-900/90 text-xs font-mono text-slate-100 placeholder-slate-600 px-3.5 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC]"
           />
         </div>
 
@@ -70,7 +70,7 @@ export function ProviderKeyCard({
           <select
             value={preferredModel}
             onChange={(e) => onModelChange(e.target.value)}
-            className="w-full bg-slate-900 text-xs text-slate-200 px-3 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-cyan-500 cursor-pointer"
+            className="w-full bg-slate-900 text-xs text-slate-200 px-3 py-2.5 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC] cursor-pointer"
           >
             {models.map((m) => (
               <option key={m.id} value={m.id}>
@@ -85,7 +85,7 @@ export function ProviderKeyCard({
         <button
           onClick={onSave}
           disabled={isSaving || !inputKey?.trim()}
-          className="flex items-center justify-center gap-2 px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white font-medium text-xs shadow-md shadow-cyan-600/20 transition-all disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#8A3FFC]/25 transition-all hover:scale-101 disabled:opacity-40 disabled:cursor-not-allowed cursor-pointer w-full sm:w-auto"
         >
           {isSaving ? (
             <>

@@ -97,7 +97,7 @@ export function CreatePresetModal({
         <form onSubmit={handleCreatePreset} className="space-y-4 text-xs">
           {/* File upload shortcut */}
           <div className="p-4 rounded-xl border border-dashed border-slate-700 bg-slate-900/60 text-center space-y-2">
-            <Upload className="w-6 h-6 text-purple-400 mx-auto" />
+            <Upload className="w-6 h-6 text-[#58E6F7] mx-auto" />
             <p className="text-slate-300 font-medium">
               Upload Master Prompt (.md or .txt)
             </p>
@@ -109,7 +109,7 @@ export function CreatePresetModal({
               type="file"
               accept=".md,.txt"
               onChange={handleFileUpload}
-              className="block mx-auto text-xs text-slate-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-purple-950 file:text-purple-300 hover:file:bg-purple-900 cursor-pointer"
+              className="block mx-auto text-xs text-slate-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-[#58E6F7] hover:file:bg-slate-700 cursor-pointer"
             />
           </div>
 
@@ -122,7 +122,7 @@ export function CreatePresetModal({
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g., 3D Pixar Animation / Stylized 2.5D"
                 required
-                className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-purple-500"
+                className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-[#8A3FFC]"
               />
             </div>
 
@@ -135,7 +135,7 @@ export function CreatePresetModal({
                 value={aspectRatio}
                 onChange={(e) => setAspectRatio(e.target.value)}
                 placeholder="--ar 16:9 --v 6.1"
-                className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-purple-500"
+                className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-[#8A3FFC]"
               />
             </div>
           </div>
@@ -147,7 +147,7 @@ export function CreatePresetModal({
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of this visual theme..."
-              className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-purple-500"
+              className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-[#8A3FFC]"
             />
           </div>
 
@@ -160,26 +160,26 @@ export function CreatePresetModal({
               onChange={(e) => setVisualStyleRules(e.target.value)}
               rows={8}
               placeholder="Specify aesthetic, character description, lighting, color palette, camera cues, and negative rules..."
-              className="w-full bg-slate-900 font-mono text-slate-200 p-3 rounded-xl border border-slate-800 focus:outline-none focus:border-purple-500"
+              className="w-full bg-slate-900 font-mono text-slate-200 p-3 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC]"
             />
           </div>
 
           {statusMsg && (
-            <p className="text-purple-400 font-medium">{statusMsg}</p>
+            <p className="text-pink-400 font-medium">{statusMsg}</p>
           )}
 
           <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800/80">
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-2 rounded-xl bg-slate-800 text-slate-300 cursor-pointer"
+              className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={submitting}
-              className="px-4 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-medium cursor-pointer"
+              className="px-4 py-2 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold cursor-pointer shadow-md shadow-[#8A3FFC]/25"
             >
               {submitting ? "Saving..." : "Save Style Preset"}
             </button>

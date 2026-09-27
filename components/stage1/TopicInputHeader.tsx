@@ -47,7 +47,7 @@ export function TopicInputHeader({
             )}
 
           {modelUsed && (
-            <span className="text-[11px] font-mono text-cyan-400 bg-cyan-950/60 px-2.5 py-1 rounded-lg border border-cyan-800/40">
+            <span className="text-[11px] font-mono font-bold text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-[#E51FD1]/40">
               Resolved: {modelUsed}
             </span>
           )}
@@ -61,7 +61,7 @@ export function TopicInputHeader({
             value={keyword}
             onChange={(e) => setKeyword(e.target.value)}
             placeholder="e.g. losing fire in winter, human teeth rotting, inventing shoes, why humans lost fur..."
-            className="w-full bg-slate-900/90 text-sm text-slate-100 placeholder-slate-500 px-4 py-3 rounded-xl border border-slate-800 focus:outline-none focus:border-cyan-500 transition-colors"
+            className="w-full bg-slate-900/90 text-sm text-slate-100 placeholder-slate-500 px-4 py-3 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC] transition-colors"
             onKeyDown={(e) => e.key === "Enter" && !loading && onGenerate()}
           />
         </div>

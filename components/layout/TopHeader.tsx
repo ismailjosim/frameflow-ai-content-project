@@ -77,14 +77,14 @@ export function TopHeader({
         {availableModelsCount > 0 ? (
           <div
             title={`Active: ${availableModelsCount} models across ${configuredProviders.map((p) => p.toUpperCase()).join(", ")}`}
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-950/80 text-emerald-300 border border-emerald-500/40 text-xs font-semibold shadow-xs"
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-linear-to-r from-[#8A3FFC]/20 via-[#E51FD1]/15 to-transparent text-pink-200 border border-[#E51FD1]/30 text-xs font-semibold shadow-xs"
           >
-            <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+            <span className="w-2 h-2 rounded-full bg-[#E51FD1] animate-pulse shrink-0" />
             <span>
               {availableModelsCount} Model
               {availableModelsCount > 1 ? "s" : ""} Available
             </span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-emerald-900/80 text-emerald-300 font-medium">
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-linear-to-r from-purple-900/60 to-pink-900/60 text-pink-200 border border-pink-600/40 font-medium">
               {configuredProviders.map((p) => p.toUpperCase()).join(", ")}
             </span>
           </div>
@@ -100,8 +100,8 @@ export function TopHeader({
 
         {/* Model Selector Dropdown with ample breathing space */}
         <div className="relative flex items-center">
-          <div className="flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-xs shadow-inner hover:border-slate-700 transition-colors">
-            <Cpu className="w-3.5 h-3.5 text-cyan-400 animate-pulse shrink-0" />
+          <div className="flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-xs shadow-inner hover:border-[#8A3FFC]/50 transition-colors">
+            <Cpu className="w-3.5 h-3.5 text-[#58E6F7] animate-pulse shrink-0" />
             <select
               aria-label="Select AI Model"
               value={currentModel}
@@ -110,7 +110,7 @@ export function TopHeader({
             >
               <option
                 value={AUTO_MODEL.id}
-                className="bg-slate-900 text-cyan-300 font-semibold"
+                className="bg-slate-900 text-[#58E6F7] font-semibold"
               >
                 ⚡{" "}
                 {availableModelsCount > 0
@@ -122,8 +122,8 @@ export function TopHeader({
               {activeGroups.map((group) => (
                 <optgroup
                   key={group.provider}
-                  label={`🟢 ${group.name} (${group.models.length} Models Available)`}
-                  className="bg-slate-950 text-emerald-400 font-bold"
+                  label={`✨ ${group.name} (${group.models.length} Models Available)`}
+                  className="bg-slate-950 text-[#58E6F7] font-bold"
                 >
                   {group.models.map((m) => (
                     <option
@@ -163,7 +163,7 @@ export function TopHeader({
         {/* API Vault Shortcut Button */}
         <Link
           href="/settings"
-          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-linear-to-r from-indigo-600 via-purple-600 to-indigo-600 hover:from-indigo-500 hover:to-purple-500 text-white text-xs font-semibold shadow-md shadow-indigo-600/20 transition-all hover:scale-102 cursor-pointer"
+          className="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF1688] hover:brightness-110 text-white text-xs font-bold shadow-md shadow-[#8A3FFC]/25 transition-all hover:scale-102 cursor-pointer"
         >
           <Sparkles className="w-3.5 h-3.5" />
           <span className="hidden sm:inline">Key Vault</span>

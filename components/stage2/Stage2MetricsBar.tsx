@@ -15,13 +15,13 @@ export function Stage2MetricsBar({
       <div className="flex flex-wrap items-center gap-3 sm:gap-4">
         <div>
           <span className="text-slate-400">Lines: </span>
-          <span className="font-mono font-semibold text-cyan-300">
+          <span className="font-mono font-semibold text-[#58E6F7]">
             {stats.lines}
           </span>
         </div>
         <div>
           <span className="text-slate-400">Words: </span>
-          <span className="font-mono font-semibold text-indigo-300">
+          <span className="font-mono font-semibold text-[#E51FD1]">
             {stats.words}
           </span>
         </div>
@@ -29,7 +29,7 @@ export function Stage2MetricsBar({
           <span className="text-slate-400">Lines &gt;90 chars: </span>
           <span
             className={`font-mono font-semibold ${
-              stats.longLines > 0 ? "text-amber-400" : "text-emerald-400"
+              stats.longLines > 0 ? "text-amber-400" : "text-[#58E6F7]"
             }`}
           >
             {stats.longLines}

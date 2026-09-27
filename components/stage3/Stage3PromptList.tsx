@@ -26,7 +26,7 @@ export function Stage3PromptList({
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-800/80 pb-3">
         <div className="flex flex-wrap items-center gap-3 text-xs">
           <span className="text-slate-400">Generated Prompts: </span>
-          <span className="font-mono font-semibold text-cyan-300">
+          <span className="font-mono font-semibold text-[#58E6F7]">
             {promptList.length}
           </span>
 
@@ -36,7 +36,7 @@ export function Stage3PromptList({
               onClick={() => setViewMode("cards")}
               className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs transition-colors ${
                 viewMode === "cards"
-                  ? "bg-cyan-500/20 text-cyan-300 font-semibold"
+                  ? "bg-linear-to-r from-[#8A3FFC]/30 to-[#E51FD1]/30 text-pink-200 font-bold border border-[#E51FD1]/40"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -47,7 +47,7 @@ export function Stage3PromptList({
               onClick={() => setViewMode("raw")}
               className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs transition-colors ${
                 viewMode === "raw"
-                  ? "bg-cyan-500/20 text-cyan-300 font-semibold"
+                  ? "bg-linear-to-r from-[#8A3FFC]/30 to-[#E51FD1]/30 text-pink-200 font-bold border border-[#E51FD1]/40"
                   : "text-slate-400 hover:text-slate-200"
               }`}
             >
@@ -89,7 +89,7 @@ export function Stage3PromptList({
           onChange={(e) => onPromptsChange(e.target.value)}
           placeholder="Generated Midjourney / Flux prompts will appear here..."
           rows={14}
-          className="w-full bg-slate-950/80 text-xs font-mono text-slate-200 p-4 rounded-xl border border-slate-800 focus:outline-none focus:border-cyan-500 leading-relaxed resize-y"
+          className="w-full bg-slate-950/80 text-xs font-mono text-slate-200 p-4 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC] leading-relaxed resize-y"
         />
       ) : (
         <div className="space-y-3 max-h-125 overflow-y-auto pr-1">
@@ -105,7 +105,7 @@ export function Stage3PromptList({
               >
                 <div className="space-y-1 flex-1">
                   <div className="flex items-center gap-2">
-                    <span className="w-5 h-5 rounded-full bg-cyan-950 text-cyan-400 font-mono text-[10px] font-bold flex items-center justify-center border border-cyan-800/40">
+                    <span className="w-5 h-5 rounded-full bg-linear-to-br from-[#8A3FFC]/30 to-[#E51FD1]/30 text-[#58E6F7] font-mono text-[10px] font-bold flex items-center justify-center border border-[#E51FD1]/40">
                       {idx + 1}
                     </span>
                     <span className="font-mono text-[11px] text-slate-400 font-medium">

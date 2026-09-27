@@ -151,7 +151,7 @@ export function SettingsClient() {
         {/* Header */}
         <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800 space-y-2">
           <div className="flex items-center gap-2.5">
-            <div className="p-2 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20 shrink-0">
+            <div className="p-2.5 rounded-xl bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#58E6F7] border border-[#58E6F7]/40 shrink-0">
               <KeyRound className="w-5 h-5" />
             </div>
             <div>
@@ -160,14 +160,16 @@ export function SettingsClient() {
               </h1>
               <p className="text-xs text-slate-400">
                 Configure your LLM credentials. Keys are encrypted with{" "}
-                <span className="text-cyan-400 font-semibold">AES-256-GCM</span>{" "}
+                <span className="text-[#58E6F7] font-semibold">
+                  AES-256-GCM
+                </span>{" "}
                 at rest in MongoDB and never sent back to the browser.
               </p>
             </div>
           </div>
 
           <div className="mt-3 flex items-center gap-2 p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400">
-            <Lock className="w-3.5 h-3.5 text-cyan-400 shrink-0" />
+            <Lock className="w-3.5 h-3.5 text-[#58E6F7] shrink-0" />
             <span>
               <strong>Zero Leak Architecture:</strong> API keys are decrypted
               only in server memory for the duration of prompt generation. Auto

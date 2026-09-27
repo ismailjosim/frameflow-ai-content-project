@@ -59,7 +59,7 @@ export function Sidebar({
           onClick={onClose}
           className="flex items-center gap-3 group"
         >
-          <div className="relative w-10 h-10 rounded-xl p-[2px] bg-frameflow-gradient shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0">
+          <div className="relative w-10 h-10 rounded-xl p-0.5 bg-frameflow-gradient shadow-lg shadow-purple-500/25 group-hover:scale-105 transition-transform duration-200 shrink-0">
             <div className="w-full h-full rounded-[10px] bg-slate-950 overflow-hidden flex items-center justify-center p-0.5">
               <Image
                 src="/apple-touch-icon.png"
@@ -149,17 +149,17 @@ export function Sidebar({
         <div className="p-3.5 rounded-xl bg-slate-900/90 border border-slate-800/80 space-y-2">
           <div className="flex items-center justify-between">
             <span className="text-[11px] font-semibold text-slate-300 flex items-center gap-1.5">
-              <ShieldCheck className="w-3.5 h-3.5 text-cyan-400" />
+              <ShieldCheck className="w-3.5 h-3.5 text-[#58E6F7]" />
               Engine Status
             </span>
             {isAnalyzing ? (
               <span className="flex items-center gap-1 text-[10px] text-slate-400">
-                <Loader2 className="w-3 h-3 animate-spin text-cyan-400" />
+                <Loader2 className="w-3 h-3 animate-spin text-[#58E6F7]" />
                 Checking
               </span>
             ) : availableModelsCount > 0 ? (
-              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-emerald-400">
-                <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              <span className="inline-flex items-center gap-1 text-[10px] font-semibold text-[#58E6F7]">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#58E6F7] shadow-xs shadow-[#58E6F7] animate-pulse" />
                 Online
               </span>
             ) : (
@@ -178,7 +178,7 @@ export function Sidebar({
                 {configuredProviders.map((provider) => (
                   <span
                     key={provider}
-                    className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-emerald-950/80 text-emerald-300 border border-emerald-800/50"
+                    className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded bg-linear-to-r from-[#8A3FFC]/30 to-[#E51FD1]/30 text-pink-200 border border-[#E51FD1]/40"
                   >
                     {provider}
                   </span>

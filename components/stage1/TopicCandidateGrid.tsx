@@ -19,7 +19,7 @@ export function TopicCandidateGrid({
             onClick={() => onTopicSelected(cand)}
             className={`group cursor-pointer p-5 rounded-2xl border transition-all duration-200 flex flex-col justify-between ${
               isSelected
-                ? "bg-cyan-950/40 border-cyan-500 shadow-md shadow-cyan-500/10 ring-1 ring-cyan-500"
+                ? "bg-linear-to-r from-[#8A3FFC]/20 via-[#E51FD1]/15 to-transparent border-[#E51FD1] shadow-md shadow-[#8A3FFC]/20 ring-1 ring-[#E51FD1]/50"
                 : "glass-panel border-slate-800 hover:border-slate-700 hover:bg-slate-900/70"
             }`}
           >
@@ -29,7 +29,7 @@ export function TopicCandidateGrid({
                   <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-800 text-slate-300 border border-slate-700">
                     Rank #{cand.priorityRank || idx + 2}
                   </span>
-                  <span className="text-[11px] font-semibold px-2 py-0.5 rounded-full bg-indigo-950 text-indigo-300 border border-indigo-800/40">
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-linear-to-r from-[#8A3FFC]/25 to-[#E51FD1]/25 text-pink-300 border border-[#E51FD1]/40">
                     Score: {cand.viralScore || Math.max(80, 92 - idx * 3)}%
                   </span>
                 </div>
@@ -39,7 +39,7 @@ export function TopicCandidateGrid({
                 </span>
               </div>
 
-              <h4 className="text-sm font-bold text-white group-hover:text-cyan-300 transition-colors leading-snug">
+              <h4 className="text-sm font-bold text-white group-hover:text-[#58E6F7] transition-colors leading-snug">
                 {cand.title}
               </h4>
 
@@ -88,7 +88,7 @@ export function TopicCandidateGrid({
                   </button>
                 )}
 
-                <div className="flex items-center gap-1 text-cyan-300 font-semibold group-hover:translate-x-0.5 transition-transform">
+                <div className="flex items-center gap-1 text-[#58E6F7] group-hover:text-[#E51FD1] font-semibold group-hover:translate-x-0.5 transition-transform">
                   <span>Select Angle</span>
                   <ArrowRight className="w-3.5 h-3.5" />
                 </div>

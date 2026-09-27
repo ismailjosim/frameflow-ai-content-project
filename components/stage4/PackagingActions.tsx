@@ -31,7 +31,7 @@ export function PackagingActions({
         <button
           onClick={onDownloadAllAssets}
           disabled={disabled || isZipping}
-          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] via-[#E51FD1] to-[#FF7A32] hover:brightness-110 text-slate-950 text-xs font-black shadow-xl shadow-[#8A3FFC]/30 transition-all hover:scale-102 disabled:opacity-40 cursor-pointer w-full sm:w-auto"
+          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#FF7A32] hover:brightness-110 text-slate-950 text-xs font-black shadow-xl shadow-[#8A3FFC]/30 transition-all hover:scale-102 disabled:opacity-40 cursor-pointer w-full sm:w-auto"
           title="Download full project assets (script, timestamps, image prompts, packaging, metadata) as a compressed .zip file"
         >
           {isZipping ? (
