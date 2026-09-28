@@ -59,7 +59,7 @@ export function PresetCard({
         </p>
       )}
       <div className="flex items-center justify-between mt-2 pt-1.5 border-t border-slate-100 dark:border-slate-800/60 text-[10px]">
-        <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400 truncate max-w-[140px]">
+        <span className="flex items-center gap-1 text-slate-500 dark:text-slate-400 truncate max-w-35">
           <User className="w-2.5 h-2.5 text-[#8A3FFC] dark:text-[#58E6F7] shrink-0" />
           <span className="truncate">
             {preset.userName || (preset.isDefault ? "System" : "Creator")}
