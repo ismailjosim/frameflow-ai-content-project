@@ -132,7 +132,7 @@ export function Stage2Script({
 
           <div className="flex flex-wrap items-center gap-2">
             {modelUsed && (
-              <span className="text-[11px] font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-linear-to-r dark:from-[#8A3FFC]/20 dark:to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-[#E51FD1]/40">
+              <span className="text-[11px] font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-purple-950/70 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-800/60 shadow-xs">
                 Resolved: {modelUsed}
               </span>
             )}
@@ -140,7 +140,7 @@ export function Stage2Script({
               type="button"
               onClick={generateScript}
               disabled={loading}
-              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF1688] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#E51FD1]/25 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF1688] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#E51FD1]/25 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
             >
               {loading ? (
                 <>

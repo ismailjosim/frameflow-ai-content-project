@@ -100,7 +100,7 @@ export function Stage3BatchControl({
                 type="button"
                 onClick={onRecalculateTimestamps}
                 disabled={isRunning || !timestampInput?.trim()}
-                className="inline-flex items-center gap-1.5 text-[11px] text-[#8A3FFC] dark:text-[#58E6F7] hover:text-[#E51FD1] bg-purple-50 dark:bg-linear-to-r dark:from-[#8A3FFC]/20 dark:to-[#E51FD1]/20 border border-purple-200 dark:border-[#E51FD1]/40 px-2.5 py-1 rounded-lg transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+                className="inline-flex items-center gap-1.5 text-[11px] text-purple-700 dark:text-[#58E6F7] hover:text-purple-900 dark:hover:text-white bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/70 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800/60 px-2.5 py-1 rounded-lg transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-xs"
                 title="Recalculate continuous timestamps based on realistic 135 WPM storytelling cadence"
               >
                 <Sparkles className="w-3 h-3 text-[#FF7A32]" />

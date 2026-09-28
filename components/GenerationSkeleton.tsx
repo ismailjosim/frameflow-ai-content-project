@@ -1,7 +1,8 @@
 "use client";
 
-import { Activity, BrainCircuit, Sparkles } from "lucide-react";
+import { Activity, BrainCircuit, Clock, Sparkles } from "lucide-react";
 import { useEffect, useState } from "react";
+import { formatElapsedTime } from "@/lib/timestamps";
 
 interface GenerationSkeletonProps {
   stage: "topic" | "script" | "prompts" | "packaging";
@@ -117,12 +118,13 @@ export default function GenerationSkeleton({
 
           <div className="flex items-center gap-2 shrink-0">
             {totalBatches && totalBatches > 1 && (
-              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 text-purple-700 dark:text-pink-300 border border-[#E51FD1]/40">
+              <span className="text-xs font-mono font-bold px-2.5 py-1 rounded-lg bg-purple-50 dark:bg-purple-950/70 text-purple-700 dark:text-pink-300 border border-purple-200 dark:border-[#E51FD1]/40">
                 Batch {currentBatch} of {totalBatches}
               </span>
             )}
-            <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800">
-              Elapsed: {elapsedSeconds}s
+            <span className="text-xs font-mono px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-slate-900 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-800 flex items-center gap-1.5 shadow-xs">
+              <Clock className="w-3 h-3 text-[#8A3FFC] dark:text-[#58E6F7]" />
+              <span>Elapsed: {formatElapsedTime(elapsedSeconds)}</span>
             </span>
           </div>
         </div>

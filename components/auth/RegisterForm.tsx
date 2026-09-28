@@ -1,6 +1,6 @@
 "use client";
 
-import { Cpu, Loader2, ShieldCheck, Sparkles } from "lucide-react";
+import { AlertCircle, Cpu, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -33,21 +33,47 @@ function GoogleIcon() {
 function RegisterFormInner() {
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
+  const errorParam = searchParams.get("error");
 
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [errorMsg, setErrorMsg] = useState("");
+  const [errorMsg, setErrorMsg] = useState(
+    errorParam ? `Registration error: ${errorParam}` : "",
+  );
 
   const handleGoogleLogin = async () => {
     setErrorMsg("");
     setGoogleLoading(true);
+
+    const timeout = setTimeout(() => {
+      setGoogleLoading(false);
+      setErrorMsg(
+        "Registration request timed out. Please check your network and try again.",
+      );
+    }, 15000);
+
     try {
-      await authClient.signIn.social({
+      const res = await authClient.signIn.social({
         provider: "google",
         callbackURL: callbackUrl,
       });
-    } catch {
+
+      if (res?.error) {
+        clearTimeout(timeout);
+        setGoogleLoading(false);
+        setErrorMsg(
+          res.error.message ||
+            res.error.statusText ||
+            "Google sign-up failed. Please try again.",
+        );
+      }
+    } catch (err: unknown) {
+      clearTimeout(timeout);
       setGoogleLoading(false);
-      setErrorMsg("Google sign-in failed. Please try again.");
+      setErrorMsg(
+        err instanceof Error
+          ? err.message
+          : "Google sign-up failed. Please try again.",
+      );
     }
   };
 
@@ -62,7 +88,7 @@ function RegisterFormInner() {
           <div className="relative w-16 h-16 rounded-2xl p-0.5 bg-frameflow-gradient mx-auto shadow-xl shadow-purple-500/30">
             <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center p-1.5">
               <Image
-                src="/apple-touch-icon.png"
+                src="/logo.png"
                 alt="FrameFlow Logo"
                 width={48}
                 height={48}
@@ -85,8 +111,14 @@ function RegisterFormInner() {
 
         {/* ── Error Alert ── */}
         {errorMsg && (
-          <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-600 dark:text-rose-300 text-xs text-center font-medium">
-            {errorMsg}
+          <div className="flex items-start gap-2.5 p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/50 border border-rose-200 dark:border-rose-800/60 text-rose-700 dark:text-rose-300 text-xs shadow-sm animate-fade-in">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-semibold text-rose-800 dark:text-rose-200">
+                Registration Error
+              </p>
+              <p className="leading-relaxed">{errorMsg}</p>
+            </div>
           </div>
         )}
 

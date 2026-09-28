@@ -13,7 +13,7 @@ export function LandingFooter() {
           <div className="w-8 h-8 rounded-lg p-[1.5px] bg-frameflow-gradient shrink-0">
             <div className="w-full h-full rounded-md bg-slate-950 flex items-center justify-center p-0.5">
               <Image
-                src="/apple-touch-icon.png"
+                src="/logo.png"
                 alt="FrameFlow Logo"
                 width={24}
                 height={24}
@@ -29,7 +29,7 @@ export function LandingFooter() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-6 font-medium">
+        <div className="flex flex-wrap items-center justify-center md:justify-start gap-4 sm:gap-6 font-medium">
           {FOOTER_LINKS.map((l) => (
             <a
               key={l.href}

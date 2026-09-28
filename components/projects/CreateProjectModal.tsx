@@ -11,6 +11,7 @@ export function CreateProjectModal({
 }: CreateProjectModalProps) {
   const [newTitle, setNewTitle] = useState("");
   const [creating, setCreating] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   if (!isOpen) return null;
 
@@ -19,6 +20,7 @@ export function CreateProjectModal({
     if (!newTitle.trim()) return;
 
     setCreating(true);
+    setError(null);
     try {
       const res = await fetch("/api/projects", {
         method: "POST",
@@ -28,11 +30,16 @@ export function CreateProjectModal({
       const data = await res.json();
       if (data.success) {
         setNewTitle("");
+        setError(null);
         onSuccess();
         onClose();
+      } else {
+        setError(data.error || "Failed to create project");
       }
-    } catch {
-      // ignore
+    } catch (err: unknown) {
+      setError(
+        err instanceof Error ? err.message : "Error connecting to server",
+      );
     } finally {
       setCreating(false);
     }
@@ -68,6 +75,12 @@ export function CreateProjectModal({
               className="w-full bg-slate-50 dark:bg-slate-900 px-3.5 py-2.5 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#8A3FFC]"
             />
           </div>
+
+          {error && (
+            <div className="p-2.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-600 dark:text-rose-300 text-xs">
+              {error}
+            </div>
+          )}
 
           <div className="flex items-center justify-end gap-2 pt-2">
             <button

@@ -139,9 +139,17 @@ export function SettingsClient() {
       if (data.success) {
         setMessage({ text: `${provider} key deleted.`, type: "success" });
         await fetchKeys();
+      } else {
+        setMessage({
+          text: data.error || "Failed to delete key",
+          type: "error",
+        });
       }
-    } catch {
-      setMessage({ text: "Failed to delete key", type: "error" });
+    } catch (err: unknown) {
+      setMessage({
+        text: err instanceof Error ? err.message : "Failed to delete key",
+        type: "error",
+      });
     }
   };
 

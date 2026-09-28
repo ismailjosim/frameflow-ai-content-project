@@ -201,7 +201,7 @@ FILES IN THIS BUNDLE:
             <button
               onClick={generatePackaging}
               disabled={loading}
-              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#FF1688] via-[#FF4E63] to-[#FFC13B] hover:brightness-110 text-slate-950 font-bold text-xs shadow-lg shadow-[#FF1688]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
+              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#FF1688] via-[#FF4E63] to-[#FF7A32] hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-[#FF1688]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
             >
               {loading ? (
                 <>
@@ -223,7 +223,7 @@ FILES IN THIS BUNDLE:
         {modelUsed && (
           <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
             <span>Model used:</span>
-            <span className="font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-linear-to-r dark:from-[#8A3FFC]/20 dark:to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-[#E51FD1]/40">
+            <span className="font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-purple-950/70 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-800/60 shadow-xs">
               {modelUsed}
             </span>
           </div>

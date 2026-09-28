@@ -100,7 +100,7 @@ export function DashboardLayout({
         <div className="relative w-12 h-12 rounded-2xl p-0.5 bg-frameflow-gradient animate-pulse shadow-lg shadow-purple-500/25">
           <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center p-1">
             <Image
-              src="/apple-touch-icon.png"
+              src="/logo.png"
               alt="FrameFlow Logo"
               width={40}
               height={40}
@@ -150,7 +150,7 @@ export function DashboardLayout({
           isAnalyzing={isAnalyzing}
         />
 
-        <main className="flex-1 p-3.5 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto overflow-x-hidden">
+        <main className="flex-1 p-3 sm:p-5 lg:p-6 xl:p-8 w-full mx-auto max-w-[1720px] overflow-x-hidden">
           {children}
         </main>
       </div>

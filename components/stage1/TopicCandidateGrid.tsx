@@ -29,7 +29,7 @@ export function TopicCandidateGrid({
                   <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700">
                     Rank #{cand.priorityRank || idx + 2}
                   </span>
-                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-100 dark:bg-linear-to-r dark:from-[#8A3FFC]/25 dark:to-[#E51FD1]/25 text-purple-700 dark:text-pink-300 border border-purple-200 dark:border-[#E51FD1]/40">
+                  <span className="text-[11px] font-bold px-2 py-0.5 rounded-full bg-purple-50 dark:bg-purple-950/70 text-purple-700 dark:text-pink-300 border border-purple-200 dark:border-purple-800/60 shadow-xs">
                     Score: {cand.viralScore || Math.max(80, 92 - idx * 3)}%
                   </span>
                 </div>

@@ -39,8 +39,8 @@ export function Stage3PromptList({
               onClick={() => setViewMode("cards")}
               className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
                 viewMode === "cards"
-                  ? "bg-purple-100 dark:bg-linear-to-r dark:from-[#8A3FFC]/30 dark:to-[#E51FD1]/30 text-purple-700 dark:text-pink-200 font-bold border border-purple-200 dark:border-[#E51FD1]/40"
-                  : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+                  ? "bg-white dark:bg-purple-950/80 text-purple-700 dark:text-pink-200 font-bold shadow-xs border border-purple-200 dark:border-purple-800/60"
+                  : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
               }`}
             >
               <LayoutGrid className="w-3 h-3" />
@@ -51,8 +51,8 @@ export function Stage3PromptList({
               onClick={() => setViewMode("raw")}
               className={`flex items-center gap-1 px-2.5 py-1 rounded text-xs transition-colors cursor-pointer ${
                 viewMode === "raw"
-                  ? "bg-purple-100 dark:bg-linear-to-r dark:from-[#8A3FFC]/30 dark:to-[#E51FD1]/30 text-purple-700 dark:text-pink-200 font-bold border border-purple-200 dark:border-[#E51FD1]/40"
-                  : "text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200"
+                  ? "bg-white dark:bg-purple-950/80 text-purple-700 dark:text-pink-200 font-bold shadow-xs border border-purple-200 dark:border-purple-800/60"
+                  : "text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-200"
               }`}
             >
               <AlignLeft className="w-3 h-3" />

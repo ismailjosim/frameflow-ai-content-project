@@ -176,18 +176,18 @@ export function Stage1Topic({
       {/* Generated Candidates Cards with Data-Backed Priority Highlight */}
       {candidates.length > 0 && !loading && (
         <div className="space-y-4">
-          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-800/80 pb-3">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-200 dark:border-slate-800/80 pb-3">
             <div>
-              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-300 flex items-center gap-1.5">
-                <Lightbulb className="w-3.5 h-3.5 text-amber-400" />
+              <h3 className="text-xs font-semibold uppercase tracking-wider text-slate-800 dark:text-slate-200 flex items-center gap-1.5">
+                <Lightbulb className="w-3.5 h-3.5 text-amber-500 dark:text-amber-400" />
                 Viral Angle Analysis & Priority Ranking
               </h3>
-              <p className="text-[11px] text-slate-400 mt-0.5">
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-0.5">
                 Evaluated against YouTube audience retention patterns, curiosity
                 gap indices, and mobile CTR readability.
               </p>
             </div>
-            <span className="text-xs font-mono font-bold text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-[#E51FD1]/40">
+            <span className="text-xs font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-purple-950/70 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-800/60 shadow-xs">
               {candidates.length} Angles Active
             </span>
           </div>

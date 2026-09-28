@@ -86,9 +86,11 @@ export function calculateTimestamps(
   }
 
   const totalSec = Math.floor(currentSec);
-  const mins = Math.floor(totalSec / 60);
+  const hrs = Math.floor(totalSec / 3600);
+  const mins = Math.floor((totalSec % 3600) / 60);
   const secs = totalSec % 60;
-  const formattedRuntime = `${mins}m ${secs}s`;
+  const formattedRuntime =
+    hrs > 0 ? `${hrs}h ${mins}m ${secs}s` : `${mins}m ${secs}s`;
 
   return {
     result: outputLines.join("\n"),
@@ -97,6 +99,28 @@ export function calculateTimestamps(
     totalSec,
     formattedRuntime,
   };
+}
+
+/**
+ * Formats elapsed running time cleanly with hours, minutes, and seconds.
+ * Examples:
+ *   formatElapsedTime(45) -> "45s"
+ *   formatElapsedTime(500) -> "8m 20s"
+ *   formatElapsedTime(3665) -> "1h 1m 5s"
+ */
+export function formatElapsedTime(seconds: number): string {
+  const s = Math.max(0, Math.floor(seconds));
+  const hrs = Math.floor(s / 3600);
+  const mins = Math.floor((s % 3600) / 60);
+  const secs = s % 60;
+
+  if (hrs > 0) {
+    return `${hrs}h ${mins}m ${secs}s`;
+  }
+  if (mins > 0) {
+    return `${mins}m ${secs}s`;
+  }
+  return `${secs}s`;
 }
 
 /**

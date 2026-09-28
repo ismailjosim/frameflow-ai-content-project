@@ -26,7 +26,7 @@ export function PresetInspector({
           </p>
         </div>
         <div className="flex items-center gap-2 shrink-0">
-          <span className="font-mono text-xs text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-linear-to-r dark:from-[#8A3FFC]/20 dark:to-[#E51FD1]/20 px-3 py-1 rounded-lg border border-purple-200 dark:border-[#E51FD1]/40">
+          <span className="font-mono text-xs text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-purple-950/70 px-3 py-1 rounded-lg border border-purple-200 dark:border-purple-800/60 shadow-xs">
             {preset.aspectRatio}
           </span>
           {!preset.isDefault && onDelete && (

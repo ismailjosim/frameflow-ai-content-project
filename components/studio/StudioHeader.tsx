@@ -21,29 +21,29 @@ export function StudioHeader({
   onSave,
 }: StudioHeaderProps) {
   return (
-    <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
-      <div className="flex items-center gap-3">
+    <div className="glass-panel p-4 sm:p-5 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col md:flex-row md:items-center justify-between gap-3 sm:gap-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
+      <div className="flex items-center gap-3 min-w-0 flex-1">
         <div className="w-9 h-9 rounded-xl p-[1.5px] bg-frameflow-gradient shrink-0 shadow-md shadow-[#8A3FFC]/20">
           <div className="w-full h-full rounded-[9px] bg-slate-950 flex items-center justify-center p-0.5">
             <Image
-              src="/apple-touch-icon.png"
-              alt="FrameFlow"
+              src="/logo.png"
+              alt="FrameFlow Logo"
               width={26}
               height={26}
               className="object-contain rounded-md"
             />
           </div>
         </div>
-        <div>
+        <div className="min-w-0 flex-1">
           <input
             type="text"
             value={projectTitle}
             onChange={(e) => onTitleChange(e.target.value)}
             onBlur={onTitleBlur}
-            className="bg-transparent text-sm sm:text-base font-bold text-slate-900 dark:text-white border-b border-transparent hover:border-slate-300 dark:hover:border-slate-700 focus:border-[#8A3FFC] focus:outline-none transition-colors px-1 py-0.5"
+            className="w-full bg-transparent text-sm sm:text-base font-bold text-slate-900 dark:text-white border-b border-transparent hover:border-slate-300 dark:hover:border-slate-700 focus:border-[#8A3FFC] focus:outline-none transition-colors px-1 py-0.5 truncate"
             title="Click to rename project"
           />
-          <p className="text-[11px] text-slate-500 dark:text-slate-400 px-1">
+          <p className="text-[11px] text-slate-500 dark:text-slate-400 px-1 truncate">
             <span className="text-slate-700 dark:text-slate-300 font-medium">
               From Idea to Video, All in One Flow
             </span>{" "}
@@ -54,7 +54,7 @@ export function StudioHeader({
 
       <div className="flex items-center gap-2.5">
         {saveStatus && (
-          <span className="text-xs font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-linear-to-r dark:from-[#8A3FFC]/20 dark:to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-[#E51FD1]/40 animate-fade-in">
+          <span className="text-xs font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-purple-950/70 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-800/60 shadow-xs animate-fade-in">
             {saveStatus}
           </span>
         )}

@@ -126,6 +126,8 @@ export function useStudioProject() {
           }
         } catch {
           // ignore
+        } finally {
+          setLoadingProject(false);
         }
       }
     }
