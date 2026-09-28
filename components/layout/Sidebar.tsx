@@ -219,13 +219,29 @@ export function Sidebar({
           {user ? (
             <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xs">
               <div className="flex items-center gap-2 truncate">
-                <div className="w-6 h-6 rounded-full bg-linear-to-br from-[#58E6F7] to-[#8A3FFC] flex items-center justify-center text-slate-950 font-black text-xs shrink-0">
-                  {user.name?.[0]?.toUpperCase() || "U"}
-                </div>
+                {user.image ? (
+                  <Image
+                    src={user.image}
+                    alt={user.name || "User"}
+                    width={24}
+                    height={24}
+                    unoptimized
+                    className="w-6 h-6 rounded-full object-cover shrink-0 border border-slate-200 dark:border-slate-700"
+                  />
+                ) : (
+                  <div className="w-6 h-6 rounded-full bg-linear-to-br from-[#58E6F7] to-[#8A3FFC] flex items-center justify-center text-slate-950 font-black text-xs shrink-0">
+                    {user.name?.[0]?.toUpperCase() || "U"}
+                  </div>
+                )}
                 <div className="truncate">
-                  <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate leading-tight">
-                    {user.name}
-                  </p>
+                  <div className="flex items-center gap-1.5 truncate">
+                    <p className="text-xs font-semibold text-slate-800 dark:text-slate-200 truncate leading-tight">
+                      {user.name}
+                    </p>
+                    <span className="text-[9px] font-bold uppercase tracking-wider px-1.5 py-0.5 rounded-sm bg-purple-500/10 text-purple-600 dark:text-purple-400 border border-purple-500/20 shrink-0">
+                      {(user as { role?: string }).role || "creator"}
+                    </span>
+                  </div>
                   <p className="text-[10px] text-slate-500 dark:text-slate-400 truncate leading-tight">
                     {user.email}
                   </p>

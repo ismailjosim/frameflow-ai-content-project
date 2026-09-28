@@ -15,7 +15,7 @@ export function ThemeToggler({ className = "" }: { className?: string }) {
   if (!mounted) {
     return (
       <div
-        className={`w-8 h-8 rounded-xl bg-slate-900/60 border border-slate-800 animate-pulse ${className}`}
+        className={`w-8 h-8 rounded-xl bg-slate-100 dark:bg-slate-900/60 border border-slate-200 dark:border-slate-800 animate-pulse ${className}`}
         aria-hidden="true"
       />
     );

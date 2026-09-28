@@ -180,18 +180,18 @@ FILES IN THIS BUNDLE:
   return (
     <div className="space-y-6">
       {/* Stage Header */}
-      <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800 space-y-4">
+      <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
               <span className="w-6 h-6 rounded-full bg-linear-to-br from-[#FF1688]/20 to-[#FFC13B]/30 text-[#FFC13B] font-bold text-xs flex items-center justify-center border border-[#FFC13B]/40">
                 4
               </span>
-              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                 Stage 4: Viral Packaging & YouTube SEO
               </h2>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               High-CTR title hooks, Midjourney/Flux thumbnail prompt,
               hook-optimized description, and targeted tags.
             </p>
@@ -221,17 +221,17 @@ FILES IN THIS BUNDLE:
         </div>
 
         {modelUsed && (
-          <div className="text-xs text-slate-400 flex items-center gap-2">
+          <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
             <span>Model used:</span>
-            <span className="font-mono font-bold text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-[#E51FD1]/40">
+            <span className="font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-linear-to-r dark:from-[#8A3FFC]/20 dark:to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-[#E51FD1]/40">
               {modelUsed}
             </span>
           </div>
         )}
 
         {error && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-950/40 border border-rose-800/50 text-rose-300 text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
+          <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
             <p>{error}</p>
           </div>
         )}
@@ -239,12 +239,12 @@ FILES IN THIS BUNDLE:
 
       {/* Failover Logs */}
       {logs.length > 1 && (
-        <div className="p-3 rounded-xl bg-slate-900/70 border border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
-          <span className="text-xs font-semibold text-[#58E6F7]">
+        <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400 space-y-1">
+          <span className="text-xs font-semibold text-[#8A3FFC] dark:text-[#58E6F7]">
             Packaging Orchestrator Trace:
           </span>
           {logs.map((log, i) => (
-            <p key={i} className="text-slate-300">
+            <p key={i} className="text-slate-700 dark:text-slate-300">
               ↳ {log}
             </p>
           ))}

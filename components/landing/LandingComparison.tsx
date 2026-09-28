@@ -20,14 +20,8 @@ export function LandingComparison() {
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {/* Manual way */}
-          <div
-            className="p-6 sm:p-8 rounded-3xl space-y-4"
-            style={{
-              background: "rgba(244,63,94,0.06)",
-              border: "1px solid rgba(244,63,94,0.2)",
-            }}
-          >
-            <h3 className="text-lg font-bold text-rose-500 dark:text-rose-400">
+          <div className="p-6 sm:p-8 rounded-3xl space-y-4 bg-rose-50/70 dark:bg-rose-950/20 border border-rose-200 dark:border-rose-500/20 shadow-xs">
+            <h3 className="text-lg font-bold text-rose-600 dark:text-rose-400">
               The Disconnected Way (4–6 Hours)
             </h3>
             <ul className="space-y-3 text-xs text-muted-foreground">
@@ -43,13 +37,7 @@ export function LandingComparison() {
           </div>
 
           {/* FrameFlow way */}
-          <div
-            className="p-6 sm:p-8 rounded-3xl space-y-4 shadow-xl shadow-[#8A3FFC]/10"
-            style={{
-              background: "rgba(138,63,252,0.07)",
-              border: "1px solid rgba(138,63,252,0.25)",
-            }}
-          >
+          <div className="p-6 sm:p-8 rounded-3xl space-y-4 shadow-xl shadow-[#8A3FFC]/10 bg-purple-50/70 dark:bg-[#8A3FFC]/10 border border-purple-200 dark:border-[#8A3FFC]/30">
             <h3 className="text-lg font-bold text-frameflow-gradient">
               The FrameFlow Way (Under 3 Minutes)
             </h3>

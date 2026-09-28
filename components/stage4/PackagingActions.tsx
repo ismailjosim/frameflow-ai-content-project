@@ -38,12 +38,12 @@ export function PackagingActions({
         >
           {isZipping ? (
             <>
-              <Loader2 className="w-4 h-4 animate-spin text-white" />
+              <Loader2 className="w-4 h-4 animate-spin text-slate-950" />
               <span>Packing ZIP Bundle...</span>
             </>
           ) : (
             <>
-              <Archive className="w-4 h-4 text-white" />
+              <Archive className="w-4 h-4 text-slate-950" />
               <span>Export Full Video Bundle (.zip)</span>
             </>
           )}

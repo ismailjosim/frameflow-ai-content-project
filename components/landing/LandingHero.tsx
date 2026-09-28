@@ -37,7 +37,7 @@ function FeatureTickers() {
         return (
           <div
             key={f.label}
-            className="p-3.5 rounded-2xl backdrop-blur-sm transition-all hover:scale-[1.02]"
+            className="p-3.5 rounded-2xl backdrop-blur-sm transition-all hover:scale-[1.02] bg-white/70 dark:bg-slate-900/60 shadow-xs"
             style={{ background: f.glow, border: `1px solid ${f.border}` }}
           >
             <span
@@ -63,19 +63,9 @@ function PipelineMockup({
 }: Pick<HeroProps, "activePipelineTab" | "onTabChange">) {
   return (
     <div className="max-w-5xl mx-auto mt-12 sm:mt-16 px-4">
-      <div
-        className="rounded-3xl p-3 sm:p-6 shadow-2xl shadow-[#8A3FFC]/15 space-y-4 backdrop-blur-xl"
-        style={{
-          background:
-            "linear-gradient(135deg, rgba(15,23,42,0.95) 0%, rgba(9,13,22,0.98) 100%)",
-          border: "1px solid rgba(138,63,252,0.2)",
-        }}
-      >
+      <div className="rounded-3xl p-3 sm:p-6 shadow-2xl shadow-[#8A3FFC]/15 space-y-4 backdrop-blur-xl bg-white/95 dark:bg-slate-950/95 border border-slate-200 dark:border-purple-500/20">
         {/* Window bar */}
-        <div
-          className="flex items-center justify-between pb-3"
-          style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}
-        >
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200 dark:border-white/10">
           <div className="flex items-center gap-2">
             <div className="w-3 h-3 rounded-full bg-rose-500/70" />
             <div className="w-3 h-3 rounded-full bg-amber-500/70" />
@@ -86,13 +76,7 @@ function PipelineMockup({
           </div>
 
           {/* Stage tab switcher */}
-          <div
-            className="flex items-center gap-1 rounded-xl p-1"
-            style={{
-              background: "rgba(255,255,255,0.05)",
-              border: "1px solid rgba(255,255,255,0.08)",
-            }}
-          >
+          <div className="flex items-center gap-1 rounded-xl p-1 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10">
             {[
               { num: 1, label: "Topic" },
               { num: 2, label: "Script" },
@@ -116,13 +100,7 @@ function PipelineMockup({
         </div>
 
         {/* Tab content */}
-        <div
-          className="p-4 sm:p-6 rounded-2xl min-h-64 flex flex-col justify-center"
-          style={{
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.06)",
-          }}
-        >
+        <div className="p-4 sm:p-6 rounded-2xl min-h-64 flex flex-col justify-center bg-slate-50/80 dark:bg-white/3 border border-slate-200/80 dark:border-white/5">
           {activePipelineTab === 1 && (
             <div className="space-y-4">
               <div className="flex items-center justify-between">
@@ -133,13 +111,7 @@ function PipelineMockup({
                   Virality Confidence: 96%
                 </span>
               </div>
-              <div
-                className="p-4 rounded-xl space-y-2"
-                style={{
-                  background: "rgba(88,230,247,0.05)",
-                  border: "1px solid rgba(88,230,247,0.15)",
-                }}
-              >
+              <div className="p-4 rounded-xl space-y-2 bg-cyan-50/70 dark:bg-[#58E6F7]/5 border border-cyan-200 dark:border-[#58E6F7]/20">
                 <div className="flex items-center gap-2">
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-[#8A3FFC]/20 text-[#8A3FFC]">
                     #1 PRIORITIZED ANGLE
@@ -170,13 +142,7 @@ function PipelineMockup({
                   24 Lines • 100% Under 90 Chars
                 </span>
               </div>
-              <div
-                className="p-4 rounded-xl font-mono text-xs space-y-1.5 text-foreground"
-                style={{
-                  background: "rgba(138,63,252,0.05)",
-                  border: "1px solid rgba(138,63,252,0.15)",
-                }}
-              >
+              <div className="p-4 rounded-xl font-mono text-xs space-y-1.5 text-foreground bg-purple-50/70 dark:bg-[#8A3FFC]/5 border border-purple-200 dark:border-[#8A3FFC]/20">
                 <p className="text-muted-foreground">
                   [00:00] It was forty below zero.
                 </p>
@@ -200,13 +166,7 @@ function PipelineMockup({
                   Midjourney v6.1 &amp; Flux Schnell
                 </span>
               </div>
-              <div
-                className="p-4 rounded-xl font-mono text-xs space-y-2 text-foreground"
-                style={{
-                  background: "rgba(229,31,209,0.05)",
-                  border: "1px solid rgba(229,31,209,0.15)",
-                }}
-              >
+              <div className="p-4 rounded-xl font-mono text-xs space-y-2 text-foreground bg-pink-50/70 dark:bg-[#E51FD1]/5 border border-pink-200 dark:border-[#E51FD1]/20">
                 <div className="flex items-center gap-2">
                   <span className="w-5 h-5 rounded-full bg-[#8A3FFC]/20 text-[#8A3FFC] text-[10px] font-bold flex items-center justify-center">
                     1
@@ -215,13 +175,7 @@ function PipelineMockup({
                     Prompt #1 [00:00 - 00:02]
                   </span>
                 </div>
-                <p
-                  className="text-xs text-foreground/90 leading-relaxed p-2.5 rounded-lg"
-                  style={{
-                    background: "rgba(255,255,255,0.04)",
-                    border: "1px solid rgba(255,255,255,0.07)",
-                  }}
-                >
+                <p className="text-xs text-foreground/90 leading-relaxed p-2.5 rounded-lg bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10">
                   Hand-drawn 2D doodle cartoon illustration, minimalist stick
                   figure explainer style, flat solid colors, bold black marker
                   outlines, HomoDoodle stickman in slate grey tunic shivering on
@@ -271,10 +225,9 @@ function PipelineMockup({
                 ].map((f) => (
                   <div
                     key={f.name}
-                    className="p-3 rounded-xl text-center transition-all hover:scale-[1.03]"
+                    className="p-3 rounded-xl text-center transition-all hover:scale-[1.03] bg-white/80 dark:bg-slate-900/60 shadow-xs"
                     style={{
-                      background: `${f.color}0d`,
-                      border: `1px solid ${f.color}25`,
+                      border: `1px solid ${f.color}35`,
                     }}
                   >
                     <div
@@ -348,7 +301,7 @@ export function LandingHero({
           </Link>
           <a
             href="#pipeline"
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-white/5 dark:bg-white/5 hover:bg-white/10 dark:hover:bg-white/10 text-foreground font-semibold text-sm border border-white/10 dark:border-white/10 transition-colors cursor-pointer"
+            className="w-full sm:w-auto flex items-center justify-center gap-2 px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200 dark:bg-white/5 dark:hover:bg-white/10 dark:text-foreground dark:border-white/10 font-semibold text-sm border transition-colors cursor-pointer"
           >
             <Play className="w-4 h-4 text-[#8A3FFC]" />
             <span>Explore 4-Stage Workflow</span>

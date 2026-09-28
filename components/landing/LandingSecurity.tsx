@@ -30,10 +30,9 @@ export function LandingSecurity() {
             return (
               <div
                 key={s.title}
-                className="p-6 rounded-2xl space-y-3 transition-all hover:scale-[1.01]"
+                className="p-6 rounded-2xl space-y-3 transition-all hover:scale-[1.01] bg-white/80 dark:bg-slate-900/60 shadow-xs"
                 style={{
-                  background: `${s.accent}08`,
-                  border: `1px solid ${s.accent}20`,
+                  border: `1px solid ${s.accent}25`,
                 }}
               >
                 <div

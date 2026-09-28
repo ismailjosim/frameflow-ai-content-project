@@ -21,9 +21,8 @@ export function LandingPresets() {
           {STYLE_PRESETS.map((p) => (
             <div
               key={p.title}
-              className="p-5 rounded-2xl space-y-3 transition-all hover:scale-[1.02] hover:shadow-lg"
+              className="p-5 rounded-2xl space-y-3 transition-all hover:scale-[1.02] hover:shadow-lg bg-white/80 dark:bg-slate-900/60 shadow-xs"
               style={{
-                background: p.glow,
                 border: `1px solid ${p.border}`,
               }}
             >

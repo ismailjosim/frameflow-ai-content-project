@@ -27,13 +27,32 @@ export const auth = betterAuth({
   secret:
     process.env.BETTER_AUTH_SECRET || "frameflow-secret-fallback-key-32chars",
   emailAndPassword: {
-    enabled: true,
+    enabled: false,
   },
   // ── Google OAuth Social Provider ──────────────────────────────────────
   socialProviders: {
     google: {
       clientId: process.env.GOOGLE_CLIENT_ID as string,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+      mapProfileToUser: async () => {
+        return {
+          role: "creator",
+        };
+      },
+    },
+  },
+  databaseHooks: {
+    user: {
+      create: {
+        before: async (user) => {
+          return {
+            data: {
+              ...user,
+              role: user.role || "creator",
+            },
+          };
+        },
+      },
     },
   },
   user: {
@@ -42,6 +61,7 @@ export const auth = betterAuth({
         type: "string",
         required: false,
         defaultValue: "creator",
+        input: false,
       },
     },
   },

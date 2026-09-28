@@ -17,17 +17,11 @@ export function LandingFaq() {
           {FAQ_ITEMS.map((faq, i) => (
             <div
               key={faq.q}
-              className="p-5 rounded-2xl space-y-2 transition-all hover:shadow-sm"
-              style={{
-                background:
-                  i % 2 === 0
-                    ? "rgba(138,63,252,0.05)"
-                    : "rgba(88,230,247,0.04)",
-                border:
-                  i % 2 === 0
-                    ? "1px solid rgba(138,63,252,0.15)"
-                    : "1px solid rgba(88,230,247,0.12)",
-              }}
+              className={`p-5 rounded-2xl space-y-2 transition-all hover:shadow-sm bg-white/80 dark:bg-slate-900/60 shadow-xs border ${
+                i % 2 === 0
+                  ? "border-purple-200 dark:border-[#8A3FFC]/25"
+                  : "border-cyan-200 dark:border-[#58E6F7]/25"
+              }`}
             >
               <h4 className="text-sm font-bold text-foreground">{faq.q}</h4>
               <p className="text-xs text-muted-foreground leading-relaxed">

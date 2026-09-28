@@ -21,18 +21,9 @@ export function LandingPipeline() {
           {PIPELINE_STAGES.map((stage) => (
             <div
               key={stage.num}
-              className="group p-6 rounded-3xl space-y-4 backdrop-blur-sm transition-all duration-200 hover:shadow-lg"
+              className="group p-6 rounded-3xl space-y-4 backdrop-blur-sm transition-all duration-200 hover:shadow-lg hover:scale-[1.01] bg-white/80 dark:bg-slate-900/60"
               style={{
-                background: stage.glow,
                 border: `1px solid ${stage.border}`,
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLDivElement).style.background =
-                  stage.hover;
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLDivElement).style.background =
-                  stage.glow;
               }}
             >
               <div className="flex items-center gap-3">

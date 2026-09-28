@@ -2,6 +2,7 @@
 // Edit copy, colors, and feature lists here — components stay clean.
 
 export const NAV_LINKS = [
+  { href: "#interactive-tour", label: "Studio Tour" },
   { href: "#pipeline", label: "4-Stage Pipeline" },
   { href: "#features", label: "Features" },
   { href: "#presets", label: "Style Presets" },
@@ -214,5 +215,5 @@ export const FOOTER_LINKS = [
 ] as const;
 
 export const SECTION_DIVIDER = {
-  borderTop: "1px solid rgba(255,255,255,0.06)",
+  borderTop: "1px solid var(--border)",
 } as const;

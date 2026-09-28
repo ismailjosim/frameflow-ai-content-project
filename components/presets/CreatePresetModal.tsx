@@ -81,14 +81,14 @@ export function CreatePresetModal({
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm">
-      <div className="glass-panel max-w-2xl w-full p-6 rounded-2xl border border-slate-800 space-y-4 max-h-[90vh] overflow-y-auto">
-        <div className="flex items-center justify-between border-b border-slate-800/80 pb-3">
-          <h3 className="text-sm font-bold text-white">
+      <div className="glass-panel max-w-2xl w-full p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 max-h-[90vh] overflow-y-auto bg-white dark:bg-slate-900/95 shadow-2xl">
+        <div className="flex items-center justify-between border-b border-slate-200 dark:border-slate-800/80 pb-3">
+          <h3 className="text-sm font-bold text-slate-900 dark:text-white">
             Create / Upload Master Style Preset
           </h3>
           <button
             onClick={onClose}
-            className="text-slate-400 hover:text-white text-xs cursor-pointer"
+            className="text-slate-400 hover:text-slate-700 dark:hover:text-white text-xs cursor-pointer"
           >
             ✕ Close
           </button>
@@ -96,12 +96,12 @@ export function CreatePresetModal({
 
         <form onSubmit={handleCreatePreset} className="space-y-4 text-xs">
           {/* File upload shortcut */}
-          <div className="p-4 rounded-xl border border-dashed border-slate-700 bg-slate-900/60 text-center space-y-2">
-            <Upload className="w-6 h-6 text-[#58E6F7] mx-auto" />
-            <p className="text-slate-300 font-medium">
+          <div className="p-4 rounded-xl border border-dashed border-slate-300 dark:border-slate-700 bg-slate-50 dark:bg-slate-900/60 text-center space-y-2">
+            <Upload className="w-6 h-6 text-[#8A3FFC] dark:text-[#58E6F7] mx-auto" />
+            <p className="text-slate-700 dark:text-slate-300 font-medium">
               Upload Master Prompt (.md or .txt)
             </p>
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Drag or select a markdown style file to auto-populate prompt
               rules.
             </p>
@@ -109,25 +109,27 @@ export function CreatePresetModal({
               type="file"
               accept=".md,.txt"
               onChange={handleFileUpload}
-              className="block mx-auto text-xs text-slate-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-slate-800 file:text-[#58E6F7] hover:file:bg-slate-700 cursor-pointer"
+              className="block mx-auto text-xs text-slate-500 dark:text-slate-400 file:mr-2 file:py-1 file:px-3 file:rounded-lg file:border-0 file:bg-slate-200 dark:file:bg-slate-800 file:text-[#8A3FFC] dark:file:text-[#58E6F7] hover:file:bg-slate-300 dark:hover:file:bg-slate-700 cursor-pointer"
             />
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="font-medium text-slate-300">Style Name:</label>
+              <label className="font-medium text-slate-700 dark:text-slate-300">
+                Style Name:
+              </label>
               <input
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="e.g., 3D Pixar Animation / Stylized 2.5D"
                 required
-                className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-[#8A3FFC]"
+                className="w-full bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#8A3FFC]"
               />
             </div>
 
             <div className="space-y-1">
-              <label className="font-medium text-slate-300">
+              <label className="font-medium text-slate-700 dark:text-slate-300">
                 Aspect Ratio / Midjourney Flags:
               </label>
               <input
@@ -135,24 +137,26 @@ export function CreatePresetModal({
                 value={aspectRatio}
                 onChange={(e) => setAspectRatio(e.target.value)}
                 placeholder="--ar 16:9 --v 6.1"
-                className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-[#8A3FFC]"
+                className="w-full bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#8A3FFC]"
               />
             </div>
           </div>
 
           <div className="space-y-1">
-            <label className="font-medium text-slate-300">Description:</label>
+            <label className="font-medium text-slate-700 dark:text-slate-300">
+              Description:
+            </label>
             <input
               type="text"
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               placeholder="Brief description of this visual theme..."
-              className="w-full bg-slate-900 px-3 py-2 rounded-xl border border-slate-800 text-white focus:outline-none focus:border-[#8A3FFC]"
+              className="w-full bg-slate-50 dark:bg-slate-900 px-3 py-2 rounded-xl border border-slate-200 dark:border-slate-800 text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:border-[#8A3FFC]"
             />
           </div>
 
           <div className="space-y-1">
-            <label className="font-medium text-slate-300">
+            <label className="font-medium text-slate-700 dark:text-slate-300">
               Visual Style & Prompt DNA Rules:
             </label>
             <textarea
@@ -160,19 +164,21 @@ export function CreatePresetModal({
               onChange={(e) => setVisualStyleRules(e.target.value)}
               rows={8}
               placeholder="Specify aesthetic, character description, lighting, color palette, camera cues, and negative rules..."
-              className="w-full bg-slate-900 font-mono text-slate-200 p-3 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC]"
+              className="w-full bg-slate-50 dark:bg-slate-900 font-mono text-slate-900 dark:text-slate-200 p-3 rounded-xl border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-[#8A3FFC]"
             />
           </div>
 
           {statusMsg && (
-            <p className="text-pink-400 font-medium">{statusMsg}</p>
+            <p className="text-pink-500 dark:text-pink-400 font-medium">
+              {statusMsg}
+            </p>
           )}
 
-          <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-800/80">
+          <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200 dark:border-slate-800/80">
             <button
               type="button"
               onClick={onClose}
-              className="px-3 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 cursor-pointer"
+              className="px-3 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 cursor-pointer transition-colors"
             >
               Cancel
             </button>

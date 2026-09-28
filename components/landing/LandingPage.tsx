@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { InteractiveSlideshow } from "./InteractiveSlideshow";
 import { LandingComparison } from "./LandingComparison";
 import { LandingCta } from "./LandingCta";
 import { LandingFaq } from "./LandingFaq";
@@ -25,6 +26,7 @@ export function LandingPage() {
         activePipelineTab={activePipelineTab}
         onTabChange={setActivePipelineTab}
       />
+      <InteractiveSlideshow />
       <LandingPipeline />
       <LandingPresets />
       <LandingSecurity />
