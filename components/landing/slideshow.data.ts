@@ -23,6 +23,7 @@ export interface SlideData {
   description: string;
   imageSrc: string;
   imageAlt: string;
+  useImageBackground?: boolean; // Set to true to use full-bleed image background with glassmorphic text overlay
   features: SlideFeature[];
   hotspots: Hotspot[];
   stats: { label: string; value: string; change?: string }[];
@@ -245,6 +246,7 @@ export const SLIDES_DATA: SlideData[] = [
       "Experience unmatched resilience. FrameFlow dynamically routes requests between OpenAI, Anthropic Claude, and Google Gemini — instantly failing over during rate limits to keep generation seamless.",
     imageSrc: "/slide-4.jpg",
     imageAlt: "FrameFlow Multi-Model AI Router and Automatic Failover Graph",
+    useImageBackground: true,
     features: [
       {
         id: "f4-1",
