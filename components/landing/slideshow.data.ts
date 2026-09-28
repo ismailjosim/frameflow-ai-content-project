@@ -44,6 +44,7 @@ export const SLIDES_DATA: SlideData[] = [
       "Witness the full holographic flow: an initial creative thought cascades through real-time scriptwriting, acoustic waveform timing, batch visual generation, and multi-format viral packaging.",
     imageSrc: "/slide-1.jpg",
     imageAlt: "FrameFlow Studio End-to-End 3D Video Production Pipeline",
+    useImageBackground: true,
     features: [
       {
         id: "f1-1",
@@ -109,6 +110,7 @@ export const SLIDES_DATA: SlideData[] = [
       "Transform simple concepts into psychology-driven viral narrative scripts. The engine auto-segments copy into 8-second pacing beats synchronized to speech cadence and captions.",
     imageSrc: "/slide-2.jpg",
     imageAlt: "AI Scriptwriter and Automatic Timeline Waveform Alignment",
+    useImageBackground: true,
     features: [
       {
         id: "f2-1",
@@ -175,6 +177,7 @@ export const SLIDES_DATA: SlideData[] = [
       "Convert script timestamps into 20 cinematic image prompts simultaneously. Live batch processing ensures coherent character lighting, color palettes, and stylistic continuity across all frames.",
     imageSrc: "/slide-3.jpg",
     imageAlt: "Stage 3 Automated Visual Prompts Generation Batch Engine",
+    useImageBackground: true,
     features: [
       {
         id: "f3-1",
@@ -317,6 +320,7 @@ export const SLIDES_DATA: SlideData[] = [
       "Everything needed to dominate search algorithms and social feeds. High-CTR 16:9 & 9:16 thumbnails, algorithmic descriptions, viral hashtags, and full video files bundled in a single click.",
     imageSrc: "/slide-5.jpg",
     imageAlt: "Stage 4 Complete Video Publishing Packaging Bundle",
+    useImageBackground: true,
     features: [
       {
         id: "f5-1",

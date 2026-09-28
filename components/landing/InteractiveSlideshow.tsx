@@ -180,7 +180,7 @@ export function InteractiveSlideshow() {
       </div>
 
       {/* ── Main Studio Display Card ── */}
-      {slide.useImageBackground ? (
+      {slide.useImageBackground !== false ? (
         /* Full-Bleed Background Layout with Glassmorphic Overlay */
         <div className="relative rounded-3xl border border-white/15 dark:border-slate-800 bg-slate-950 overflow-hidden p-4 sm:p-6 lg:p-8 shadow-2xl shadow-purple-500/10 backdrop-blur-2xl transition-all duration-300 min-h-145 flex items-center">
           {/* Full-bleed background visual */}
