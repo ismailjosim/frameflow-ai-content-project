@@ -1,10 +1,12 @@
 "use client";
 
-import { AlertCircle, Loader2, Sparkles } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
+import { sound } from "@/lib/sound";
 import { PackagingActions } from "./PackagingActions";
 import { PackagingCards } from "./PackagingCards";
+import { Stage4Header } from "./Stage4Header";
 import type { Stage4PackagingProps } from "./stage4.types";
 
 export function Stage4Packaging({
@@ -30,6 +32,7 @@ export function Stage4Packaging({
   const generatePackaging = useCallback(async () => {
     if (!topicTitle) {
       setError("Please select or specify a topic in Stage 1.");
+      toast.error("Please select or specify a topic in Stage 1.");
       return;
     }
 
@@ -55,8 +58,13 @@ export function Stage4Packaging({
       onPackagingChange(data.packagingText || "", data.parsedPackaging || {});
       setModelUsed(data.modelUsed || selectedModel);
       if (data.logs) setLogs(data.logs);
+      sound.playTaskSuccess();
+      toast.success("Viral YouTube SEO & Packaging generated successfully!");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Unknown generation error");
+      const msg =
+        err instanceof Error ? err.message : "Unknown generation error";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
@@ -74,6 +82,8 @@ export function Stage4Packaging({
   const copyText = (text: string, fieldName: string) => {
     navigator.clipboard.writeText(text);
     setCopiedField(fieldName);
+    sound.playNotification();
+    toast.success(`${fieldName} copied to clipboard!`);
     setTimeout(() => setCopiedField(null), 2000);
   };
 
@@ -93,6 +103,8 @@ export function Stage4Packaging({
     link.download = `packaging_${slug}.txt`;
     link.click();
     URL.revokeObjectURL(url);
+    sound.playNotification();
+    toast.success("Packaging metadata downloaded as text file!");
   };
 
   const downloadAllAssets = async () => {
@@ -169,9 +181,12 @@ FILES IN THIS BUNDLE:
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
+      sound.playTaskSuccess();
+      toast.success("Complete video production bundle ZIP downloaded!");
     } catch (err) {
       console.error("Failed to generate zip bundle:", err);
       setError("Failed to create ZIP bundle. Please try again.");
+      toast.error("Failed to create ZIP bundle.");
     } finally {
       setIsZipping(false);
     }
@@ -179,63 +194,14 @@ FILES IN THIS BUNDLE:
 
   return (
     <div className="space-y-6">
-      {/* Stage Header */}
-      <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-linear-to-br from-[#FF1688]/20 to-[#FFC13B]/30 text-[#FFC13B] font-bold text-xs flex items-center justify-center border border-[#FFC13B]/40">
-                4
-              </span>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                Stage 4: Viral Packaging & YouTube SEO
-              </h2>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              High-CTR title hooks, Midjourney/Flux thumbnail prompt,
-              hook-optimized description, and targeted tags.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            <button
-              onClick={generatePackaging}
-              disabled={loading}
-              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#FF1688] via-[#FF4E63] to-[#FF7A32] hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-[#FF1688]/25 transition-all disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Generating Packaging...
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-3.5 h-3.5" />
-                  {packagingText
-                    ? "Regenerate Packaging"
-                    : "Generate Full Packaging"}
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {modelUsed && (
-          <div className="text-xs text-slate-500 dark:text-slate-400 flex items-center gap-2">
-            <span>Model used:</span>
-            <span className="font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-purple-950/70 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-800/60 shadow-xs">
-              {modelUsed}
-            </span>
-          </div>
-        )}
-
-        {error && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
-            <p>{error}</p>
-          </div>
-        )}
-      </div>
+      {/* Stage Header & Retry Controls */}
+      <Stage4Header
+        loading={loading}
+        packagingText={packagingText}
+        modelUsed={modelUsed}
+        error={error}
+        onGenerate={generatePackaging}
+      />
 
       {/* Failover Logs */}
       {logs.length > 1 && (

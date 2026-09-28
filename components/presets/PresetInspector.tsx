@@ -1,93 +1,179 @@
-import { Trash2 } from "lucide-react";
-import type { PresetInspectorProps } from "./presets.types";
+"use client";
+
+import { AlertCircle } from "lucide-react";
+import { useState } from "react";
+import { toast } from "sonner";
+import { sound } from "@/lib/sound";
+import { PresetEditForm } from "./PresetEditForm";
+import { PresetInspectorHeader } from "./PresetInspectorHeader";
+import { PresetViewMode } from "./PresetViewMode";
+import type { Preset, PresetInspectorProps } from "./presets.types";
 
 export function PresetInspector({
   preset,
   onDelete,
   isDeleting,
+  onUpdate,
+  onSetDefault,
+  isSettingDefault,
 }: PresetInspectorProps) {
+  const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [showAdvancedPrompts, setShowAdvancedPrompts] = useState(false);
+
+  // Form states initialized directly from preset
+  const [name, setName] = useState(preset?.name || "");
+  const [description, setDescription] = useState(preset?.description || "");
+  const [aspectRatio, setAspectRatio] = useState(
+    preset?.aspectRatio || "--ar 16:9 --v 6.1",
+  );
+  const [visualStyleRules, setVisualStyleRules] = useState(
+    preset?.visualStyleRules || "",
+  );
+  const [stage1Prompt, setStage1Prompt] = useState(preset?.stage1Prompt || "");
+  const [stage2Prompt, setStage2Prompt] = useState(preset?.stage2Prompt || "");
+  const [stage3Prompt, setStage3Prompt] = useState(preset?.stage3Prompt || "");
+  const [stage4Prompt, setStage4Prompt] = useState(preset?.stage4Prompt || "");
+
+  // Sync state during render when preset prop changes (React recommended pattern)
+  const [prevPreset, setPrevPreset] = useState(preset);
+  if (preset !== prevPreset) {
+    setPrevPreset(preset);
+    setName(preset?.name || "");
+    setDescription(preset?.description || "");
+    setAspectRatio(preset?.aspectRatio || "--ar 16:9 --v 6.1");
+    setVisualStyleRules(preset?.visualStyleRules || "");
+    setStage1Prompt(preset?.stage1Prompt || "");
+    setStage2Prompt(preset?.stage2Prompt || "");
+    setStage3Prompt(preset?.stage3Prompt || "");
+    setStage4Prompt(preset?.stage4Prompt || "");
+    setIsEditing(false);
+    setErrorMsg(null);
+    setShowAdvancedPrompts(false);
+  }
+
   if (!preset) {
     return (
       <div className="md:col-span-2 glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800 text-center py-16 text-slate-400 dark:text-slate-500 text-xs bg-white/80 dark:bg-slate-900/60">
-        Select a preset to view its style configuration.
+        Select a preset to view or edit its style configuration.
       </div>
     );
   }
 
+  const handleCancel = () => {
+    sound.playNotification();
+    setName(preset.name || "");
+    setDescription(preset.description || "");
+    setAspectRatio(preset.aspectRatio || "--ar 16:9 --v 6.1");
+    setVisualStyleRules(preset.visualStyleRules || "");
+    setStage1Prompt(preset.stage1Prompt || "");
+    setStage2Prompt(preset.stage2Prompt || "");
+    setStage3Prompt(preset.stage3Prompt || "");
+    setStage4Prompt(preset.stage4Prompt || "");
+    setIsEditing(false);
+    setErrorMsg(null);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!name.trim() || !visualStyleRules.trim()) {
+      const msg = "Preset name and visual style rules cannot be empty.";
+      setErrorMsg(msg);
+      toast.error(msg);
+      return;
+    }
+
+    setSaving(true);
+    setErrorMsg(null);
+
+    try {
+      const res = await fetch(`/api/presets/${preset._id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: name.trim(),
+          description: description.trim(),
+          aspectRatio: aspectRatio.trim(),
+          visualStyleRules: visualStyleRules.trim(),
+          stage1Prompt: stage1Prompt.trim() || undefined,
+          stage2Prompt: stage2Prompt.trim() || undefined,
+          stage3Prompt: stage3Prompt.trim() || undefined,
+          stage4Prompt: stage4Prompt.trim() || undefined,
+        }),
+      });
+
+      const data = await res.json();
+      if (!data.success) {
+        throw new Error(data.error || "Failed to update preset");
+      }
+
+      setIsEditing(false);
+      if (onUpdate && data.preset) {
+        onUpdate(data.preset as Preset);
+      }
+    } catch (err: unknown) {
+      const msg =
+        err instanceof Error ? err.message : "Error saving preset changes";
+      setErrorMsg(msg);
+      toast.error(msg);
+    } finally {
+      setSaving(false);
+    }
+  };
+
   return (
-    <div className="md:col-span-2 glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-200 dark:border-slate-800/80 pb-3">
-        <div>
-          <h3 className="text-base font-bold text-slate-900 dark:text-white">
-            {preset.name}
-          </h3>
-          <p className="text-xs text-slate-500 dark:text-slate-400">
-            {preset.description || "Preset Details"}
-          </p>
-        </div>
-        <div className="flex items-center gap-2 shrink-0">
-          <span className="font-mono text-xs text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-purple-950/70 px-3 py-1 rounded-lg border border-purple-200 dark:border-purple-800/60 shadow-xs">
-            {preset.aspectRatio}
-          </span>
-          {!preset.isDefault && onDelete && (
-            <button
-              type="button"
-              onClick={() => onDelete(preset._id, preset.name)}
-              disabled={isDeleting}
-              className="flex items-center gap-1.5 px-3 py-1 rounded-lg bg-rose-50 hover:bg-rose-100 dark:bg-rose-950/40 dark:hover:bg-rose-900/60 text-rose-600 dark:text-rose-300 border border-rose-200 dark:border-rose-800/50 text-xs font-medium transition-colors cursor-pointer disabled:opacity-50"
-              title="Delete this style preset"
-            >
-              <Trash2 className="w-3.5 h-3.5" />
-              <span>{isDeleting ? "Deleting..." : "Delete Preset"}</span>
-            </button>
-          )}
-        </div>
-      </div>
+    <div className="md:col-span-2 glass-panel p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-5 bg-white/80 dark:bg-slate-900/60 transition-colors">
+      <PresetInspectorHeader
+        preset={preset}
+        isEditing={isEditing}
+        saving={saving}
+        isDeleting={isDeleting}
+        isSettingDefault={isSettingDefault}
+        onSetDefault={onSetDefault}
+        onDelete={onDelete}
+        onStartEdit={() => setIsEditing(true)}
+        onCancelEdit={handleCancel}
+        onSave={handleSave}
+      />
 
-      <div className="space-y-3 text-xs">
-        <div>
-          <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-            Visual Art Style DNA:
-          </span>
-          <pre className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-950/80 font-mono text-[11px] text-slate-800 dark:text-slate-300 border border-slate-200 dark:border-slate-800 whitespace-pre-wrap leading-relaxed max-h-56 overflow-y-auto">
-            {preset.visualStyleRules}
-          </pre>
+      {errorMsg && (
+        <div className="p-3 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs flex items-center gap-2">
+          <AlertCircle className="w-4 h-4 shrink-0 text-rose-500" />
+          <span>{errorMsg}</span>
         </div>
+      )}
 
-        <div>
-          <span className="font-semibold text-slate-700 dark:text-slate-300 block mb-1">
-            Pipeline Workflow:
-          </span>
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-[11px]">
-            <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-[#58E6F7]/40 transition-colors">
-              <span className="text-[#8A3FFC] dark:text-[#58E6F7] font-bold block">
-                Stage 1
-              </span>
-              <span className="text-slate-500 dark:text-slate-400">
-                Viral Topic Ideation
-              </span>
-            </div>
-            <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-[#8A3FFC]/40 transition-colors">
-              <span className="text-[#8A3FFC] font-bold block">Stage 2</span>
-              <span className="text-slate-500 dark:text-slate-400">
-                Voiceover &lt;90 chars
-              </span>
-            </div>
-            <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-[#E51FD1]/40 transition-colors">
-              <span className="text-[#E51FD1] font-bold block">Stage 3</span>
-              <span className="text-slate-500 dark:text-slate-400">
-                Batch Image Prompts
-              </span>
-            </div>
-            <div className="p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 hover:border-[#FF7A32]/40 transition-colors">
-              <span className="text-[#FF7A32] font-bold block">Stage 4</span>
-              <span className="text-slate-500 dark:text-slate-400">
-                Viral SEO & Packaging
-              </span>
-            </div>
-          </div>
-        </div>
-      </div>
+      {isEditing ? (
+        <PresetEditForm
+          name={name}
+          setName={setName}
+          description={description}
+          setDescription={setDescription}
+          aspectRatio={aspectRatio}
+          setAspectRatio={setAspectRatio}
+          visualStyleRules={visualStyleRules}
+          setVisualStyleRules={setVisualStyleRules}
+          stage1Prompt={stage1Prompt}
+          setStage1Prompt={setStage1Prompt}
+          stage2Prompt={stage2Prompt}
+          setStage2Prompt={setStage2Prompt}
+          stage3Prompt={stage3Prompt}
+          setStage3Prompt={setStage3Prompt}
+          stage4Prompt={stage4Prompt}
+          setStage4Prompt={setStage4Prompt}
+          showAdvancedPrompts={showAdvancedPrompts}
+          setShowAdvancedPrompts={setShowAdvancedPrompts}
+          saving={saving}
+          onCancel={handleCancel}
+          onSubmit={handleSave}
+        />
+      ) : (
+        <PresetViewMode
+          preset={preset}
+          onStartEdit={() => setIsEditing(true)}
+        />
+      )}
     </div>
   );
 }

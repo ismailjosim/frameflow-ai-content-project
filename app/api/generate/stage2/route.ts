@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import {
   ensureDefaultPresets,
-  HOMODOODLE_DEFAULT_PRESET,
+  FRAMEFLOW_DEFAULT_PRESET,
 } from "@/lib/presets/default-presets";
 import MasterPromptPreset from "@/models/MasterPromptPreset";
 import Project from "@/models/Project";
@@ -27,7 +27,7 @@ export async function POST(req: NextRequest) {
     await connectToDatabase();
     await ensureDefaultPresets();
     const userId = await getUserId(req);
-    const { projectId, topic, model } = await req.json();
+    const { projectId, topic, model, continueFromScript } = await req.json();
 
     if (!topic?.title) {
       return NextResponse.json(
@@ -52,10 +52,31 @@ export async function POST(req: NextRequest) {
     if (!preset) {
       preset =
         (await MasterPromptPreset.findOne({ isDefault: true })) ||
-        HOMODOODLE_DEFAULT_PRESET;
+        FRAMEFLOW_DEFAULT_PRESET;
     }
 
-    const userPrompt = `TOPIC: "${topic.title}"
+    const isContinuing = Boolean(
+      continueFromScript &&
+        typeof continueFromScript === "string" &&
+        continueFromScript.trim().length > 0,
+    );
+
+    const userPrompt = isContinuing
+      ? `TOPIC: "${topic.title}"
+SURVIVAL CONFLICT / HOOK: "${topic.conflict || topic.title}"
+FORMULA: "${topic.formula || "Documentary"}"
+
+PARTIALLY GENERATED SCRIPT SO FAR:
+"""
+${continueFromScript.trim()}
+"""
+
+TASK:
+Resume and continue the voiceover narration script immediately following the last sentence above until the full documentary concludes.
+Do NOT re-write or repeat any sentences that are already in the partial script above.
+Output ONLY the new subsequent lines.
+Rules: Strictly format one sentence per line, with each line under 90 characters.`
+      : `TOPIC: "${topic.title}"
 SURVIVAL CONFLICT / HOOK: "${topic.conflict || topic.title}"
 FORMULA: "${topic.formula || "Documentary"}"
 
@@ -72,9 +93,13 @@ Write the complete narration voiceover script following all line-break and chara
       model || project?.modelSelected || "auto",
     );
 
+    const fullScriptText = isContinuing
+      ? `${continueFromScript.trim()}\n${result.text.trim()}`
+      : result.text.trim();
+
     // Save into project if projectId provided
     if (projectId && project) {
-      project.stageData.scriptText = result.text;
+      project.stageData.scriptText = fullScriptText;
       project.stageData.topic = topic.title;
       project.stageData.topicDetails = {
         title: topic.title,
@@ -89,7 +114,8 @@ Write the complete narration voiceover script following all line-break and chara
 
     return NextResponse.json({
       success: true,
-      scriptText: result.text,
+      scriptText: fullScriptText,
+      newAddition: result.text.trim(),
       modelUsed: result.modelUsed,
       provider: result.provider,
       logs: result.logs,

@@ -1,8 +1,11 @@
 "use client";
 
-import { AlertCircle, ArrowRight, Loader2, Sparkles } from "lucide-react";
+import { ArrowRight, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
+import { sound } from "@/lib/sound";
+import { Stage2Header } from "./Stage2Header";
 import { Stage2MetricsBar } from "./Stage2MetricsBar";
 import type { Stage2ScriptProps } from "./stage2.types";
 
@@ -31,55 +34,73 @@ export function Stage2Script({
     return { lines: lines.length, words, longLines };
   }, [scriptText]);
 
-  const generateScript = useCallback(async () => {
-    if (!topicTitle) {
-      setError("Please select or enter a topic title in Stage 1 first.");
-      return;
-    }
-
-    setLoading(true);
-    setError(null);
-    try {
-      const res = await fetch("/api/generate/stage2", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          projectId,
-          topic: {
-            title: topicTitle,
-            conflict: topicConflict || topicTitle,
-            formula: topicFormula || "Documentary",
-          },
-          model: selectedModel,
-        }),
-      });
-
-      const data = await res.json();
-      if (!data.success) {
-        throw new Error(data.error || "Failed to generate script");
+  const generateScript = useCallback(
+    async (continueExisting = false) => {
+      if (!topicTitle) {
+        setError("Please select or enter a topic title in Stage 1 first.");
+        toast.error("Please select or enter a topic title in Stage 1 first.");
+        return;
       }
 
-      onScriptChange(data.scriptText || "");
-      setModelUsed(data.modelUsed || selectedModel);
-      if (data.logs) setLogs(data.logs);
-    } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Unknown generation error");
-    } finally {
-      setLoading(false);
-    }
-  }, [
-    projectId,
-    topicTitle,
-    topicConflict,
-    topicFormula,
-    selectedModel,
-    onScriptChange,
-  ]);
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch("/api/generate/stage2", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            projectId,
+            topic: {
+              title: topicTitle,
+              conflict: topicConflict || topicTitle,
+              formula: topicFormula || "Documentary",
+            },
+            model: selectedModel,
+            continueFromScript:
+              continueExisting && scriptText.trim().length > 0
+                ? scriptText.trim()
+                : undefined,
+          }),
+        });
+
+        const data = await res.json();
+        if (!data.success) {
+          throw new Error(data.error || "Failed to generate script");
+        }
+
+        onScriptChange(data.scriptText || "");
+        setModelUsed(data.modelUsed || selectedModel);
+        if (data.logs) setLogs(data.logs);
+        sound.playStepComplete();
+        toast.success(
+          continueExisting
+            ? "Voiceover narration script continued successfully!"
+            : "Voiceover narration script generated successfully!",
+        );
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error ? err.message : "Unknown generation error";
+        setError(msg);
+        toast.error(msg);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [
+      projectId,
+      topicTitle,
+      topicConflict,
+      topicFormula,
+      selectedModel,
+      scriptText,
+      onScriptChange,
+    ],
+  );
 
   useEffect(() => {
     if (autoStart && !scriptText && topicTitle && !loading) {
       const timer = setTimeout(() => {
-        generateScript();
+        generateScript(false);
       }, 50);
       return () => clearTimeout(timer);
     }
@@ -88,6 +109,8 @@ export function Stage2Script({
   const copyToClipboard = () => {
     navigator.clipboard.writeText(scriptText);
     setCopied(true);
+    sound.playNotification();
+    toast.success("Narration script copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -107,87 +130,25 @@ export function Stage2Script({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    sound.playNotification();
+    toast.success("Script downloaded as text file!");
   };
 
   return (
     <div className="space-y-6">
-      {/* Intro Header */}
-      <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <div>
-            <div className="flex items-center gap-2">
-              <span className="w-6 h-6 rounded-full bg-linear-to-br from-[#8A3FFC]/20 to-[#E51FD1]/30 text-[#E51FD1] font-bold text-xs flex items-center justify-center border border-[#E51FD1]/40">
-                2
-              </span>
-              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
-                Stage 2: Voiceover Scriptwriter (90-Char Rule)
-              </h2>
-            </div>
-            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
-              Produces caption-ready narration formatted strictly one sentence
-              per line, kept under 90 characters for effortless TTS and visual
-              syncing.
-            </p>
-          </div>
-
-          <div className="flex flex-wrap items-center gap-2">
-            {modelUsed && (
-              <span className="text-[11px] font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-purple-950/70 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-purple-800/60 shadow-xs">
-                Resolved: {modelUsed}
-              </span>
-            )}
-            <button
-              type="button"
-              onClick={generateScript}
-              disabled={loading}
-              className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF1688] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#E51FD1]/25 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
-            >
-              {loading ? (
-                <>
-                  <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  <span>Generating...</span>
-                </>
-              ) : (
-                <>
-                  <Sparkles className="w-3.5 h-3.5" />
-                  <span>
-                    {scriptText ? "Regenerate Script" : "Generate Script"}
-                  </span>
-                </>
-              )}
-            </button>
-          </div>
-        </div>
-
-        {/* Selected Topic Context Banner */}
-        <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
-          <div className="flex items-center gap-2 truncate">
-            <span className="font-semibold text-slate-700 dark:text-slate-300">
-              Topic:
-            </span>
-            <span className="text-[#8A3FFC] dark:text-[#58E6F7] font-medium truncate">
-              {topicTitle || "No topic selected"}
-            </span>
-          </div>
-          {topicConflict && (
-            <span className="text-slate-500 dark:text-slate-400 text-[11px] italic shrink-0">
-              Formula: {topicFormula}
-            </span>
-          )}
-        </div>
-
-        {error && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
-            <div>
-              <p className="font-semibold">Script Generation Error</p>
-              <p className="text-rose-600 dark:text-rose-400/80 mt-0.5">
-                {error}
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
+      {/* Intro Header & Continuation Controls */}
+      <Stage2Header
+        topicTitle={topicTitle}
+        topicConflict={topicConflict}
+        topicFormula={topicFormula}
+        modelUsed={modelUsed}
+        scriptText={scriptText}
+        statsLines={stats.lines}
+        loading={loading}
+        error={error}
+        onContinueScript={() => generateScript(true)}
+        onGenerateScript={() => generateScript(false)}
+      />
 
       {/* Orchestrator Logs */}
       {logs.length > 1 && (

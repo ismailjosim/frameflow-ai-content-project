@@ -35,13 +35,13 @@ const STAGE_MESSAGES: Record<
     ],
   },
   prompts: {
-    title: "AI 2D Doodle Director & Flux Prompt Synthesizer",
+    title: "AI Visual Director & Prompt Synthesizer",
     steps: [
       "Parsing timestamp markers and scene narrative cues...",
-      "Enforcing strict 2D hand-drawn marker stickman aesthetic...",
+      "Enforcing active visual style preset aesthetic...",
       "Injecting high-contrast palette rules (#FFFFFF, #3A86FF, #E63946)...",
       "Composing wide establishing shots & dramatic punch-in zoom framing...",
-      "Assembling prompt batch for Midjourney v6.1 & Flux...",
+      "Assembling prompt batch for Midjourney & Flux...",
     ],
   },
   packaging: {

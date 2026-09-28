@@ -16,7 +16,7 @@ An end-to-end AI video production workstation tailored for creators and producti
   - **Manual Model Selection**: Lock into Gemini 2.5 Flash, Claude 3.7 Sonnet, GPT-4o Mini, etc.
 - **Master Prompt & Style Presets**:
   - Supports uploading `.md` or `.txt` style rules.
-  - Default preset: **HomoDoodle 2D Vector Doodles**.
+  - Default preset: **FrameFlow 2D Vector Doodles**.
   - Pipeline remains strictly fixed: `Topic ➔ Script (<90 chars/line) ➔ Timestamps ➔ Batch Prompts ➔ Packaging`.
 - **Text Format Persistence**: All stage outputs saved to MongoDB in clean, exportable text formats.
 

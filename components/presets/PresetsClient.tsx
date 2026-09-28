@@ -1,21 +1,30 @@
 "use client";
 
-import { AlertCircle, Check, Palette, Plus, Trash2 } from "lucide-react";
+import { Palette, Plus } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import DashboardLayout from "@/components/layout/DashboardLayout";
+import { sound } from "@/lib/sound";
 import { CreatePresetModal } from "./CreatePresetModal";
+import { PresetCard } from "./PresetCard";
+import { PresetConfirmDialogs } from "./PresetConfirmDialogs";
 import { PresetInspector } from "./PresetInspector";
 import type { Preset } from "./presets.types";
 
 export function PresetsClient() {
   const [presets, setPresets] = useState<Preset[]>([]);
-  const [showCreateModal, setShowCreateModal] = useState(false);
   const [selectedPreset, setSelectedPreset] = useState<Preset | null>(null);
-  const [deletingId, setDeletingId] = useState<string | null>(null);
-  const [toastMsg, setToastMsg] = useState<{
-    text: string;
-    type: "success" | "error";
+  const [showCreateModal, setShowCreateModal] = useState(false);
+  const [presetToDelete, setPresetToDelete] = useState<{
+    id: string;
+    name: string;
   } | null>(null);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const [presetToMakeDefault, setPresetToMakeDefault] = useState<Preset | null>(
+    null,
+  );
+  const [isSettingDefault, setIsSettingDefault] = useState(false);
 
   const fetchPresets = useCallback(async () => {
     try {
@@ -23,12 +32,20 @@ export function PresetsClient() {
       const data = await res.json();
       if (data.success && Array.isArray(data.presets)) {
         setPresets(data.presets);
-        setSelectedPreset(
-          (curr) => curr || (data.presets.length > 0 ? data.presets[0] : null),
-        );
+        const defaultOne =
+          data.presets.find((p: Preset) => p.isDefault) ||
+          data.presets[0] ||
+          null;
+        setSelectedPreset((prev) => {
+          if (!prev) return defaultOne;
+          const stillExists = data.presets.find(
+            (p: Preset) => p._id === prev._id,
+          );
+          return stillExists || defaultOne;
+        });
       }
     } catch {
-      // ignore
+      // silently handle
     }
   }, []);
 
@@ -40,10 +57,11 @@ export function PresetsClient() {
         const data = await res.json();
         if (!ignore && data.success && Array.isArray(data.presets)) {
           setPresets(data.presets);
-          setSelectedPreset(
-            (curr) =>
-              curr || (data.presets.length > 0 ? data.presets[0] : null),
-          );
+          const defaultOne =
+            data.presets.find((p: Preset) => p.isDefault) ||
+            data.presets[0] ||
+            null;
+          setSelectedPreset(defaultOne);
         }
       } catch {
         // ignore
@@ -55,41 +73,81 @@ export function PresetsClient() {
     };
   }, []);
 
-  const handleDeletePreset = async (id: string, name: string) => {
-    if (!window.confirm(`Are you sure you want to delete preset "${name}"?`)) {
+  const handleSelectPreset = (p: Preset) => {
+    if (selectedPreset?._id === p._id) return;
+    if (p.isDefault) {
+      setSelectedPreset(p);
       return;
     }
-    setDeletingId(id);
+    setPresetToMakeDefault(p);
+  };
+
+  const handleConfirmSetDefault = async () => {
+    if (!presetToMakeDefault) return;
+    setIsSettingDefault(true);
     try {
-      const res = await fetch(`/api/presets/${id}`, { method: "DELETE" });
+      const res = await fetch(`/api/presets/${presetToMakeDefault._id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ isDefault: true }),
+      });
       const data = await res.json();
       if (data.success) {
-        setToastMsg({ text: `Preset "${name}" deleted.`, type: "success" });
-        setPresets((prev) => {
-          const updated = prev.filter((p) => p._id !== id);
-          if (selectedPreset?._id === id) {
-            setSelectedPreset(updated.length > 0 ? updated[0] : null);
-          }
-          return updated;
-        });
-        setTimeout(() => setToastMsg(null), 3000);
+        sound.playStepComplete();
+        toast.success(
+          `"${presetToMakeDefault.name}" is now the default preset!`,
+        );
+        await fetchPresets();
+        setSelectedPreset(presetToMakeDefault);
+        setPresetToMakeDefault(null);
       } else {
-        setToastMsg({
-          text: data.error || "Failed to delete preset",
-          type: "error",
-        });
-        setTimeout(() => setToastMsg(null), 3500);
+        toast.error(data.error || "Failed to set default preset");
       }
     } catch {
-      setToastMsg({ text: "Network error deleting preset", type: "error" });
-      setTimeout(() => setToastMsg(null), 3500);
+      toast.error("Network error setting default preset");
     } finally {
-      setDeletingId(null);
+      setIsSettingDefault(false);
     }
   };
 
+  const handleConfirmDelete = async () => {
+    if (!presetToDelete) return;
+    setIsDeleting(true);
+    try {
+      const res = await fetch(`/api/presets/${presetToDelete.id}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (data.success) {
+        sound.playNotification();
+        toast.success(`Preset "${presetToDelete.name}" deleted.`);
+        await fetchPresets();
+        if (selectedPreset?._id === presetToDelete.id) {
+          const remaining = presets.filter((p) => p._id !== presetToDelete.id);
+          setSelectedPreset(remaining[0] || null);
+        }
+        setPresetToDelete(null);
+      } else {
+        toast.error(data.error || "Failed to delete preset");
+      }
+    } catch {
+      toast.error("Network error deleting preset");
+    } finally {
+      setIsDeleting(false);
+    }
+  };
+
+  const handleUpdatePreset = (updated: Preset) => {
+    sound.playStepComplete();
+    toast.success("Style preset updated successfully!");
+    setPresets((prev) =>
+      prev.map((p) => (p._id === updated._id ? updated : p)),
+    );
+    setSelectedPreset(updated);
+  };
+
   return (
-    <DashboardLayout pageTitle="Style Presets">
+    <DashboardLayout pageTitle="Master Prompt & Styles">
       <div className="space-y-6">
         {/* Header */}
         <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
@@ -118,29 +176,27 @@ export function PresetsClient() {
           </button>
         </div>
 
-        {/* Status Toast */}
-        {toastMsg && (
-          <div
-            className={`p-3.5 rounded-xl text-xs flex items-center gap-2 animate-fade-in ${
-              toastMsg.type === "success"
-                ? "bg-linear-to-r from-[#8A3FFC]/15 to-[#E51FD1]/15 border border-[#E51FD1]/40 text-purple-800 dark:text-pink-200"
-                : "bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300"
-            }`}
-          >
-            {toastMsg.type === "success" ? (
-              <Check className="w-4 h-4 text-[#8A3FFC] dark:text-[#58E6F7]" />
-            ) : (
-              <AlertCircle className="w-4 h-4 text-rose-500" />
-            )}
-            <span>{toastMsg.text}</span>
-          </div>
-        )}
-
         {/* Modal: Add Custom Style */}
         <CreatePresetModal
           isOpen={showCreateModal}
           onClose={() => setShowCreateModal(false)}
-          onSuccess={fetchPresets}
+          onSuccess={() => {
+            sound.playStepComplete();
+            toast.success("New style preset added!");
+            fetchPresets();
+          }}
+        />
+
+        {/* Confirm Dialogs */}
+        <PresetConfirmDialogs
+          presetToMakeDefault={presetToMakeDefault}
+          onCloseDefaultDialog={() => setPresetToMakeDefault(null)}
+          onConfirmSetDefault={handleConfirmSetDefault}
+          isSettingDefault={isSettingDefault}
+          presetToDelete={presetToDelete}
+          onCloseDeleteDialog={() => setPresetToDelete(null)}
+          onConfirmDelete={handleConfirmDelete}
+          isDeleting={isDeleting}
         />
 
         {/* Preset Browser Grid & Inspector */}
@@ -150,62 +206,29 @@ export function PresetsClient() {
             <h2 className="text-xs font-semibold uppercase tracking-wider text-slate-500 dark:text-slate-400">
               Available Presets ({presets.length})
             </h2>
-            {presets.map((p) => {
-              const isSelected = selectedPreset?._id === p._id;
-              const isDeletingThis = deletingId === p._id;
-              return (
-                <div
-                  key={p._id}
-                  onClick={() => setSelectedPreset(p)}
-                  className={`p-4 rounded-2xl border cursor-pointer transition-all ${
-                    isSelected
-                      ? "bg-linear-to-r from-[#8A3FFC]/15 via-[#E51FD1]/10 to-transparent border-[#E51FD1] shadow-md shadow-[#8A3FFC]/20 ring-1 ring-[#E51FD1]/50 text-slate-900 dark:text-white"
-                      : "glass-panel border-slate-200 dark:border-slate-800 hover:border-slate-300 dark:hover:border-slate-700 bg-white/80 dark:bg-slate-900/60"
-                  } ${isDeletingThis ? "opacity-50 pointer-events-none" : ""}`}
-                >
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-slate-900 dark:text-white truncate pr-2">
-                      {p.name}
-                    </span>
-                    <div className="flex items-center gap-1.5 shrink-0">
-                      {p.isDefault ? (
-                        <span className="text-[10px] font-bold uppercase px-2 py-0.5 rounded-full bg-linear-to-r from-purple-100 to-pink-100 dark:from-[#8A3FFC]/25 dark:to-[#E51FD1]/25 text-purple-700 dark:text-pink-300 border border-purple-200 dark:border-[#E51FD1]/40">
-                          Default
-                        </span>
-                      ) : (
-                        <button
-                          type="button"
-                          onClick={(e) => {
-                            e.stopPropagation();
-                            handleDeletePreset(p._id, p.name);
-                          }}
-                          disabled={isDeletingThis}
-                          className="p-1 rounded-lg text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-800 transition-colors cursor-pointer"
-                          title={`Delete preset ${p.name}`}
-                        >
-                          <Trash2 className="w-3.5 h-3.5" />
-                        </button>
-                      )}
-                    </div>
-                  </div>
-                  {p.description && (
-                    <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
-                      {p.description}
-                    </p>
-                  )}
-                  <span className="font-mono text-[10px] text-[#8A3FFC] dark:text-[#58E6F7] block mt-2">
-                    {p.aspectRatio}
-                  </span>
-                </div>
-              );
-            })}
+            {presets.map((p) => (
+              <PresetCard
+                key={p._id}
+                preset={p}
+                isSelected={selectedPreset?._id === p._id}
+                isDeleting={isDeleting && presetToDelete?.id === p._id}
+                onSelect={handleSelectPreset}
+                onDeleteRequest={(id, name) => setPresetToDelete({ id, name })}
+              />
+            ))}
           </div>
 
           {/* Preset Inspector */}
           <PresetInspector
+            key={selectedPreset?._id || "empty"}
             preset={selectedPreset}
-            onDelete={handleDeletePreset}
-            isDeleting={deletingId === selectedPreset?._id}
+            onDelete={(id, name) => setPresetToDelete({ id, name })}
+            isDeleting={
+              isDeleting && presetToDelete?.id === selectedPreset?._id
+            }
+            onUpdate={handleUpdatePreset}
+            onSetDefault={(p) => setPresetToMakeDefault(p)}
+            isSettingDefault={isSettingDefault}
           />
         </div>
       </div>

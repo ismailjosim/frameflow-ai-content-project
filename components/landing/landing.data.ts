@@ -32,7 +32,7 @@ export const FEATURE_TICKERS = [
     color: "#E51FD1",
     glow: "rgba(229,31,209,0.12)",
     border: "rgba(229,31,209,0.2)",
-    label: "HomoDoodle Consistency",
+    label: "Visual Character Consistency",
     desc: "Flat solid colors, slate grey tunic, bold black marker lines.",
   },
   {
@@ -112,7 +112,7 @@ export const STYLE_PRESETS = [
   {
     badge: "Default",
     badgeColor: "#8A3FFC",
-    title: "HomoDoodle Classic",
+    title: "FrameFlow 2D Classic",
     desc: "Hand-drawn 2D cartoon stickman in slate grey tunic, bold black marker outlines, flat solid colors, no 3D, no photorealism.",
     meta: "Aspect: 16:9 • Midjourney v6.1",
     accent: "#8A3FFC",
@@ -155,20 +155,20 @@ export const SECURITY_FEATURES = [
   {
     icon: "lock" as const,
     accent: "#8A3FFC",
-    title: "AES-256-GCM Encryption",
-    desc: "Credentials are encrypted with authenticated AES-256-GCM at rest in MongoDB. Keys are masked in all client responses (••••••••).",
+    title: "Secure Vault Storage",
+    desc: "Credentials and projects are encrypted securely at rest in your private vault. Keys are masked in all client displays (••••••••).",
   },
   {
     icon: "cpu" as const,
     accent: "#E51FD1",
     title: "Zero Leak Memory Lifecycle",
-    desc: "Keys are decrypted solely in server memory for the exact duration of prompt generation, then immediately garbage collected.",
+    desc: "Keys are decrypted solely in server memory for the exact duration of prompt generation, then immediately erased.",
   },
   {
     icon: "shield" as const,
     accent: "#58E6F7",
     title: "Multi-Model Auto Fallback",
-    desc: "Supports Google Gemini 2.5 Flash, Anthropic Claude 3.7 Sonnet, and OpenAI GPT-4o. If one hits rate limits, auto-fallback kicks in.",
+    desc: "Supports Google Gemini 3.8 Flash, Anthropic Claude 3.7 Sonnet, and OpenAI GPT-4o. If one hits rate limits, auto-fallback kicks in.",
   },
 ] as const;
 
@@ -184,7 +184,7 @@ export const COMPARISON_FRAMEFLOW = [
   "Algorithmic topic ranking with virality score, conflict, and thumbnail concepts.",
   "Strict <90-character narration scriptwriter with voiceover pacing estimation.",
   "Batch auto-chunking (20 prompts/run) formulated for Midjourney & Flux.",
-  "Guaranteed HomoDoodle character consistency with negative constraints.",
+  "Guaranteed character visual consistency with negative constraints.",
   "1-Click ZIP production bundle with scripts, prompts, SEO, and packaging.",
 ] as const;
 
@@ -199,8 +199,9 @@ export const FAQ_ITEMS = [
   },
   {
     q: "Is my API key safe?",
-    a: "Yes. Keys are encrypted using military-grade AES-256-GCM with a unique initialisation vector per key. The unencrypted key is never sent to the client browser and is decrypted solely in server memory during API calls.",
+    a: "Yes. Keys are securely encrypted with high-grade security and isolated per creator. The unencrypted key is never sent to the client browser and is utilized solely in server memory during AI calls.",
   },
+
   {
     q: "Can I customise or delete style presets?",
     a: "Absolutely. The Preset Studio allows you to create custom visual styles, change camera angles, tweak negative prompts, or delete custom presets whenever you wish.",

@@ -1,15 +1,15 @@
 import connectToDatabase from "@/lib/mongodb";
 import MasterPromptPreset from "@/models/MasterPromptPreset";
 
-export const HOMODOODLE_DEFAULT_PRESET = {
-  name: "HomoDoodle 2D Vector Doodles (Default)",
-  slug: "homodoodle-2d",
+export const FRAMEFLOW_DEFAULT_PRESET = {
+  name: "FrameFlow 2D Vector Doodles (Default)",
+  slug: "frameflow-2d",
   description:
-    "Hand-drawn 2D marker cartoon stickman aesthetic with high-CTR prehistoric and evolutionary storytelling formulas.",
+    "Hand-drawn 2D marker cartoon stickman aesthetic with high-retention storytelling formulas.",
   isDefault: true,
   aspectRatio: "--ar 16:9 --v 6.1",
   visualStyleRules: `Hand-drawn 2D doodle cartoon illustration, minimalist stick figure explainer style, flat solid colors, bold black marker outlines, slightly imperfect sketchy lines.
-Protagonist: HomoDoodle stickman in rough jagged animal pelt tunic, circular head, confused dot eyes, expressive eyebrows.
+Protagonist: FrameFlow 2D doodle stickman in rough jagged animal pelt tunic, circular head, confused dot eyes, expressive eyebrows.
 Colors: Healthy white (#FFFFFF), Freezing bright blue (#3A86FF), Panic bright red (#E63946), Starving slate grey (#8D99AE).
 Backgrounds: Parchment #F7F4EB, Night/Cold #1A2238, Savanna/Sand #D6B27A, Camp/Hearth #D95C2B.
 Motion cues: [PUNCH-IN ZOOM], [WIDE ESTABLISHING], [SPLIT-SCREEN COMPARISON], [EXPRESSION SWAP].
@@ -92,9 +92,51 @@ Return ONLY raw valid JSON without markdown codeblocks or extra text.`,
 
 export async function ensureDefaultPresets() {
   await connectToDatabase();
-  await MasterPromptPreset.findOneAndUpdate(
-    { slug: HOMODOODLE_DEFAULT_PRESET.slug },
-    { $set: HOMODOODLE_DEFAULT_PRESET },
-    { upsert: true, returnDocument: "after" },
-  );
+
+  // Migrate any previous database presets with legacy naming to FrameFlow
+  try {
+    await MasterPromptPreset.updateMany(
+      {
+        $or: [
+          { slug: "homodoodle-2d" },
+          { name: { $regex: /homodoodle/i } },
+          { visualStyleRules: { $regex: /homodoodle/i } },
+        ],
+      },
+      {
+        $set: {
+          name: FRAMEFLOW_DEFAULT_PRESET.name,
+          slug: FRAMEFLOW_DEFAULT_PRESET.slug,
+          description: FRAMEFLOW_DEFAULT_PRESET.description,
+          visualStyleRules: FRAMEFLOW_DEFAULT_PRESET.visualStyleRules,
+        },
+      },
+    );
+  } catch {
+    // silently continue
+  }
+
+  const count = await MasterPromptPreset.countDocuments();
+  if (count === 0) {
+    await MasterPromptPreset.create(FRAMEFLOW_DEFAULT_PRESET);
+    return;
+  }
+
+  // Ensure at least one preset is marked as default
+  const hasDefault = await MasterPromptPreset.findOne({ isDefault: true });
+  if (!hasDefault) {
+    const defaultPreset = await MasterPromptPreset.findOne({
+      slug: FRAMEFLOW_DEFAULT_PRESET.slug,
+    });
+    if (defaultPreset) {
+      defaultPreset.isDefault = true;
+      await defaultPreset.save();
+    } else {
+      const first = await MasterPromptPreset.findOne();
+      if (first) {
+        first.isDefault = true;
+        await first.save();
+      }
+    }
+  }
 }

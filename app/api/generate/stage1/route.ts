@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import {
   ensureDefaultPresets,
-  HOMODOODLE_DEFAULT_PRESET,
+  FRAMEFLOW_DEFAULT_PRESET,
 } from "@/lib/presets/default-presets";
 import IgnoredTopic from "@/models/IgnoredTopic";
 import MasterPromptPreset from "@/models/MasterPromptPreset";
@@ -43,7 +43,7 @@ export async function POST(req: NextRequest) {
     if (!preset) {
       preset =
         (await MasterPromptPreset.findOne({ isDefault: true })) ||
-        HOMODOODLE_DEFAULT_PRESET;
+        FRAMEFLOW_DEFAULT_PRESET;
     }
 
     // Retrieve ignored topics and existing projects to prevent repetition

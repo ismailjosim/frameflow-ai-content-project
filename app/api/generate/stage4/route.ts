@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import {
   ensureDefaultPresets,
-  HOMODOODLE_DEFAULT_PRESET,
+  FRAMEFLOW_DEFAULT_PRESET,
 } from "@/lib/presets/default-presets";
 import MasterPromptPreset from "@/models/MasterPromptPreset";
 import Project from "@/models/Project";
@@ -52,7 +52,7 @@ export async function POST(req: NextRequest) {
     if (!preset) {
       preset =
         (await MasterPromptPreset.findOne({ isDefault: true })) ||
-        HOMODOODLE_DEFAULT_PRESET;
+        FRAMEFLOW_DEFAULT_PRESET;
     }
 
     const systemPrompt = preset.stage4Prompt.replace(

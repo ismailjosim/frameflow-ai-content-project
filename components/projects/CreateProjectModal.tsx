@@ -2,6 +2,8 @@
 
 import type React from "react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { sound } from "@/lib/sound";
 import type { CreateProjectModalProps } from "./projects.types";
 
 export function CreateProjectModal({
@@ -29,17 +31,22 @@ export function CreateProjectModal({
       });
       const data = await res.json();
       if (data.success) {
+        sound.playStepComplete();
+        toast.success(`Project "${newTitle.trim()}" created successfully!`);
         setNewTitle("");
         setError(null);
         onSuccess();
         onClose();
       } else {
-        setError(data.error || "Failed to create project");
+        const msg = data.error || "Failed to create project";
+        setError(msg);
+        toast.error(msg);
       }
     } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : "Error connecting to server",
-      );
+      const msg =
+        err instanceof Error ? err.message : "Error connecting to server";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setCreating(false);
     }

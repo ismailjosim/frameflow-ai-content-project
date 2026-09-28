@@ -253,40 +253,40 @@ export const SLIDES_DATA: SlideData[] = [
     features: [
       {
         id: "f4-1",
-        title: "Sub-Second Automatic Failover",
+        title: "Seamless Automatic Failover",
         description:
-          "Instantly detects HTTP 429 rate limits or network drops and reroutes to the optimal backup provider.",
+          "Instantly detects when an AI provider is busy or slow and smoothly switches to your backup service.",
         metric: "< 250ms Failover",
       },
       {
         id: "f4-2",
-        title: "Provider Load Balancing",
+        title: "Smart Provider Balancing",
         description:
-          "Dynamically evaluates latency and model capacity between Claude, ChatGPT, and Gemini.",
+          "Dynamically selects the fastest, most reliable AI between Claude, ChatGPT, and Gemini.",
         metric: "Auto Dynamic Routing",
       },
       {
         id: "f4-3",
-        title: "Client-Side AES-256 Vault",
+        title: "Private Encrypted Key Vault",
         description:
-          "Your provider keys are encrypted locally and never exposed in plaintext to third-party databases.",
-        metric: "Zero-Leak Security",
+          "Your personal AI keys stay securely encrypted and protected in your private studio, never shared or exposed.",
+        metric: "Complete Privacy",
       },
     ],
     hotspots: [
       {
         x: 55,
         y: 46,
-        label: "FrameFlow AI Router",
+        label: "FrameFlow AI Director",
         detail:
-          "Central dispatch orchestrating multi-LLM requests in real-time",
+          "Central orchestrator managing multi-model generation seamlessly",
       },
       {
         x: 74,
         y: 35,
-        label: "429 Rate Limit Detected",
+        label: "AI Capacity Switched",
         detail:
-          "Automated trigger reroutes Claude request instantly to ChatGPT",
+          "Automated backup activates instantly so your video generation never stops",
       },
       {
         x: 88,

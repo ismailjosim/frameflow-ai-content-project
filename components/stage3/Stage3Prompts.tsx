@@ -2,7 +2,9 @@
 
 import { ArrowRight, Loader2 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { toast } from "sonner";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
+import { sound } from "@/lib/sound";
 import { calculateTimestamps, ensureTimestampedScript } from "@/lib/timestamps";
 import { Stage3BatchControl } from "./Stage3BatchControl";
 import { Stage3PromptList } from "./Stage3PromptList";
@@ -23,6 +25,7 @@ export function Stage3Prompts({
   const [isRunning, setIsRunning] = useState(false);
   const [currentBatch, setCurrentBatch] = useState(0);
   const [totalBatches, setTotalBatches] = useState(0);
+  const [failedBatchIndex, setFailedBatchIndex] = useState<number | null>(null);
   const [copied, setCopied] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
@@ -55,6 +58,8 @@ export function Stage3Prompts({
     if (!raw.trim()) return;
     const recalculated = calculateTimestamps(raw);
     onTimestampChange(recalculated.result);
+    sound.playNotification();
+    toast.success("Timestamps recalculated based on word cadence.");
   }, [timestampInput, scriptText, onTimestampChange]);
 
   const promptList = useMemo(() => {
@@ -65,78 +70,92 @@ export function Stage3Prompts({
       .filter((p) => p.length > 0);
   }, [promptsText]);
 
-  const startBatchQueue = useCallback(async () => {
-    const targetLines =
-      lines.length > 0
-        ? lines
-        : scriptText
-          ? scriptText
-              .split("\n")
-              .map((l) => l.trim())
-              .filter(Boolean)
-          : [];
-    if (targetLines.length === 0) {
-      setError("Please paste your script or timestamps from Stage 2 first.");
-      return;
-    }
-
-    setIsRunning(true);
-    setError(null);
-
-    const chunks: string[][] = [];
-    for (let i = 0; i < targetLines.length; i += batchSize) {
-      chunks.push(targetLines.slice(i, i + batchSize));
-    }
-
-    setTotalBatches(chunks.length);
-    let accumulatedPrompts = promptsText ? `${promptsText}\n\n` : "";
-
-    try {
-      for (let i = 0; i < chunks.length; i++) {
-        setCurrentBatch(i + 1);
-        const chunk = chunks[i];
-
-        const res = await fetch("/api/generate/stage3-batch", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            projectId,
-            batchLines: chunk,
-            topicTitle: topicTitle || "Video Production",
-            batchIndex: i,
-            totalBatches: chunks.length,
-            model: selectedModel,
-          }),
-        });
-
-        const data = await res.json();
-        if (!data.success) {
-          throw new Error(data.error || `Batch ${i + 1} failed`);
-        }
-
-        accumulatedPrompts += `${(data.promptsText || "").trim()}\n\n`;
-        onPromptsChange(accumulatedPrompts.trim());
-
-        if (data.logs) {
-          setLogs((prev) => [...prev.slice(-4), ...data.logs]);
-        }
+  const startBatchQueue = useCallback(
+    async (fromBatchIndex = 0) => {
+      const targetLines =
+        lines.length > 0
+          ? lines
+          : scriptText
+            ? scriptText
+                .split("\n")
+                .map((l) => l.trim())
+                .filter(Boolean)
+            : [];
+      if (targetLines.length === 0) {
+        setError("Please paste your script or timestamps from Stage 2 first.");
+        toast.error(
+          "Please paste your script or timestamps from Stage 2 first.",
+        );
+        return;
       }
-    } catch (err: unknown) {
-      setError(
-        err instanceof Error ? err.message : "Batch queue stopped due to error",
-      );
-    } finally {
-      setIsRunning(false);
-    }
-  }, [
-    lines,
-    scriptText,
-    promptsText,
-    projectId,
-    topicTitle,
-    selectedModel,
-    onPromptsChange,
-  ]);
+
+      setIsRunning(true);
+      setError(null);
+
+      const chunks: string[][] = [];
+      for (let i = 0; i < targetLines.length; i += batchSize) {
+        chunks.push(targetLines.slice(i, i + batchSize));
+      }
+
+      setTotalBatches(chunks.length);
+      let accumulatedPrompts =
+        fromBatchIndex > 0 && promptsText ? `${promptsText.trim()}\n\n` : "";
+
+      try {
+        for (let i = fromBatchIndex; i < chunks.length; i++) {
+          setCurrentBatch(i + 1);
+          const chunk = chunks[i];
+
+          const res = await fetch("/api/generate/stage3-batch", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              projectId,
+              batchLines: chunk,
+              topicTitle: topicTitle || "Video Production",
+              batchIndex: i,
+              totalBatches: chunks.length,
+              model: selectedModel,
+            }),
+          });
+
+          const data = await res.json();
+          if (!data.success) {
+            setFailedBatchIndex(i);
+            throw new Error(data.error || `Batch ${i + 1} failed`);
+          }
+
+          accumulatedPrompts += `${(data.promptsText || "").trim()}\n\n`;
+          onPromptsChange(accumulatedPrompts.trim());
+
+          if (data.logs) {
+            setLogs((prev) => [...prev.slice(-4), ...data.logs]);
+          }
+        }
+        setFailedBatchIndex(null);
+        sound.playStepComplete();
+        toast.success("All Midjourney image prompts generated successfully!");
+      } catch (err: unknown) {
+        const msg =
+          err instanceof Error
+            ? err.message
+            : "Batch queue stopped due to error";
+        setError(msg);
+        toast.error(msg);
+      } finally {
+        setIsRunning(false);
+      }
+    },
+    [
+      lines,
+      scriptText,
+      promptsText,
+      projectId,
+      topicTitle,
+      selectedModel,
+      onPromptsChange,
+    ],
+  );
 
   useEffect(() => {
     if (autoStart && lines.length > 0 && !promptsText && !isRunning) {
@@ -150,6 +169,8 @@ export function Stage3Prompts({
   const copyToClipboard = () => {
     navigator.clipboard.writeText(promptsText);
     setCopied(true);
+    sound.playNotification();
+    toast.success("Image prompts copied to clipboard!");
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -169,6 +190,8 @@ export function Stage3Prompts({
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+    sound.playNotification();
+    toast.success("Prompts downloaded as text file!");
   };
 
   const currentPercent =
@@ -186,7 +209,9 @@ export function Stage3Prompts({
         currentPercent={currentPercent}
         timestampInput={timestampInput}
         onTimestampChange={onTimestampChange}
-        onStartQueue={startBatchQueue}
+        onStartQueue={() => startBatchQueue(0)}
+        onResumeQueue={(batchIdx) => startBatchQueue(batchIdx)}
+        failedBatchIndex={failedBatchIndex}
         onRecalculateTimestamps={handleRecalculateTimestamps}
         estimatedRuntime={timingStats.formattedRuntime}
         error={error}

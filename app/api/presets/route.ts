@@ -4,22 +4,39 @@ import { auth } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import {
   ensureDefaultPresets,
-  HOMODOODLE_DEFAULT_PRESET,
+  FRAMEFLOW_DEFAULT_PRESET,
 } from "@/lib/presets/default-presets";
 import MasterPromptPreset from "@/models/MasterPromptPreset";
 
-async function getUserId(req: NextRequest): Promise<string> {
+interface UserInfo {
+  id: string;
+  name: string;
+  email?: string | null;
+  image?: string | null;
+}
+
+async function getUserInfo(req: NextRequest): Promise<UserInfo> {
   try {
     const session = await auth.api.getSession({
       headers: await headers(),
     });
     if (session?.user?.id) {
-      return session.user.id;
+      return {
+        id: session.user.id,
+        name: session.user.name || "Creator",
+        email: session.user.email || null,
+        image: session.user.image || null,
+      };
     }
   } catch {
     // fallback
   }
-  return req.headers.get("x-user-id") || "default-creator";
+  return {
+    id: req.headers.get("x-user-id") || "default-creator",
+    name: req.headers.get("x-user-name") || "Creator",
+    email: req.headers.get("x-user-email") || null,
+    image: null,
+  };
 }
 
 // GET /api/presets - List all presets
@@ -27,11 +44,11 @@ export async function GET(req: NextRequest) {
   try {
     await connectToDatabase();
     await ensureDefaultPresets();
-    const userId = await getUserId(req);
+    const userInfo = await getUserInfo(req);
 
     // Fetch system defaults (userId: null) or user-created presets
     const presets = await MasterPromptPreset.find({
-      $or: [{ userId: null }, { userId }],
+      $or: [{ userId: null }, { userId: userInfo.id }],
     })
       .sort({ isDefault: -1, createdAt: -1 })
       .lean();
@@ -51,7 +68,7 @@ export async function GET(req: NextRequest) {
 export async function POST(req: NextRequest) {
   try {
     await connectToDatabase();
-    const userId = await getUserId(req);
+    const userInfo = await getUserInfo(req);
     const body = await req.json();
 
     const {
@@ -64,6 +81,9 @@ export async function POST(req: NextRequest) {
       stage4Prompt,
       aspectRatio,
       rawMasterFile,
+      userName,
+      userEmail,
+      userImage,
     } = body;
 
     if (!name || !visualStyleRules) {
@@ -82,13 +102,16 @@ export async function POST(req: NextRequest) {
       name,
       slug: `${slug}-${Date.now().toString().slice(-4)}`,
       description: description || "Custom video production art style",
-      userId,
+      userId: userInfo.id,
+      userName: userName || userInfo.name || "Creator",
+      userEmail: userEmail || userInfo.email || undefined,
+      userImage: userImage || userInfo.image || undefined,
       isDefault: false,
       visualStyleRules,
-      stage1Prompt: stage1Prompt || HOMODOODLE_DEFAULT_PRESET.stage1Prompt,
-      stage2Prompt: stage2Prompt || HOMODOODLE_DEFAULT_PRESET.stage2Prompt,
-      stage3Prompt: stage3Prompt || HOMODOODLE_DEFAULT_PRESET.stage3Prompt,
-      stage4Prompt: stage4Prompt || HOMODOODLE_DEFAULT_PRESET.stage4Prompt,
+      stage1Prompt: stage1Prompt || FRAMEFLOW_DEFAULT_PRESET.stage1Prompt,
+      stage2Prompt: stage2Prompt || FRAMEFLOW_DEFAULT_PRESET.stage2Prompt,
+      stage3Prompt: stage3Prompt || FRAMEFLOW_DEFAULT_PRESET.stage3Prompt,
+      stage4Prompt: stage4Prompt || FRAMEFLOW_DEFAULT_PRESET.stage4Prompt,
       aspectRatio: aspectRatio || "--ar 16:9 --v 6.1",
       rawMasterFile: rawMasterFile || undefined,
     });

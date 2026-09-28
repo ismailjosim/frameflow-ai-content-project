@@ -1,6 +1,12 @@
 "use client";
 
-import { AlertCircle, EyeOff, Loader2, Sparkles } from "lucide-react";
+import {
+  AlertCircle,
+  EyeOff,
+  Loader2,
+  RotateCcw,
+  Sparkles,
+} from "lucide-react";
 import type { TopicInputHeaderProps } from "./stage1.types";
 
 export function TopicInputHeader({
@@ -87,18 +93,28 @@ export function TopicInputHeader({
       </div>
 
       {error && (
-        <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs">
-          <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
-          <div>
-            <p className="font-semibold">Generation Failed</p>
-            <p className="text-rose-600 dark:text-rose-400/80 mt-0.5">
-              {error}
-            </p>
-            <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
-              Make sure you have added an active API key in the Key Vault
-              Settings.
-            </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs">
+          <div className="flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
+            <div>
+              <p className="font-semibold">Topic Generation Failed</p>
+              <p className="text-rose-600 dark:text-rose-400/80 mt-0.5">
+                {error}
+              </p>
+              <p className="text-[11px] text-slate-500 dark:text-slate-400 mt-1">
+                Make sure you have an active AI key configured in settings.
+              </p>
+            </div>
           </div>
+          <button
+            type="button"
+            onClick={() => onGenerate()}
+            disabled={loading}
+            className="flex items-center justify-center gap-1.5 px-3.5 py-2 rounded-xl bg-rose-600 hover:bg-rose-700 text-white font-medium text-xs transition-colors shrink-0 cursor-pointer shadow-xs disabled:opacity-50"
+          >
+            <RotateCcw className="w-3.5 h-3.5" />
+            <span>Retry Generating Topics</span>
+          </button>
         </div>
       )}
     </div>

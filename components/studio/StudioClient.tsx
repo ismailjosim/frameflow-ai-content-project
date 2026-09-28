@@ -72,7 +72,7 @@ export function StudioClient() {
         {loadingProject ? (
           <div className="flex items-center justify-center py-20 text-slate-400 text-xs gap-2">
             <Loader2 className="w-5 h-5 animate-spin text-[#58E6F7]" />
-            Loading project state from database...
+            Loading your project...
           </div>
         ) : (
           <div className="transition-opacity duration-200">

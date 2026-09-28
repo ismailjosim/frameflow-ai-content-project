@@ -2,6 +2,8 @@
 
 import { useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
+import { sound } from "@/lib/sound";
 import { ensureTimestampedScript } from "@/lib/timestamps";
 import type { ParsedPackaging, StageStep, TopicCandidate } from "@/types";
 
@@ -135,7 +137,7 @@ export function useStudioProject() {
     initProject();
   }, [urlProjectId]);
 
-  // Save changes to MongoDB
+  // Save changes to cloud library
   const saveProjectState = useCallback(async () => {
     if (!projectId) return;
     setIsSaving(true);
@@ -163,11 +165,14 @@ export function useStudioProject() {
 
       const data = await res.json();
       if (data.success) {
-        setSaveStatus("Saved to MongoDB!");
+        setSaveStatus("All Changes Saved!");
+        sound.playNotification();
+        toast.success("Project saved successfully!");
         setTimeout(() => setSaveStatus(null), 2500);
       }
     } catch {
       setSaveStatus("Failed to save");
+      toast.error("Failed to save project state.");
     } finally {
       setIsSaving(false);
     }
@@ -189,6 +194,8 @@ export function useStudioProject() {
     setProjectTitle(cand.title);
     setAutoStartScript(true);
     setActiveStage(2);
+    sound.playStepComplete();
+    toast.success(`Stage 1 complete! Entering Stage 2 Scriptwriter...`);
     setTimeout(saveProjectState, 300);
   };
 
@@ -198,12 +205,18 @@ export function useStudioProject() {
     setTimestampInput(timestamped);
     setAutoStartPrompts(true);
     setActiveStage(3);
+    sound.playStepComplete();
+    toast.success(`Stage 2 complete! Entering Stage 3 Batch Image Prompts...`);
     setTimeout(saveProjectState, 300);
   };
 
   const handleProceedToStage4 = () => {
     setAutoStartPackaging(true);
     setActiveStage(4);
+    sound.playStepComplete();
+    toast.success(
+      `Stage 3 complete! Entering Stage 4 Viral SEO & Packaging...`,
+    );
     setTimeout(saveProjectState, 300);
   };
 

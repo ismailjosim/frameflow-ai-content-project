@@ -169,8 +169,9 @@ function LoginFormInner() {
             </div>
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/60 text-slate-600 dark:text-slate-300">
               <ShieldCheck className="w-3.5 h-3.5 text-[#58E6F7] shrink-0" />
-              <span>Zero-leak AES-256 client encrypted API keys</span>
+              <span>Private and secure encrypted API key vault</span>
             </div>
+
             <div className="flex items-center gap-2 px-3 py-2 rounded-xl bg-slate-50 dark:bg-slate-900/60 border border-slate-200/70 dark:border-slate-800/60 text-slate-600 dark:text-slate-300">
               <Wand2 className="w-3.5 h-3.5 text-[#E51FD1] shrink-0" />
               <span>Full 4-stage pipeline & multi-AI routing</span>

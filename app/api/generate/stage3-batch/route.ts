@@ -5,7 +5,7 @@ import { auth } from "@/lib/auth";
 import connectToDatabase from "@/lib/mongodb";
 import {
   ensureDefaultPresets,
-  HOMODOODLE_DEFAULT_PRESET,
+  FRAMEFLOW_DEFAULT_PRESET,
 } from "@/lib/presets/default-presets";
 import { alignBatchPromptsWithInputTimestamps } from "@/lib/timestamps";
 import MasterPromptPreset from "@/models/MasterPromptPreset";
@@ -60,7 +60,7 @@ export async function POST(req: NextRequest) {
     if (!preset) {
       preset =
         (await MasterPromptPreset.findOne({ isDefault: true })) ||
-        HOMODOODLE_DEFAULT_PRESET;
+        FRAMEFLOW_DEFAULT_PRESET;
     }
 
     // Prepare system prompt with dynamic visual rules and aspect ratio replacement

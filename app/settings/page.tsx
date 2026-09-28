@@ -6,7 +6,7 @@ import { SettingsClient } from "@/components/settings";
 export const metadata: Metadata = {
   title: "API Key Vault & Security - FrameFlow",
   description:
-    "Manage encrypted API keys for Google Gemini, Anthropic Claude, and OpenAI with AES-256-GCM zero-leak server security.",
+    "Manage encrypted API keys for Google Gemini, Anthropic Claude, and OpenAI with secure, private cloud encryption.",
 };
 
 export default function SettingsPage() {

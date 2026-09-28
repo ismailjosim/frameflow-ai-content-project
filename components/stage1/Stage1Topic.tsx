@@ -2,7 +2,9 @@
 
 import { Lightbulb } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
+import { toast } from "sonner";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
+import { sound } from "@/lib/sound";
 import { IgnoredTopicsBar } from "./IgnoredTopicsBar";
 import type {
   IgnoredTopicItem,
@@ -83,11 +85,24 @@ export function Stage1Topic({
       setModelUsed(data.modelUsed || selectedModel);
       if (data.logs) setLogs(data.logs);
       await fetchIgnoredTopics();
+      sound.playStepComplete();
+      toast.success("5 viral topic concepts generated and prioritized!");
     } catch (err: unknown) {
-      setError(err instanceof Error ? err.message : "Unknown generation error");
+      const msg =
+        err instanceof Error ? err.message : "Unknown generation error";
+      setError(msg);
+      toast.error(msg);
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleSelectTopic = (cand: TopicCandidate) => {
+    sound.playNotification();
+    toast.success(
+      `Selected "${cand.title}"! Proceeding to script generation...`,
+    );
+    onTopicSelected(cand);
   };
 
   const handleIgnoreTopic = async (cand: TopicCandidate) => {
@@ -101,6 +116,7 @@ export function Stage1Topic({
       }
       return remaining;
     });
+    toast.info(`Excluded "${cand.title}" from topic suggestions.`);
 
     try {
       await fetch("/api/topics/ignored", {
@@ -197,7 +213,7 @@ export function Stage1Topic({
             <TopicHeroPriorityCard
               topPick={topPick}
               currentTopic={currentTopic}
-              onTopicSelected={onTopicSelected}
+              onTopicSelected={handleSelectTopic}
               onIgnoreTopic={handleIgnoreTopic}
             />
           )}
@@ -206,7 +222,7 @@ export function Stage1Topic({
           <TopicCandidateGrid
             candidates={otherCandidates}
             currentTopic={currentTopic}
-            onTopicSelected={onTopicSelected}
+            onTopicSelected={handleSelectTopic}
             onIgnoreTopic={handleIgnoreTopic}
           />
         </div>

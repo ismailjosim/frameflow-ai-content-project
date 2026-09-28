@@ -3,6 +3,9 @@
 import { Upload } from "lucide-react";
 import type React from "react";
 import { useState } from "react";
+import { toast } from "sonner";
+import { useSession } from "@/lib/auth-client";
+import { sound } from "@/lib/sound";
 import type { CreatePresetModalProps } from "./presets.types";
 
 export function CreatePresetModal({
@@ -10,6 +13,7 @@ export function CreatePresetModal({
   onClose,
   onSuccess,
 }: CreatePresetModalProps) {
+  const { data: session } = useSession();
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [aspectRatio, setAspectRatio] = useState("--ar 16:9 --v 6.1");
@@ -32,6 +36,8 @@ export function CreatePresetModal({
       if (!name) {
         setName(file.name.replace(/\.[^/.]+$/, "").replace(/[-_]/g, " "));
       }
+      sound.playNotification();
+      toast.success(`Imported style rules from "${file.name}"`);
     };
     reader.readAsText(file);
   };
@@ -40,6 +46,7 @@ export function CreatePresetModal({
     e.preventDefault();
     if (!name.trim() || !visualStyleRules.trim()) {
       setStatusMsg("Please provide a name and visual style rules.");
+      toast.error("Please provide a name and visual style rules.");
       return;
     }
 
@@ -56,6 +63,9 @@ export function CreatePresetModal({
           aspectRatio,
           visualStyleRules: visualStyleRules.trim(),
           rawMasterFile: fileContent || undefined,
+          userName: session?.user?.name || undefined,
+          userEmail: session?.user?.email || undefined,
+          userImage: session?.user?.image || undefined,
         }),
       });
 
@@ -64,6 +74,8 @@ export function CreatePresetModal({
         throw new Error(data.error || "Failed to save preset");
       }
 
+      sound.playStepComplete();
+      toast.success(`Style preset "${name.trim()}" created!`);
       setName("");
       setDescription("");
       setVisualStyleRules("");
@@ -71,9 +83,9 @@ export function CreatePresetModal({
       onSuccess();
       onClose();
     } catch (err: unknown) {
-      setStatusMsg(
-        err instanceof Error ? err.message : "Error creating preset",
-      );
+      const msg = err instanceof Error ? err.message : "Error creating preset";
+      setStatusMsg(msg);
+      toast.error(msg);
     } finally {
       setSubmitting(false);
     }

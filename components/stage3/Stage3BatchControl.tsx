@@ -1,6 +1,14 @@
 "use client";
 
-import { AlertCircle, Clock, Loader2, Play, Sparkles } from "lucide-react";
+import {
+  AlertCircle,
+  Clock,
+  Loader2,
+  Play,
+  RotateCcw,
+  RotateCw,
+  Sparkles,
+} from "lucide-react";
 import type { Stage3BatchControlProps } from "./stage3.types";
 
 export function Stage3BatchControl({
@@ -13,10 +21,18 @@ export function Stage3BatchControl({
   timestampInput,
   onTimestampChange,
   onStartQueue,
+  onResumeQueue,
+  failedBatchIndex,
   onRecalculateTimestamps,
   estimatedRuntime,
   error,
 }: Stage3BatchControlProps) {
+  const canResume =
+    !isRunning &&
+    failedBatchIndex !== null &&
+    failedBatchIndex !== undefined &&
+    typeof onResumeQueue === "function";
+
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
@@ -31,34 +47,57 @@ export function Stage3BatchControl({
           </div>
           <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
             Splits timestamped lines into batches of 20, generating consistent
-            hand-drawn 2D stickman prompts without hitting model token limits.
+            visual prompt styles without hitting model token limits.
           </p>
         </div>
 
-        <button
-          type="button"
-          onClick={onStartQueue}
-          disabled={isRunning || linesCount === 0}
-          className="flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#8A3FFC]/25 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0 w-full sm:w-auto"
-        >
-          {isRunning ? (
-            <>
-              <Loader2 className="w-3.5 h-3.5 animate-spin" />
+        <div className="flex flex-wrap items-center gap-2 shrink-0">
+          {canResume && (
+            <button
+              type="button"
+              onClick={() => onResumeQueue(failedBatchIndex)}
+              disabled={isRunning}
+              className="flex items-center justify-center gap-1.5 px-4 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] to-[#8A3FFC] hover:brightness-110 text-slate-950 font-bold text-xs shadow-md shadow-[#58E6F7]/20 transition-all hover:scale-102 cursor-pointer w-full sm:w-auto"
+              title={`Continue prompt generation starting from batch ${failedBatchIndex + 1}`}
+            >
+              <RotateCw className="w-3.5 h-3.5" />
               <span>
-                Processing Batch {currentBatch}/{totalBatches}...
+                Resume from Batch {failedBatchIndex + 1} of {totalBatches}
               </span>
-            </>
-          ) : (
-            <>
-              <Play className="w-3.5 h-3.5 fill-white" />
-              <span>
-                {promptsExist
-                  ? "Regenerate Prompts Queue"
-                  : "Start Batch Queue"}
-              </span>
-            </>
+            </button>
           )}
-        </button>
+
+          <button
+            type="button"
+            onClick={onStartQueue}
+            disabled={isRunning || linesCount === 0}
+            className={`flex items-center justify-center gap-2 px-6 py-2.5 rounded-xl font-bold text-xs shadow-md transition-all cursor-pointer shrink-0 w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed ${
+              canResume
+                ? "bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700"
+                : "bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white shadow-[#8A3FFC]/25 hover:scale-102"
+            }`}
+          >
+            {isRunning ? (
+              <>
+                <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                <span>
+                  Processing Batch {currentBatch}/{totalBatches}...
+                </span>
+              </>
+            ) : (
+              <>
+                <Play className="w-3.5 h-3.5 fill-current" />
+                <span>
+                  {canResume
+                    ? "Restart from Batch 1"
+                    : promptsExist
+                      ? "Regenerate Prompts Queue"
+                      : "Start Batch Queue"}
+                </span>
+              </>
+            )}
+          </button>
+        </div>
       </div>
 
       {/* Progress bar if running */}
@@ -103,7 +142,7 @@ export function Stage3BatchControl({
                 className="inline-flex items-center gap-1.5 text-[11px] text-purple-700 dark:text-[#58E6F7] hover:text-purple-900 dark:hover:text-white bg-purple-50 hover:bg-purple-100 dark:bg-purple-950/70 dark:hover:bg-purple-900/60 border border-purple-200 dark:border-purple-800/60 px-2.5 py-1 rounded-lg transition-all cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed font-medium shadow-xs"
                 title="Recalculate continuous timestamps based on realistic 135 WPM storytelling cadence"
               >
-                <Sparkles className="w-3 h-3 text-[#FF7A32]" />
+                <Sparkles className="w-3.5 h-3.5 text-[#FF7A32]" />
                 <span>Re-time Pacing (135 WPM)</span>
               </button>
             )}
@@ -126,13 +165,52 @@ export function Stage3BatchControl({
       </div>
 
       {error && (
-        <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs">
-          <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
-          <div>
-            <p className="font-semibold">Queue Error</p>
-            <p className="text-rose-600 dark:text-rose-400/80 mt-0.5">
-              {error}
-            </p>
+        <div className="p-4 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs space-y-3">
+          <div className="flex items-start gap-2.5">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
+            <div className="space-y-0.5">
+              <p className="font-semibold text-rose-800 dark:text-rose-200">
+                Batch Generation Stopped
+                {failedBatchIndex !== null && failedBatchIndex !== undefined
+                  ? ` on Batch ${failedBatchIndex + 1} of ${totalBatches}`
+                  : ""}
+              </p>
+              <p className="text-rose-600 dark:text-rose-400/80">{error}</p>
+            </div>
+          </div>
+
+          <div className="flex flex-wrap items-center gap-2 pt-1 border-t border-rose-200/70 dark:border-rose-800/40">
+            {canResume ? (
+              <>
+                <button
+                  type="button"
+                  onClick={() => onResumeQueue(failedBatchIndex)}
+                  className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-linear-to-r from-[#58E6F7] to-[#8A3FFC] text-slate-950 font-bold text-xs shadow-sm hover:brightness-110 transition-all cursor-pointer"
+                >
+                  <RotateCw className="w-3.5 h-3.5" />
+                  <span>
+                    Resume from Batch {failedBatchIndex + 1} of {totalBatches}
+                  </span>
+                </button>
+                <button
+                  type="button"
+                  onClick={onStartQueue}
+                  className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/80 dark:bg-slate-900/80 hover:bg-white dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 border border-slate-300 dark:border-slate-700 font-semibold text-xs transition-colors cursor-pointer"
+                >
+                  <RotateCcw className="w-3 h-3" />
+                  <span>Restart from Batch 1</span>
+                </button>
+              </>
+            ) : (
+              <button
+                type="button"
+                onClick={onStartQueue}
+                className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 text-white font-bold text-xs shadow-sm transition-all cursor-pointer"
+              >
+                <RotateCcw className="w-3.5 h-3.5" />
+                <span>Retry Batch Queue</span>
+              </button>
+            )}
           </div>
         </div>
       )}

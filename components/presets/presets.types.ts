@@ -3,6 +3,10 @@ export interface Preset {
   name: string;
   slug: string;
   description?: string;
+  userId?: string | null;
+  userName?: string | null;
+  userEmail?: string | null;
+  userImage?: string | null;
   isDefault: boolean;
   visualStyleRules: string;
   aspectRatio: string;
@@ -23,4 +27,7 @@ export interface PresetInspectorProps {
   preset: Preset | null;
   onDelete?: (id: string, name: string) => void;
   isDeleting?: boolean;
+  onUpdate?: (updated: Preset) => void;
+  onSetDefault?: (preset: Preset) => void;
+  isSettingDefault?: boolean;
 }
