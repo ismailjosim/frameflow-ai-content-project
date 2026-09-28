@@ -1,7 +1,10 @@
 "use client";
 
+import Image from "next/image";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { getProviderForModel, PROVIDER_GROUPS } from "@/lib/ai/models";
+import { authClient } from "@/lib/auth-client";
 import type { DashboardLayoutProps } from "./layout.types";
 import { Sidebar } from "./Sidebar";
 import { TopHeader } from "./TopHeader";
@@ -13,9 +16,21 @@ export function DashboardLayout({
   activeProjectTitle,
   pageTitle,
 }: DashboardLayoutProps) {
+  const router = useRouter();
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
   const [mobileSidebarOpen, setMobileSidebarOpen] = useState(false);
   const [configuredProviders, setConfiguredProviders] = useState<string[]>([]);
   const [isAnalyzing, setIsAnalyzing] = useState(true);
+
+  // Client-side session guard for private dashboard
+  useEffect(() => {
+    if (!isSessionPending && !session?.user) {
+      const currentPath =
+        typeof window !== "undefined" ? window.location.pathname : "/dashboard";
+      router.push(`/login?callbackUrl=${encodeURIComponent(currentPath)}`);
+    }
+  }, [session, isSessionPending, router]);
 
   useEffect(() => {
     let ignore = false;
@@ -78,8 +93,41 @@ export function DashboardLayout({
     0,
   );
 
+  // Show loading state while checking session to ensure zero data leak
+  if (isSessionPending) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex flex-col items-center justify-center gap-3">
+        <div className="relative w-12 h-12 rounded-2xl p-0.5 bg-frameflow-gradient animate-pulse shadow-lg shadow-purple-500/25">
+          <div className="w-full h-full rounded-[14px] bg-slate-950 flex items-center justify-center p-1">
+            <Image
+              src="/apple-touch-icon.png"
+              alt="FrameFlow Logo"
+              width={40}
+              height={40}
+              className="rounded-lg object-contain"
+              priority
+            />
+          </div>
+        </div>
+        <p className="text-xs text-slate-500 dark:text-slate-400 font-medium animate-pulse">
+          Verifying creator session...
+        </p>
+      </div>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <div className="min-h-screen bg-background text-foreground flex items-center justify-center">
+        <p className="text-xs text-slate-500 dark:text-slate-400">
+          Redirecting to login...
+        </p>
+      </div>
+    );
+  }
+
   return (
-    <div className="min-h-screen bg-slate-950 text-slate-100 flex">
+    <div className="min-h-screen bg-background text-foreground flex transition-colors duration-200">
       {/* Fixed Left Sidebar (Desktop) + Sliding Drawer (Mobile) */}
       <Sidebar
         isOpen={mobileSidebarOpen}

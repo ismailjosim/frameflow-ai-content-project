@@ -149,18 +149,18 @@ export function SettingsClient() {
     <DashboardLayout pageTitle="Key Vault & Security">
       <div className="space-y-6">
         {/* Header */}
-        <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800 space-y-2">
+        <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 bg-white/80 dark:bg-slate-900/60 transition-colors">
           <div className="flex items-center gap-2.5">
-            <div className="p-2.5 rounded-xl bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#58E6F7] border border-[#58E6F7]/40 shrink-0">
+            <div className="p-2.5 rounded-xl bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#8A3FFC] dark:text-[#58E6F7] border border-[#58E6F7]/40 shrink-0">
               <KeyRound className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+              <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
                 API Key Vault & Security
               </h1>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 Configure your LLM credentials. Keys are encrypted with{" "}
-                <span className="text-[#58E6F7] font-semibold">
+                <span className="text-[#8A3FFC] dark:text-[#58E6F7] font-semibold">
                   AES-256-GCM
                 </span>{" "}
                 at rest in MongoDB and never sent back to the browser.
@@ -168,8 +168,8 @@ export function SettingsClient() {
             </div>
           </div>
 
-          <div className="mt-3 flex items-center gap-2 p-2.5 rounded-xl bg-slate-900/80 border border-slate-800 text-[11px] text-slate-400">
-            <Lock className="w-3.5 h-3.5 text-[#58E6F7] shrink-0" />
+          <div className="mt-3 flex items-center gap-2 p-2.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800 text-[11px] text-slate-600 dark:text-slate-400">
+            <Lock className="w-3.5 h-3.5 text-[#8A3FFC] dark:text-[#58E6F7] shrink-0" />
             <span>
               <strong>Zero Leak Architecture:</strong> API keys are decrypted
               only in server memory for the duration of prompt generation. Auto
@@ -183,14 +183,14 @@ export function SettingsClient() {
           <div
             className={`p-3.5 rounded-xl text-xs flex items-center gap-2 ${
               message.type === "success"
-                ? "bg-emerald-950/40 border border-emerald-800/50 text-emerald-300"
-                : "bg-rose-950/40 border border-rose-800/50 text-rose-300"
+                ? "bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800/50 text-emerald-700 dark:text-emerald-300"
+                : "bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300"
             }`}
           >
             {message.type === "success" ? (
-              <Check className="w-4 h-4 text-emerald-400" />
+              <Check className="w-4 h-4 text-emerald-500" />
             ) : (
-              <AlertCircle className="w-4 h-4 text-rose-400" />
+              <AlertCircle className="w-4 h-4 text-rose-500" />
             )}
             <span>{message.text}</span>
           </div>

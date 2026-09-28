@@ -63,16 +63,16 @@ export function ProjectsClient() {
     <DashboardLayout pageTitle="Project Library">
       <div className="space-y-6">
         {/* Header */}
-        <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
           <div className="flex items-center gap-3">
-            <div className="p-2.5 rounded-xl bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#58E6F7] border border-[#58E6F7]/40 shrink-0">
+            <div className="p-2.5 rounded-xl bg-linear-to-br from-[#58E6F7]/20 to-[#8A3FFC]/30 text-[#8A3FFC] dark:text-[#58E6F7] border border-[#58E6F7]/40 shrink-0">
               <FolderKanban className="w-5 h-5" />
             </div>
             <div>
-              <h1 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+              <h1 className="text-lg sm:text-xl font-bold text-slate-900 dark:text-white tracking-tight">
                 Project Library
               </h1>
-              <p className="text-xs text-slate-400">
+              <p className="text-xs text-slate-500 dark:text-slate-400">
                 All your video scripts, auto-chunked image prompts, and
                 packaging preserved in MongoDB.
               </p>
@@ -80,6 +80,7 @@ export function ProjectsClient() {
           </div>
 
           <button
+            type="button"
             onClick={() => setShowModal(true)}
             className="flex items-center justify-center gap-2 px-4 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-[#8A3FFC]/25 transition-all hover:scale-101 cursor-pointer w-full sm:w-auto shrink-0"
           >
@@ -97,19 +98,22 @@ export function ProjectsClient() {
 
         {/* Projects Grid */}
         {loading ? (
-          <div className="flex items-center justify-center py-20 text-slate-400 text-xs gap-2">
-            <Loader2 className="w-4 h-4 animate-spin text-[#58E6F7]" />
+          <div className="flex items-center justify-center py-20 text-slate-500 dark:text-slate-400 text-xs gap-2">
+            <Loader2 className="w-4 h-4 animate-spin text-[#8A3FFC] dark:text-[#58E6F7]" />
             Loading video projects from MongoDB...
           </div>
         ) : projects.length === 0 ? (
-          <div className="glass-panel p-12 rounded-2xl border border-slate-800 text-center space-y-3">
-            <Film className="w-10 h-10 text-slate-600 mx-auto" />
-            <h3 className="text-sm font-bold text-white">No Projects Found</h3>
-            <p className="text-xs text-slate-400 max-w-sm mx-auto">
+          <div className="glass-panel p-12 rounded-2xl border border-slate-200 dark:border-slate-800 text-center space-y-3 bg-white/80 dark:bg-slate-900/60">
+            <Film className="w-10 h-10 text-slate-400 dark:text-slate-600 mx-auto" />
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white">
+              No Projects Found
+            </h3>
+            <p className="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto">
               Start your first video production workflow to generate full
               scripts, batch Midjourney prompts, and packaging.
             </p>
             <button
+              type="button"
               onClick={() => setShowModal(true)}
               className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#8A3FFC]/25 mt-2 cursor-pointer"
             >

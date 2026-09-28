@@ -112,18 +112,18 @@ export function Stage2Script({
   return (
     <div className="space-y-6">
       {/* Intro Header */}
-      <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800 space-y-4">
+      <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div>
             <div className="flex items-center gap-2">
               <span className="w-6 h-6 rounded-full bg-linear-to-br from-[#8A3FFC]/20 to-[#E51FD1]/30 text-[#E51FD1] font-bold text-xs flex items-center justify-center border border-[#E51FD1]/40">
                 2
               </span>
-              <h2 className="text-base sm:text-lg font-bold text-white tracking-tight">
+              <h2 className="text-base sm:text-lg font-bold text-slate-900 dark:text-white tracking-tight">
                 Stage 2: Voiceover Scriptwriter (90-Char Rule)
               </h2>
             </div>
-            <p className="text-xs text-slate-400 mt-1">
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-1">
               Produces caption-ready narration formatted strictly one sentence
               per line, kept under 90 characters for effortless TTS and visual
               syncing.
@@ -132,11 +132,12 @@ export function Stage2Script({
 
           <div className="flex flex-wrap items-center gap-2">
             {modelUsed && (
-              <span className="text-[11px] font-mono font-bold text-[#58E6F7] bg-linear-to-r from-[#8A3FFC]/20 to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-[#E51FD1]/40">
+              <span className="text-[11px] font-mono font-bold text-purple-700 dark:text-[#58E6F7] bg-purple-50 dark:bg-linear-to-r dark:from-[#8A3FFC]/20 dark:to-[#E51FD1]/20 px-2.5 py-1 rounded-lg border border-purple-200 dark:border-[#E51FD1]/40">
                 Resolved: {modelUsed}
               </span>
             )}
             <button
+              type="button"
               onClick={generateScript}
               disabled={loading}
               className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF1688] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#E51FD1]/25 transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0"
@@ -144,12 +145,14 @@ export function Stage2Script({
               {loading ? (
                 <>
                   <Loader2 className="w-3.5 h-3.5 animate-spin" />
-                  Generating...
+                  <span>Generating...</span>
                 </>
               ) : (
                 <>
                   <Sparkles className="w-3.5 h-3.5" />
-                  {scriptText ? "Regenerate Script" : "Generate Script"}
+                  <span>
+                    {scriptText ? "Regenerate Script" : "Generate Script"}
+                  </span>
                 </>
               )}
             </button>
@@ -157,26 +160,30 @@ export function Stage2Script({
         </div>
 
         {/* Selected Topic Context Banner */}
-        <div className="p-3.5 rounded-xl bg-slate-900/80 border border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+        <div className="p-3.5 rounded-xl bg-slate-50 dark:bg-slate-900/80 border border-slate-200 dark:border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
           <div className="flex items-center gap-2 truncate">
-            <span className="font-semibold text-slate-300">Topic:</span>
-            <span className="text-[#58E6F7] font-medium truncate">
+            <span className="font-semibold text-slate-700 dark:text-slate-300">
+              Topic:
+            </span>
+            <span className="text-[#8A3FFC] dark:text-[#58E6F7] font-medium truncate">
               {topicTitle || "No topic selected"}
             </span>
           </div>
           {topicConflict && (
-            <span className="text-slate-400 text-[11px] italic shrink-0">
+            <span className="text-slate-500 dark:text-slate-400 text-[11px] italic shrink-0">
               Formula: {topicFormula}
             </span>
           )}
         </div>
 
         {error && (
-          <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-950/40 border border-rose-800/50 text-rose-300 text-xs">
-            <AlertCircle className="w-4 h-4 shrink-0 text-rose-400 mt-0.5" />
+          <div className="flex items-start gap-2.5 p-3.5 rounded-xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800/50 text-rose-700 dark:text-rose-300 text-xs">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-500 dark:text-rose-400 mt-0.5" />
             <div>
               <p className="font-semibold">Script Generation Error</p>
-              <p className="text-rose-400/80 mt-0.5">{error}</p>
+              <p className="text-rose-600 dark:text-rose-400/80 mt-0.5">
+                {error}
+              </p>
             </div>
           </div>
         )}
@@ -184,12 +191,12 @@ export function Stage2Script({
 
       {/* Orchestrator Logs */}
       {logs.length > 1 && (
-        <div className="p-3 rounded-xl bg-slate-900/70 border border-slate-800 text-[11px] font-mono text-slate-400 space-y-1">
-          <span className="text-xs font-semibold text-[#58E6F7]">
+        <div className="p-3 rounded-xl bg-slate-50 dark:bg-slate-900/70 border border-slate-200 dark:border-slate-800 text-[11px] font-mono text-slate-600 dark:text-slate-400 space-y-1">
+          <span className="text-xs font-semibold text-[#8A3FFC] dark:text-[#58E6F7]">
             Model Orchestrator Trace:
           </span>
           {logs.map((log, i) => (
-            <p key={i} className="text-slate-300">
+            <p key={i} className="text-slate-700 dark:text-slate-300">
               ↳ {log}
             </p>
           ))}
@@ -201,7 +208,7 @@ export function Stage2Script({
 
       {/* Script Editor & Metrics */}
       {!loading && (
-        <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-800 space-y-4">
+        <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60">
           <Stage2MetricsBar
             stats={stats}
             scriptText={scriptText}
@@ -215,21 +222,22 @@ export function Stage2Script({
             onChange={(e) => onScriptChange(e.target.value)}
             placeholder="Narrative script will appear here sentence by sentence, formatted under 90 characters per line..."
             rows={16}
-            className="w-full bg-slate-950/80 text-sm font-mono text-slate-200 p-3.5 sm:p-4 rounded-xl border border-slate-800 focus:outline-none focus:border-[#8A3FFC] leading-relaxed resize-y"
+            className="w-full bg-slate-50 dark:bg-slate-950/80 text-sm font-mono text-slate-900 dark:text-slate-200 p-3.5 sm:p-4 rounded-xl border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-[#8A3FFC] leading-relaxed resize-y"
           />
 
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
-            <p className="text-[11px] text-slate-400">
+            <p className="text-[11px] text-slate-500 dark:text-slate-400">
               Next: Automatically passes this script into Stage 3 to generate
               Midjourney / Flux prompts.
             </p>
 
             <button
+              type="button"
               onClick={onProceedToStage3}
               disabled={loading || !scriptText.trim()}
               className={`flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl font-medium text-xs shadow-md transition-all w-full sm:w-auto shrink-0 ${
                 loading || !scriptText.trim()
-                  ? "bg-slate-800 text-slate-500 cursor-not-allowed border border-slate-700/50 opacity-60"
+                  ? "bg-slate-100 dark:bg-slate-800 text-slate-400 dark:text-slate-500 cursor-not-allowed border border-slate-200 dark:border-slate-700/50 opacity-60"
                   : "bg-linear-to-r from-[#8A3FFC] via-[#E51FD1] to-[#FF4E63] hover:brightness-110 text-white shadow-md shadow-[#E51FD1]/25 hover:scale-102 cursor-pointer font-bold"
               }`}
             >

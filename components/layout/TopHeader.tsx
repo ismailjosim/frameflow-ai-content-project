@@ -42,22 +42,22 @@ export function TopHeader({
   );
 
   return (
-    <header className="sticky top-0 z-30 h-16 bg-slate-950/80 backdrop-blur-xl border-b border-slate-800/80 px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4">
+    <header className="sticky top-0 z-30 h-16 bg-white/80 dark:bg-slate-950/80 backdrop-blur-xl border-b border-slate-200 dark:border-slate-800/80 px-3 sm:px-6 lg:px-8 flex items-center justify-between gap-2 sm:gap-4 transition-colors duration-200">
       {/* Left: Mobile Toggle, Brand Icon & Context Info */}
       <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         <button
           type="button"
           onClick={onOpenMobileSidebar}
-          className="md:hidden p-2 rounded-xl text-slate-400 hover:text-white hover:bg-slate-900 border border-slate-800 transition-colors shrink-0"
+          className="md:hidden p-2 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-colors shrink-0"
           aria-label="Open navigation sidebar"
         >
           <Menu className="w-5 h-5" />
         </button>
 
         <Link
-          href="/"
+          href="/dashboard"
           className="md:hidden flex items-center shrink-0"
-          aria-label="FrameFlow Home"
+          aria-label="FrameFlow Dashboard"
         >
           <div className="w-7 h-7 rounded-lg p-[1.5px] bg-frameflow-gradient shrink-0 shadow-xs">
             <div className="w-full h-full rounded-[5px] bg-slate-950 flex items-center justify-center p-0.5">
@@ -75,15 +75,15 @@ export function TopHeader({
         <div className="min-w-0">
           {activeProjectTitle ? (
             <div className="flex items-center gap-1.5 sm:gap-2">
-              <span className="text-[11px] font-medium text-slate-400 hidden md:inline">
+              <span className="text-[11px] font-medium text-slate-500 dark:text-slate-400 hidden md:inline">
                 Active Project:
               </span>
-              <span className="text-xs font-semibold text-white bg-linear-to-r from-[#8A3FFC]/20 via-[#E51FD1]/15 to-[#FF4E63]/15 px-2.5 sm:px-3 py-1 rounded-lg border border-[#E51FD1]/40 shadow-xs truncate max-w-28 xs:max-w-[160px] sm:max-w-xs md:max-w-md">
+              <span className="text-xs font-semibold text-slate-900 dark:text-white bg-linear-to-r from-[#8A3FFC]/15 via-[#E51FD1]/10 to-[#FF4E63]/10 px-2.5 sm:px-3 py-1 rounded-lg border border-[#E51FD1]/30 shadow-xs truncate max-w-28 xs:max-w-[160px] sm:max-w-xs md:max-w-md">
                 {activeProjectTitle}
               </span>
             </div>
           ) : (
-            <h1 className="text-xs sm:text-base font-bold text-white tracking-tight truncate">
+            <h1 className="text-xs sm:text-base font-bold text-slate-900 dark:text-white tracking-tight truncate">
               {pageTitle || "Dashboard"}
             </h1>
           )}
@@ -91,45 +91,45 @@ export function TopHeader({
       </div>
 
       {/* Right: Model Selector & Actions with Proper Spacing */}
-      <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+      <div className="flex items-center gap-2 sm:gap-4 shrink-0">
         {/* Model Availability Badge */}
         {availableModelsCount > 0 ? (
           <div
             title={`Active: ${availableModelsCount} models across ${configuredProviders.map((p) => p.toUpperCase()).join(", ")}`}
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-linear-to-r from-[#8A3FFC]/20 via-[#E51FD1]/15 to-transparent text-pink-200 border border-[#E51FD1]/30 text-xs font-semibold shadow-xs"
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-linear-to-r from-[#8A3FFC]/15 via-[#E51FD1]/10 to-transparent text-purple-700 dark:text-pink-200 border border-[#E51FD1]/30 text-xs font-semibold shadow-xs"
           >
             <span className="w-2 h-2 rounded-full bg-[#E51FD1] animate-pulse shrink-0" />
             <span>
               {availableModelsCount} Model
               {availableModelsCount > 1 ? "s" : ""} Available
             </span>
-            <span className="text-[10px] px-1.5 py-0.5 rounded bg-linear-to-r from-purple-900/60 to-pink-900/60 text-pink-200 border border-pink-600/40 font-medium">
+            <span className="text-[10px] px-1.5 py-0.5 rounded bg-purple-100 dark:bg-linear-to-r dark:from-purple-900/60 dark:to-pink-900/60 text-purple-700 dark:text-pink-200 border border-purple-300 dark:border-pink-600/40 font-medium">
               {configuredProviders.map((p) => p.toUpperCase()).join(", ")}
             </span>
           </div>
         ) : (
           <Link
             href="/settings"
-            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-950/80 text-amber-300 border border-amber-800/60 text-xs font-medium hover:bg-amber-900/80 transition-colors"
+            className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50 dark:bg-amber-950/80 text-amber-700 dark:text-amber-300 border border-amber-200 dark:border-amber-800/60 text-xs font-medium hover:bg-amber-100 dark:hover:bg-amber-900/80 transition-colors"
           >
-            <span className="w-2 h-2 rounded-full bg-amber-400" />
+            <span className="w-2 h-2 rounded-full bg-amber-500" />
             <span>0 Models Ready • Add Key</span>
           </Link>
         )}
 
-        {/* Model Selector Dropdown with ample breathing space */}
+        {/* Model Selector Dropdown */}
         <div className="relative flex items-center">
-          <div className="flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-900/90 border border-slate-800 text-xs shadow-inner hover:border-[#8A3FFC]/50 transition-colors">
+          <div className="flex items-center gap-1.5 sm:gap-2.5 px-2.5 sm:px-3 py-1.5 sm:py-2 rounded-xl bg-slate-100 dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 text-xs shadow-inner hover:border-[#8A3FFC]/50 transition-colors">
             <Cpu className="w-3.5 h-3.5 text-[#58E6F7] animate-pulse shrink-0" />
             <select
               aria-label="Select AI Model"
               value={currentModel}
               onChange={(e) => onModelChange?.(e.target.value)}
-              className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer pr-1 w-28 xs:w-36 sm:w-48 md:w-60 truncate font-medium"
+              className="bg-transparent text-slate-800 dark:text-slate-200 text-xs focus:outline-none cursor-pointer pr-1 w-28 xs:w-36 sm:w-48 md:w-60 truncate font-medium"
             >
               <option
                 value={AUTO_MODEL.id}
-                className="bg-slate-900 text-[#58E6F7] font-semibold"
+                className="bg-white dark:bg-slate-900 text-[#8A3FFC] dark:text-[#58E6F7] font-semibold"
               >
                 ⚡{" "}
                 {availableModelsCount > 0
@@ -142,13 +142,13 @@ export function TopHeader({
                 <optgroup
                   key={group.provider}
                   label={`✨ ${group.name} (${group.models.length} Models Available)`}
-                  className="bg-slate-950 text-[#58E6F7] font-bold"
+                  className="bg-slate-50 dark:bg-slate-950 text-[#8A3FFC] dark:text-[#58E6F7] font-bold"
                 >
                   {group.models.map((m) => (
                     <option
                       key={m.id}
                       value={m.id}
-                      className="bg-slate-900 text-slate-100 font-medium"
+                      className="bg-white dark:bg-slate-900 text-slate-800 dark:text-slate-100 font-medium"
                     >
                       ✓ {m.name} {m.badge ? `[${m.badge}]` : ""}
                     </option>
@@ -161,14 +161,14 @@ export function TopHeader({
                 <optgroup
                   key={group.provider}
                   label={`🔒 ${group.name} (${group.models.length} Locked — Key Required)`}
-                  className="bg-slate-950 text-slate-500 font-normal italic"
+                  className="bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 font-normal italic"
                 >
                   {group.models.map((m) => (
                     <option
                       key={m.id}
                       value={m.id}
                       disabled={true}
-                      className="bg-slate-950 text-slate-500 font-normal"
+                      className="bg-slate-50 dark:bg-slate-950 text-slate-400 dark:text-slate-500 font-normal"
                     >
                       🔒 {m.name} (Key Required in Settings)
                     </option>
@@ -194,18 +194,18 @@ export function TopHeader({
         {/* Better-Auth User Account Badge */}
         {!isSessionPending && user ? (
           <div className="flex items-center gap-1.5 sm:gap-2">
-            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-900 border border-slate-800 text-xs">
+            <div className="flex items-center gap-1.5 px-2.5 py-1.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 text-xs">
               <div className="w-5 h-5 rounded-full bg-linear-to-br from-[#58E6F7] to-[#8A3FFC] flex items-center justify-center text-slate-950 font-black text-[10px] shrink-0">
                 {user.name?.[0]?.toUpperCase() || "U"}
               </div>
-              <span className="font-semibold text-slate-200 hidden md:inline truncate max-w-24">
+              <span className="font-semibold text-slate-800 dark:text-slate-200 hidden md:inline truncate max-w-24">
                 {user.name}
               </span>
             </div>
             <button
               type="button"
               onClick={handleLogout}
-              className="p-2 rounded-xl text-slate-400 hover:text-rose-400 hover:bg-slate-900 border border-slate-800 transition-colors cursor-pointer"
+              className="p-2 rounded-xl text-slate-400 hover:text-rose-600 dark:hover:text-rose-400 hover:bg-slate-100 dark:hover:bg-slate-900 border border-slate-200 dark:border-slate-800 transition-colors cursor-pointer"
               title="Sign Out"
               aria-label="Sign out"
             >
@@ -215,7 +215,7 @@ export function TopHeader({
         ) : !isSessionPending && !user ? (
           <Link
             href="/login"
-            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-slate-800 text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-2 rounded-xl bg-slate-100 dark:bg-slate-900 hover:bg-slate-200 dark:hover:bg-slate-800 border border-slate-200 dark:border-slate-800 text-slate-700 dark:text-slate-200 text-xs font-semibold transition-colors cursor-pointer"
           >
             <LogIn className="w-3.5 h-3.5 text-[#58E6F7]" />
             <span className="hidden sm:inline">Sign In</span>
@@ -225,3 +225,5 @@ export function TopHeader({
     </header>
   );
 }
+
+export default TopHeader;

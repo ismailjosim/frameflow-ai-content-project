@@ -2,8 +2,7 @@ import { betterAuth } from "better-auth";
 import { mongodbAdapter } from "better-auth/adapters/mongodb";
 import { MongoClient } from "mongodb";
 
-const MONGODB_URI =
-  process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/frameflow";
+const MONGODB_URI = process.env.MONGODB_URI as string;
 
 // Cache client for serverless environments
 let mongoClient: MongoClient;
@@ -29,6 +28,13 @@ export const auth = betterAuth({
     process.env.BETTER_AUTH_SECRET || "frameflow-secret-fallback-key-32chars",
   emailAndPassword: {
     enabled: true,
+  },
+  // ── Google OAuth Social Provider ──────────────────────────────────────
+  socialProviders: {
+    google: {
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
+    },
   },
   user: {
     additionalFields: {

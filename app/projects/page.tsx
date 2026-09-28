@@ -13,8 +13,8 @@ export default function ProjectsPage() {
   return (
     <Suspense
       fallback={
-        <div className="min-h-screen bg-slate-950 flex items-center justify-center text-slate-400 text-xs gap-2">
-          <Loader2 className="w-5 h-5 animate-spin text-cyan-400" />
+        <div className="min-h-screen bg-background text-foreground flex items-center justify-center text-xs gap-2">
+          <Loader2 className="w-5 h-5 animate-spin text-[#58E6F7]" />
           <span>Loading Project Library...</span>
         </div>
       }
