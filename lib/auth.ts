@@ -31,15 +31,19 @@ export const auth = betterAuth({
   },
   // ── Google OAuth Social Provider ──────────────────────────────────────
   socialProviders: {
-    google: {
-      clientId: process.env.GOOGLE_CLIENT_ID as string,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
-      mapProfileToUser: async () => {
-        return {
-          role: "creator",
-        };
-      },
-    },
+    ...(process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET
+      ? {
+          google: {
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+            mapProfileToUser: async () => {
+              return {
+                role: "creator",
+              };
+            },
+          },
+        }
+      : {}),
   },
   databaseHooks: {
     user: {
