@@ -3,9 +3,10 @@
 import { AlertCircle, Cpu, Loader2, ShieldCheck, Sparkles } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
-import { Suspense, useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { Suspense, useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { AuthFormSkeleton } from "./AuthFormSkeleton";
 
 function GoogleIcon() {
   return (
@@ -31,14 +32,41 @@ function GoogleIcon() {
 }
 
 function RegisterFormInner() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const callbackUrl = searchParams.get("callbackUrl") || "/dashboard";
   const errorParam = searchParams.get("error");
+
+  const { data: session, isPending: isSessionPending } =
+    authClient.useSession();
 
   const [googleLoading, setGoogleLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState(
     errorParam ? `Registration error: ${errorParam}` : "",
   );
+
+  useEffect(() => {
+    if (session?.user) {
+      router.replace(callbackUrl);
+    }
+  }, [session, callbackUrl, router]);
+
+  if (isSessionPending) {
+    return <AuthFormSkeleton type="register" />;
+  }
+
+  if (session?.user) {
+    return (
+      <div className="relative w-full max-w-md">
+        <div className="glass-panel rounded-3xl border border-slate-200/80 dark:border-slate-800/80 p-8 space-y-4 text-center bg-white/95 dark:bg-slate-950/90 backdrop-blur-2xl">
+          <Loader2 className="w-6 h-6 animate-spin text-[#8A3FFC] mx-auto" />
+          <p className="text-sm font-semibold text-slate-700 dark:text-slate-200">
+            Authenticated. Redirecting to Studio...
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   const handleGoogleLogin = async () => {
     setErrorMsg("");
@@ -197,13 +225,7 @@ function RegisterFormInner() {
 
 export function RegisterForm() {
   return (
-    <Suspense
-      fallback={
-        <div className="w-full max-w-md p-8 rounded-3xl glass-panel flex items-center justify-center border border-slate-200 dark:border-slate-800">
-          <Loader2 className="w-6 h-6 animate-spin text-[#8A3FFC]" />
-        </div>
-      }
-    >
+    <Suspense fallback={<AuthFormSkeleton type="register" />}>
       <RegisterFormInner />
     </Suspense>
   );

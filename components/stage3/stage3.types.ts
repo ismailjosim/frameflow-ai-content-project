@@ -13,6 +13,7 @@ export interface Stage3PromptsProps {
 
 export interface Stage3BatchControlProps {
   isRunning: boolean;
+  isPaused?: boolean;
   linesCount: number;
   promptsExist: boolean;
   currentBatch: number;
@@ -21,6 +22,8 @@ export interface Stage3BatchControlProps {
   timestampInput: string;
   onTimestampChange: (val: string) => void;
   onStartQueue: () => void;
+  onPauseQueue?: () => void;
+  onStopQueue?: () => void;
   onResumeQueue?: (fromBatchIndex: number) => void;
   failedBatchIndex?: number | null;
   onRecalculateTimestamps?: () => void;

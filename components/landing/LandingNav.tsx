@@ -10,9 +10,10 @@ import { NAV_LINKS } from "./landing.data";
 
 interface NavProps {
   user: User | null | undefined;
+  isPending?: boolean;
 }
 
-export function LandingNav({ user }: NavProps) {
+export function LandingNav({ user, isPending }: NavProps) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
@@ -67,7 +68,12 @@ export function LandingNav({ user }: NavProps) {
         <div className="flex items-center gap-2 sm:gap-3">
           <ThemeToggler />
 
-          {user ? (
+          {isPending ? (
+            <div className="hidden sm:flex items-center gap-2 animate-pulse">
+              <div className="h-8 w-16 rounded-xl bg-slate-200 dark:bg-slate-800" />
+              <div className="h-8 w-24 rounded-xl bg-slate-200 dark:bg-slate-800" />
+            </div>
+          ) : user ? (
             <Link
               href="/dashboard"
               className="hidden sm:flex items-center gap-2 px-4 py-2 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] text-white font-bold text-xs shadow-lg shadow-[#8A3FFC]/25 hover:brightness-110 transition-all hover:scale-[1.02]"
@@ -129,26 +135,37 @@ export function LandingNav({ user }: NavProps) {
           </nav>
 
           <div className="pt-2 border-t border-slate-200/60 dark:border-white/10 flex flex-col gap-2">
-            {!user && (
-              <Link
-                href="/login"
-                onClick={() => setMobileMenuOpen(false)}
-                className="w-full text-center py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-slate-100 dark:hover:bg-white/5 border border-slate-200 dark:border-white/10 transition-colors"
-              >
-                Sign In to Account
-              </Link>
+            {isPending ? (
+              <div className="space-y-2 animate-pulse">
+                <div className="w-full h-10 rounded-xl bg-slate-200 dark:bg-slate-800" />
+                <div className="w-full h-11 rounded-xl bg-slate-200 dark:bg-slate-800" />
+              </div>
+            ) : (
+              <>
+                {!user && (
+                  <Link
+                    href="/login"
+                    onClick={() => setMobileMenuOpen(false)}
+                    className="w-full text-center py-2.5 rounded-xl text-sm font-semibold text-foreground hover:bg-slate-100 dark:hover:bg-white/5 border border-slate-200 dark:border-white/10 transition-colors"
+                  >
+                    Sign In to Account
+                  </Link>
+                )}
+                <Link
+                  href={user ? "/dashboard" : "/register"}
+                  onClick={() => setMobileMenuOpen(false)}
+                  className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] text-white font-bold text-sm shadow-lg shadow-[#8A3FFC]/25"
+                >
+                  <Sparkles className="w-4 h-4" />
+                  <span>
+                    {user
+                      ? "Launch Studio Dashboard"
+                      : "Start Creating for Free"}
+                  </span>
+                  <ArrowRight className="w-4 h-4" />
+                </Link>
+              </>
             )}
-            <Link
-              href={user ? "/dashboard" : "/register"}
-              onClick={() => setMobileMenuOpen(false)}
-              className="w-full flex items-center justify-center gap-2 py-3 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] text-white font-bold text-sm shadow-lg shadow-[#8A3FFC]/25"
-            >
-              <Sparkles className="w-4 h-4" />
-              <span>
-                {user ? "Launch Studio Dashboard" : "Start Creating for Free"}
-              </span>
-              <ArrowRight className="w-4 h-4" />
-            </Link>
           </div>
         </div>
       )}

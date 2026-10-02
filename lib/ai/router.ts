@@ -27,6 +27,12 @@ export interface GenerationResult {
   provider: ProviderGroup["provider"] | string;
   modelUsed: string;
   logs: string[];
+  finishReason?: string;
+}
+
+interface ProviderApiResponse {
+  text: string;
+  finishReason?: string;
 }
 
 async function callProviderAPI(
@@ -34,7 +40,7 @@ async function callProviderAPI(
   model: string,
   apiKey: string,
   request: GenerationRequest,
-): Promise<string> {
+): Promise<ProviderApiResponse> {
   const actualModel = resolveActualApiModel(model);
 
   if (provider === "gemini") {
@@ -70,7 +76,11 @@ async function callProviderAPI(
         });
 
         if (res.text !== undefined && res.text !== null) {
-          return res.text;
+          const candidateObj = res.candidates?.[0];
+          const finishReason = candidateObj?.finishReason
+            ? String(candidateObj.finishReason)
+            : undefined;
+          return { text: res.text, finishReason };
         }
       } catch (geminiErr: unknown) {
         lastGeminiErr = geminiErr;
@@ -112,7 +122,9 @@ async function callProviderAPI(
     });
 
     const firstBlock = res.content[0];
-    return firstBlock.type === "text" ? firstBlock.text : "";
+    const text = firstBlock.type === "text" ? firstBlock.text : "";
+    const finishReason = res.stop_reason ? String(res.stop_reason) : undefined;
+    return { text, finishReason };
   } else {
     // OpenAI or OpenAI-compatible provider (xAI, DeepSeek, Mistral, Meta, Qwen, Z.ai, Cohere)
     const baseURL = PROVIDER_BASE_URLS[provider];
@@ -154,7 +166,11 @@ async function callProviderAPI(
     }
 
     const res = await openai.chat.completions.create(completionParams);
-    return res.choices[0]?.message?.content || "";
+    const text = res.choices[0]?.message?.content || "";
+    const finishReason = res.choices[0]?.finish_reason
+      ? String(res.choices[0].finish_reason)
+      : undefined;
+    return { text, finishReason };
   }
 }
 
@@ -339,10 +355,10 @@ export async function executeAIRequest(
       logs.push(
         `Executing request with [${attempt.provider} :: ${attempt.model}]...`,
       );
-      let responseText = "";
+      let providerRes: ProviderApiResponse = { text: "" };
 
       try {
-        responseText = await callProviderAPI(
+        providerRes = await callProviderAPI(
           attempt.provider,
           attempt.model,
           creds.apiKey,
@@ -362,7 +378,7 @@ export async function executeAIRequest(
           logs.push(
             `Model [${attempt.model}] not found on ${attempt.provider}. Automatically falling back to verified baseline [${fallbackModel}]...`,
           );
-          responseText = await callProviderAPI(
+          providerRes = await callProviderAPI(
             attempt.provider,
             fallbackModel,
             creds.apiKey,
@@ -373,13 +389,14 @@ export async function executeAIRequest(
         }
       }
 
-      if (responseText && responseText.trim().length > 0) {
+      if (providerRes.text && providerRes.text.trim().length > 0) {
         logs.push(`Success with [${attempt.provider} :: ${attempt.model}]!`);
         return {
-          text: responseText.trim(),
+          text: providerRes.text.trim(),
           provider: attempt.provider,
           modelUsed: attempt.model,
           logs,
+          finishReason: providerRes.finishReason,
         };
       }
     } catch (err: unknown) {

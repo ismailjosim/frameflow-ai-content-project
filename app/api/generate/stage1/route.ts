@@ -72,21 +72,78 @@ export async function POST(req: NextRequest) {
     }
 
     const excludedList = Array.from(ignoredTitles).slice(0, 40);
+    const exclusionInstruction =
+      excludedList.length > 0
+        ? `\nCRITICAL EXCLUSION LIST:
+The creator has ALREADY covered or explicitly excluded the following ${excludedList.length} topics. You MUST NOT repeat any of these concepts, hooks, or core questions. Every idea you generate MUST be completely distinct and explore an untouched survival angle:
+${excludedList.map((t, idx) => `  ${idx + 1}. "${t}"`).join("\n")}\n`
+        : "";
 
-    let exclusionInstruction = "";
-    if (excludedList.length > 0) {
-      exclusionInstruction = `\n\nCRITICAL NEGATIVE FILTER (DO NOT REPEAT):\nThe creator has already produced videos on or explicitly ignored the following topics:\n${excludedList
-        .map((t) => `- "${t}"`)
-        .join(
-          "\n",
-        )}\nYou MUST NOT generate any of the above topics or close conceptual duplicates. Provide entirely fresh, unaddressed survival dilemmas or evolutionary concepts.`;
+    const hasCustomDomain = Boolean(
+      nicheOrKeyword &&
+        typeof nicheOrKeyword === "string" &&
+        nicheOrKeyword.trim().length > 0,
+    );
+
+    let userPrompt = "";
+
+    if (hasCustomDomain) {
+      const targetDomain = nicheOrKeyword.trim();
+      userPrompt = `USER-PROVIDED TOPIC / SEED DOMAIN:
+"${targetDomain}"
+
+ANALYSIS & BRAINSTORMING INSTRUCTIONS:
+1. Analyze this seed topic / domain carefully. Correct any spelling mistakes, typos, or grammatical errors in the user's phrasing (e.g., "How ancient human invent waring cloath" -> ancient human clothing / invention of sewn garments / mammoth hide insulation).
+2. Deeply analyze the domain: identify the central prehistoric survival dilemma, the evolutionary paradox, the physical stakes (freezing to death, lice/infections, needle invention, ice age migration), and curiosity gaps.
+3. Generate exactly 5 viral, high-CTR YouTube video concepts that explore 5 DIFFERENT angles of THIS EXACT DOMAIN:
+   - Angle 1 (Deadly Survival Reality): The extreme danger, physical vulnerability, or lethal stakes before/during this dilemma.
+   - Angle 2 (Everyday Essential Invention): The gritty trial-and-error breakthrough and archaeological ingenuity of this invention.
+   - Angle 3 (Counterintuitive Evolutionary Shift / Paradox): The biological or evolutionary mechanism/trade-off behind it.
+   - Angle 4 (Visceral Crisis Dilemma): The turning point moment of panic, migration, or environmental shock.
+   - Angle 5 (Alternative High-Curiosity Angle): An unexpected consequence, psychological shift, or shocking historical contrast.
+4. STRICT DOMAIN CONSTRAINT:
+   All 5 concepts MUST stay tightly focused on this domain ("${targetDomain}"). Every concept must be an angle on this specific subject.
+5. Evaluate all 5 concepts using viral CTR metrics, assign viralScore (80-99), viralRationale, and designate the single highest-CTR concept with "isTopPick": true and "priorityRank": 1.
+
+Return EXACTLY a JSON array of 5 objects following the schema:
+[
+  {
+    "id": 1,
+    "title": "Title under 65 chars",
+    "formula": "Which formula was used",
+    "conflict": "What makes this survival question visceral and urgent",
+    "thumbnailConcept": "Visual scene with stickman + 2-3 word bold text overlay",
+    "isTopPick": true,
+    "priorityRank": 1,
+    "viralScore": 98,
+    "viralRationale": "Data-backed explanation why this is the highest priority angle to produce",
+    "audienceDemand": "Extremely High (Mass Appeal)"
+  }
+]
+Return ONLY raw valid JSON without markdown code fences or commentary.`;
+    } else {
+      userPrompt = `TASK:
+Brainstorm 5 high-CTR viral video topics adhering to the channel's 4 core educational storytelling formulas across ancient human history, anthropology, and evolutionary survival dilemmas.
+Follow the 4 formulas strictly.
+${exclusionInstruction}
+
+Return EXACTLY a JSON array of 5 objects following the schema:
+[
+  {
+    "id": 1,
+    "title": "Title under 65 chars",
+    "formula": "Which formula was used",
+    "conflict": "What makes this survival question visceral and urgent",
+    "thumbnailConcept": "Visual scene with stickman + 2-3 word bold text overlay",
+    "isTopPick": true,
+    "priorityRank": 1,
+    "viralScore": 98,
+    "viralRationale": "Data-backed explanation why this is the highest priority angle to produce",
+    "audienceDemand": "Extremely High (Mass Appeal)"
+  }
+]
+Return ONLY raw valid JSON without markdown code fences or commentary.`;
     }
-
-    const basePrompt = nicheOrKeyword
-      ? `Generate 5 high-CTR video topics around this focus/keyword: "${nicheOrKeyword}". Strictly follow the 4 formulas.`
-      : `Generate 5 high-CTR viral video topics adhering to the survival/evolutionary dilemma formulas.`;
-
-    const userPrompt = `${basePrompt}${exclusionInstruction}`;
 
     const result = await executeAIRequest(
       userId,
@@ -99,13 +156,12 @@ export async function POST(req: NextRequest) {
       model || project?.modelSelected || "auto",
     );
 
-    // Clean JSON response
+    // Robust JSON extraction
     let cleanJson = result.text.trim();
-    if (cleanJson.startsWith("```json")) {
-      cleanJson = cleanJson.replace(/^```json\s*/, "").replace(/\s*```$/, "");
-    } else if (cleanJson.startsWith("```")) {
-      cleanJson = cleanJson.replace(/^```\s*/, "").replace(/\s*```$/, "");
-    }
+    cleanJson = cleanJson
+      .replace(/```(?:json)?/gi, "")
+      .replace(/```/g, "")
+      .trim();
 
     let parsedTopics: Array<Record<string, unknown>> = [];
     try {
@@ -115,32 +171,62 @@ export async function POST(req: NextRequest) {
       } else if (parsed && typeof parsed === "object") {
         const nested =
           (parsed as Record<string, unknown>).topics ||
-          (parsed as Record<string, unknown>).candidates;
+          (parsed as Record<string, unknown>).candidates ||
+          (parsed as Record<string, unknown>).concepts;
         if (Array.isArray(nested)) {
           parsedTopics = nested as Array<Record<string, unknown>>;
         }
       }
     } catch {
+      // Substring extraction for [ ... ]
+      const firstBracket = cleanJson.indexOf("[");
+      const lastBracket = cleanJson.lastIndexOf("]");
+      if (firstBracket !== -1 && lastBracket > firstBracket) {
+        try {
+          const slice = cleanJson.slice(firstBracket, lastBracket + 1);
+          const parsed = JSON.parse(slice);
+          if (Array.isArray(parsed)) parsedTopics = parsed;
+        } catch {
+          // fallback below
+        }
+      }
+    }
+
+    if (parsedTopics.length === 0) {
       parsedTopics = [
         {
           id: 1,
-          title: cleanJson,
-          formula: "Custom",
-          conflict: "",
-          thumbnailConcept: "",
+          title: hasCustomDomain
+            ? nicheOrKeyword.trim()
+            : "How Ancient Humans Survived The Ice Age",
+          formula: "Survival Dilemma",
+          conflict:
+            "Adapting to extreme environments before modern civilization.",
+          thumbnailConcept: "A stickman in the elements. Text: 'SURVIVE'",
+          isTopPick: true,
+          priorityRank: 1,
+          viralScore: 98,
+          viralRationale:
+            "Immediate survival dilemma with mass audience curiosity.",
+          audienceDemand: "Extremely High (Mass Appeal)",
         },
       ];
     }
 
-    // Filter out any topic that matches an ignored or existing project topic
-    const normalizedIgnored = new Set(
-      Array.from(ignoredTitles).map((t) => t.toLowerCase()),
-    );
-    parsedTopics = parsedTopics.filter((t) => {
-      const titleStr =
-        typeof t.title === "string" ? t.title.toLowerCase().trim() : "";
-      return titleStr && !normalizedIgnored.has(titleStr);
-    });
+    // Only apply excluded titles filter when NOT in custom domain mode
+    if (!hasCustomDomain) {
+      const normalizedIgnored = new Set(
+        Array.from(ignoredTitles).map((t) => t.toLowerCase()),
+      );
+      const filtered = parsedTopics.filter((t) => {
+        const titleStr =
+          typeof t.title === "string" ? t.title.toLowerCase().trim() : "";
+        return titleStr && !normalizedIgnored.has(titleStr);
+      });
+      if (filtered.length > 0) {
+        parsedTopics = filtered;
+      }
+    }
 
     // Ensure data-backed viral prioritization
     if (parsedTopics.length > 0) {

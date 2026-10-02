@@ -29,6 +29,7 @@ export function useStudioProject() {
   });
 
   const [scriptText, setScriptText] = useState("");
+  const [isScriptComplete, setIsScriptComplete] = useState(false);
   const [timestampInput, setTimestampInput] = useState("");
   const [promptsText, setPromptsText] = useState("");
   const [packagingText, setPackagingText] = useState("");
@@ -63,7 +64,24 @@ export function useStudioProject() {
                 thumbnailConcept:
                   p.stageData.topicDetails?.thumbnailConcept || "",
               });
-              setScriptText(p.stageData.scriptText || "");
+              const script = p.stageData.scriptText || "";
+              setScriptText(script);
+              const scriptWords = script
+                .trim()
+                .split(/\s+/)
+                .filter(Boolean).length;
+              const scriptEndsWithPunctuation = /[.!?]["'”’]?\s*$/.test(
+                script.trim(),
+              );
+              const computedComplete =
+                typeof p.stageData.isScriptComplete === "boolean"
+                  ? p.stageData.isScriptComplete
+                  : Boolean(
+                      script &&
+                        scriptWords >= 1500 &&
+                        scriptEndsWithPunctuation,
+                    );
+              setIsScriptComplete(computedComplete);
               setTimestampInput(p.stageData.timestampInput || "");
               setPromptsText(p.stageData.imagePromptsText || "");
               setPackagingText(p.stageData.packagingText || "");
@@ -105,7 +123,24 @@ export function useStudioProject() {
                   thumbnailConcept:
                     p.stageData.topicDetails?.thumbnailConcept || "",
                 });
-                setScriptText(p.stageData.scriptText || "");
+                const script = p.stageData.scriptText || "";
+                setScriptText(script);
+                const scriptWords = script
+                  .trim()
+                  .split(/\s+/)
+                  .filter(Boolean).length;
+                const scriptEndsWithPunctuation = /[.!?]["'”’]?\s*$/.test(
+                  script.trim(),
+                );
+                const computedComplete =
+                  typeof p.stageData.isScriptComplete === "boolean"
+                    ? p.stageData.isScriptComplete
+                    : Boolean(
+                        script &&
+                          scriptWords >= 1500 &&
+                          scriptEndsWithPunctuation,
+                      );
+                setIsScriptComplete(computedComplete);
                 setTimestampInput(p.stageData.timestampInput || "");
                 setPromptsText(p.stageData.imagePromptsText || "");
                 setPackagingText(p.stageData.packagingText || "");
@@ -155,6 +190,7 @@ export function useStudioProject() {
             topic: topicDetails.title,
             topicDetails,
             scriptText,
+            isScriptComplete,
             timestampInput,
             imagePromptsText: promptsText,
             packagingText,
@@ -183,6 +219,7 @@ export function useStudioProject() {
     activeStage,
     topicDetails,
     scriptText,
+    isScriptComplete,
     timestampInput,
     promptsText,
     packagingText,
@@ -262,6 +299,8 @@ export function useStudioProject() {
     setTopicDetails,
     scriptText,
     setScriptText,
+    isScriptComplete,
+    setIsScriptComplete,
     timestampInput,
     setTimestampInput,
     promptsText,

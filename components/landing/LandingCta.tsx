@@ -5,9 +5,10 @@ import { SECTION_DIVIDER } from "./landing.data";
 
 interface CtaProps {
   user: User | null | undefined;
+  isPending?: boolean;
 }
 
-export function LandingCta({ user }: CtaProps) {
+export function LandingCta({ user, isPending }: CtaProps) {
   const ctaHref = user ? "/dashboard" : "/register";
 
   return (
@@ -50,14 +51,18 @@ export function LandingCta({ user }: CtaProps) {
 
                 {/* Action button */}
                 <div className="pt-2 flex justify-center w-full">
-                  <Link
-                    href={ctaHref}
-                    className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 active:scale-[0.98] text-white font-extrabold text-sm sm:text-base shadow-xl shadow-[#8A3FFC]/25 hover:shadow-[#8A3FFC]/40 hover:scale-[1.02] transition-all cursor-pointer group/btn"
-                  >
-                    <Sparkles className="w-4 h-4 text-white shrink-0" />
-                    <span>Launch FrameFlow Studio</span>
-                    <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform shrink-0" />
-                  </Link>
+                  {isPending ? (
+                    <div className="w-full sm:w-64 h-14 rounded-2xl bg-slate-200 dark:bg-slate-800 animate-pulse" />
+                  ) : (
+                    <Link
+                      href={ctaHref}
+                      className="w-full sm:w-auto inline-flex items-center justify-center gap-2.5 px-6 sm:px-8 py-3.5 sm:py-4 rounded-2xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 active:scale-[0.98] text-white font-extrabold text-sm sm:text-base shadow-xl shadow-[#8A3FFC]/25 hover:shadow-[#8A3FFC]/40 hover:scale-[1.02] transition-all cursor-pointer group/btn"
+                    >
+                      <Sparkles className="w-4 h-4 text-white shrink-0" />
+                      <span>Launch FrameFlow Studio</span>
+                      <ArrowRight className="w-4 h-4 group-hover/btn:translate-x-1 transition-transform shrink-0" />
+                    </Link>
+                  )}
                 </div>
 
                 {/* Micro trust indicators */}

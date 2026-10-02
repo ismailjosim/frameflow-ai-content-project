@@ -61,7 +61,8 @@ RULES:
 - Translate scientific/archaeological discoveries and evolutionary mechanisms into visceral stakes.
 - Target word count: 2,600 to 3,400 words (for a 16-22 minute runtime).
 - MANDATORY LINE FORMATTING: Output the script strictly pre-broken ONE SENTENCE PER LINE. If a sentence exceeds roughly 90 characters, break it onto the next line at a natural clause or word boundary. Short sentences get their own line. This ensures plain caption-ready format.
-- Output clean text ready for ElevenLabs TTS.`,
+- Output clean text ready for ElevenLabs TTS.
+- When the entire narration has concluded and the documentary is finished, append "[SCRIPT_COMPLETE]" on the very final line.`,
 
   stage3Prompt: `You are the visual director generating Midjourney/Flux image prompts.
 VISUAL STYLE RULES:

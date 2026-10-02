@@ -44,7 +44,7 @@ export function Sidebar({
   isAnalyzing,
 }: SidebarProps) {
   const pathname = usePathname();
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
   const sidebarContent = (
@@ -162,7 +162,7 @@ export function Sidebar({
           onClose={onClose}
         />
 
-        <SidebarUserCard user={user} onClose={onClose} />
+        <SidebarUserCard user={user} isPending={isPending} onClose={onClose} />
 
         <div className="pt-0.5 pb-1 text-center">
           <p className="text-[11px] font-bold text-frameflow-gradient tracking-wide">

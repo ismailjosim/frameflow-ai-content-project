@@ -14,15 +14,16 @@ import { LandingPresets } from "./LandingPresets";
 import { LandingSecurity } from "./LandingSecurity";
 
 export function LandingPage() {
-  const { data: session } = authClient.useSession();
+  const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
   const [activePipelineTab, setActivePipelineTab] = useState<number>(1);
 
   return (
     <div className="min-h-screen bg-background text-foreground flex flex-col selection:bg-[#E51FD1]/30 selection:text-[#58E6F7] transition-colors duration-200">
-      <LandingNav user={user} />
+      <LandingNav user={user} isPending={isPending} />
       <LandingHero
         user={user}
+        isPending={isPending}
         activePipelineTab={activePipelineTab}
         onTabChange={setActivePipelineTab}
       />
@@ -32,7 +33,7 @@ export function LandingPage() {
       <LandingSecurity />
       <LandingComparison />
       <LandingFaq />
-      <LandingCta user={user} />
+      <LandingCta user={user} isPending={isPending} />
       <LandingFooter />
     </div>
   );

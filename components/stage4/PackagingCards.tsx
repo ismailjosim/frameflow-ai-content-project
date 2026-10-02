@@ -2,12 +2,15 @@
 
 import {
   Check,
+  ClipboardList,
   Copy,
   FileCheck,
   Hash,
   Image as ImageIcon,
+  Sparkles,
   Tag,
 } from "lucide-react";
+import React from "react";
 import type { PackagingCardsProps } from "./stage4.types";
 
 export function PackagingCards({
@@ -15,9 +18,89 @@ export function PackagingCards({
   parsedPackaging,
   copiedField,
   onCopyText,
+  timestampInput,
 }: PackagingCardsProps) {
+  const fullYouTubePackage = React.useMemo(() => {
+    const title = parsedPackaging.viralTitle || topicTitle || "Untitled Video";
+    const description = parsedPackaging.description || "";
+    const hashtags = parsedPackaging.hashtags || "";
+    const tags = parsedPackaging.seoTags || "";
+
+    let chaptersSection = "";
+    if (timestampInput?.trim()) {
+      const lines = timestampInput.split("\n");
+      const matchedChapters: string[] = [];
+      for (const line of lines) {
+        const timeMatch = line.match(/\[?(\d{1,2}:\d{2})\]?\s*(.*)/);
+        if (timeMatch) {
+          const time = timeMatch[1];
+          const desc =
+            timeMatch[2]?.replace(/^[-\s:]+/, "").slice(0, 45) || "Chapter";
+          matchedChapters.push(`${time} - ${desc}`);
+        }
+      }
+      if (matchedChapters.length > 0) {
+        chaptersSection = `\n\nTIMESTAMPS / CHAPTERS:\n${matchedChapters.slice(0, 12).join("\n")}`;
+      }
+    }
+
+    return `${title}
+
+==================================================
+DESCRIPTION:
+==================================================
+${description}${chaptersSection}
+
+==================================================
+HASHTAGS:
+==================================================
+${hashtags}
+
+==================================================
+SEARCH TAGS (PASTE INTO YOUTUBE STUDIO TAGS FIELD):
+==================================================
+${tags}
+`;
+  }, [parsedPackaging, topicTitle, timestampInput]);
+
   return (
     <div className="space-y-4">
+      {/* 1-Click Copy Full YouTube Studio Package Hero Banner */}
+      <div className="p-4 sm:p-5 rounded-2xl bg-linear-to-r from-[#58E6F7]/15 via-[#8A3FFC]/20 to-[#E51FD1]/15 border border-[#8A3FFC]/30 flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-md">
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-linear-to-br from-[#8A3FFC] to-[#E51FD1] text-white flex items-center justify-center shrink-0 shadow-sm">
+            <ClipboardList className="w-5 h-5" />
+          </div>
+          <div>
+            <h4 className="text-sm font-bold text-slate-900 dark:text-white flex items-center gap-1.5">
+              <span>Complete YouTube Studio Package</span>
+              <Sparkles className="w-3.5 h-3.5 text-amber-500 animate-pulse" />
+            </h4>
+            <p className="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+              Formatted Title + Description + Chapters + Hashtags + SEO Tags
+              ready to paste directly into YouTube Studio.
+            </p>
+          </div>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => onCopyText(fullYouTubePackage, "fullPackage")}
+          className="flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-linear-to-r from-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-md shadow-[#8A3FFC]/25 transition-all hover:scale-102 active:scale-98 cursor-pointer shrink-0"
+        >
+          {copiedField === "fullPackage" ? (
+            <>
+              <Check className="w-4 h-4 text-emerald-300" />
+              <span>Full Package Copied!</span>
+            </>
+          ) : (
+            <>
+              <Copy className="w-4 h-4" />
+              <span>Copy Full YouTube Package</span>
+            </>
+          )}
+        </button>
+      </div>
       {/* 1. Viral Title */}
       <div className="glass-panel p-5 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-2 bg-white/80 dark:bg-slate-900/60 transition-colors">
         <div className="flex items-center justify-between text-xs">

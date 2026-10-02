@@ -10,6 +10,7 @@ export interface IProjectStageData {
   };
   targetDuration: string;
   scriptText: string;
+  isScriptComplete?: boolean;
   timestampInput: string;
   imagePromptsText: string;
   packagingText: string;
@@ -63,6 +64,7 @@ const ProjectSchema = new Schema<IProject>(
         default: "16–22 minutes (2,600–3,400 words)",
       },
       scriptText: { type: String, default: "" },
+      isScriptComplete: { type: Boolean, default: false },
       timestampInput: { type: String, default: "" },
       imagePromptsText: { type: String, default: "" },
       packagingText: { type: String, default: "" },

@@ -25,6 +25,8 @@ export function StudioClient() {
     topicDetails,
     scriptText,
     setScriptText,
+    isScriptComplete,
+    setIsScriptComplete,
     timestampInput,
     setTimestampInput,
     promptsText,
@@ -93,6 +95,11 @@ export function StudioClient() {
                 topicFormula={topicDetails.formula}
                 selectedModel={selectedModel}
                 scriptText={scriptText}
+                isScriptComplete={isScriptComplete}
+                onScriptCompleteChange={(complete) => {
+                  setIsScriptComplete(complete);
+                  saveProjectState();
+                }}
                 autoStart={autoStartScript}
                 onScriptChange={(newScript) => {
                   setScriptText(newScript);

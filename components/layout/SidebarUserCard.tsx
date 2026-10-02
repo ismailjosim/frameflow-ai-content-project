@@ -8,13 +8,26 @@ import { authClient } from "@/lib/auth-client";
 
 interface SidebarUserCardProps {
   user: User | null | undefined;
+  isPending?: boolean;
   onClose?: () => void;
 }
 
-export function SidebarUserCard({ user, onClose }: SidebarUserCardProps) {
+export function SidebarUserCard({
+  user,
+  isPending,
+  onClose,
+}: SidebarUserCardProps) {
   return (
     <div className="pt-2 border-t border-slate-200 dark:border-slate-900">
-      {user ? (
+      {isPending ? (
+        <div className="flex items-center gap-2.5 p-2.5 rounded-xl bg-slate-100 dark:bg-slate-900 border border-slate-200 dark:border-slate-800 animate-pulse">
+          <div className="w-6 h-6 rounded-full bg-slate-300 dark:bg-slate-800 shrink-0" />
+          <div className="space-y-1.5 flex-1 min-w-0">
+            <div className="h-3 w-20 rounded bg-slate-300 dark:bg-slate-800" />
+            <div className="h-2.5 w-28 rounded bg-slate-200 dark:bg-slate-800/60" />
+          </div>
+        </div>
+      ) : user ? (
         <div className="flex items-center justify-between p-2 rounded-xl bg-white dark:bg-slate-900/90 border border-slate-200 dark:border-slate-800 shadow-xs">
           <div className="flex items-center gap-2 truncate">
             {user.image ? (

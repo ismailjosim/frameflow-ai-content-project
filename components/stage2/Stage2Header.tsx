@@ -1,6 +1,14 @@
 "use client";
 
-import { Loader2, Play, Sparkles } from "lucide-react";
+import {
+  AlertCircle,
+  Check,
+  CheckCircle2,
+  Loader2,
+  Play,
+  Sparkles,
+  Square,
+} from "lucide-react";
 import { Stage2ErrorBanner } from "./Stage2ErrorBanner";
 
 interface Stage2HeaderProps {
@@ -10,10 +18,13 @@ interface Stage2HeaderProps {
   modelUsed: string;
   scriptText: string;
   statsLines: number;
+  isScriptComplete?: boolean;
+  onToggleScriptComplete?: () => void;
   loading: boolean;
   error: string | null;
   onContinueScript: () => void;
   onGenerateScript: () => void;
+  onStopScript?: () => void;
 }
 
 export function Stage2Header({
@@ -23,10 +34,13 @@ export function Stage2Header({
   modelUsed,
   scriptText,
   statsLines,
+  isScriptComplete = false,
+  onToggleScriptComplete,
   loading,
   error,
   onContinueScript,
   onGenerateScript,
+  onStopScript,
 }: Stage2HeaderProps) {
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
@@ -54,17 +68,65 @@ export function Stage2Header({
             </span>
           )}
 
-          {/* If partial script exists, allow continuing */}
-          {scriptText && (
+          {/* Script Completion Status & Continuation Controls */}
+          {scriptText &&
+            (isScriptComplete ? (
+              <div className="flex items-center gap-2">
+                <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-emerald-500/10 border border-emerald-500/30 text-emerald-600 dark:text-emerald-400 font-semibold text-xs shadow-xs">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500 shrink-0" />
+                  <span>Script Complete ({statsLines} lines)</span>
+                </span>
+                {onToggleScriptComplete && (
+                  <button
+                    type="button"
+                    onClick={onToggleScriptComplete}
+                    className="text-[11px] text-slate-500 hover:text-slate-800 dark:text-slate-400 dark:hover:text-slate-200 underline decoration-dotted cursor-pointer px-1 py-1"
+                    title="Click if you need to continue generating more lines"
+                  >
+                    + Append more
+                  </button>
+                )}
+              </div>
+            ) : (
+              <div className="flex items-center gap-1.5">
+                <span className="hidden sm:inline-flex items-center gap-1 px-2.5 py-1.5 rounded-lg bg-amber-500/10 border border-amber-500/30 text-amber-600 dark:text-amber-400 text-xs font-semibold">
+                  <AlertCircle className="w-3.5 h-3.5 text-amber-500 shrink-0" />
+                  <span>Partial Script</span>
+                </span>
+                <button
+                  type="button"
+                  onClick={onContinueScript}
+                  disabled={loading}
+                  className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] to-[#8A3FFC] hover:brightness-110 text-slate-950 font-bold text-xs shadow-md transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0"
+                  title="Continue generating next sentences until script concludes"
+                >
+                  <Play className="w-3.5 h-3.5 fill-current" />
+                  <span>Continue from Line {statsLines + 1}</span>
+                </button>
+                {onToggleScriptComplete && (
+                  <button
+                    type="button"
+                    onClick={onToggleScriptComplete}
+                    disabled={loading}
+                    className="px-2.5 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-300 font-medium text-xs border border-slate-200 dark:border-slate-700 transition-colors cursor-pointer shrink-0"
+                    title="Mark script as complete if no further lines are needed"
+                  >
+                    <Check className="w-3.5 h-3.5 inline mr-1 text-emerald-500" />
+                    Mark Complete
+                  </button>
+                )}
+              </div>
+            ))}
+
+          {loading && onStopScript && (
             <button
               type="button"
-              onClick={onContinueScript}
-              disabled={loading}
-              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-linear-to-r from-[#58E6F7] to-[#8A3FFC] hover:brightness-110 text-slate-950 font-bold text-xs shadow-md transition-all hover:scale-102 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer shrink-0"
-              title="Continue generating next sentences after current script"
+              onClick={onStopScript}
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-bold text-xs shadow-xs transition-all hover:scale-102 cursor-pointer shrink-0"
+              title="Stop script generation and keep current script"
             >
-              <Play className="w-3.5 h-3.5 fill-current" />
-              <span>Continue from Line {statsLines + 1}</span>
+              <Square className="w-3.5 h-3.5 fill-current" />
+              <span>Stop</span>
             </button>
           )}
 

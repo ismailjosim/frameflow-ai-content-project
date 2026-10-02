@@ -6,6 +6,8 @@ import {
   Loader2,
   RotateCcw,
   Sparkles,
+  Square,
+  X,
 } from "lucide-react";
 import type { TopicInputHeaderProps } from "./stage1.types";
 
@@ -16,6 +18,7 @@ export function TopicInputHeader({
   error,
   modelUsed,
   onGenerate,
+  onStop,
   ignoredCount,
   onToggleIgnoredList,
 }: TopicInputHeaderProps) {
@@ -60,36 +63,83 @@ export function TopicInputHeader({
         </div>
       </div>
 
-      <div className="flex flex-col sm:flex-row gap-3">
-        <div className="relative flex-1">
-          <input
-            type="text"
-            value={keyword}
-            onChange={(e) => setKeyword(e.target.value)}
-            placeholder="e.g. losing fire in winter, human teeth rotting, inventing shoes, why humans lost fur..."
-            className="w-full bg-slate-50 dark:bg-slate-900/90 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-[#8A3FFC] transition-colors"
-            onKeyDown={(e) => e.key === "Enter" && !loading && onGenerate()}
-          />
+      <div className="space-y-2">
+        <div className="flex flex-col sm:flex-row gap-3">
+          <div className="relative flex-1">
+            <input
+              type="text"
+              value={keyword}
+              onChange={(e) => setKeyword(e.target.value)}
+              placeholder="e.g. How ancient human invent wearing cloth, losing fire in winter..."
+              className="w-full bg-slate-50 dark:bg-slate-900/90 text-sm text-slate-900 dark:text-slate-100 placeholder-slate-400 dark:placeholder-slate-500 pl-4 pr-10 py-3 rounded-xl border border-slate-200 dark:border-slate-800 focus:outline-none focus:border-[#8A3FFC] transition-colors"
+              onKeyDown={(e) => e.key === "Enter" && !loading && onGenerate()}
+            />
+            {keyword.trim().length > 0 && (
+              <button
+                type="button"
+                onClick={() => setKeyword("")}
+                className="absolute right-3 top-1/2 -translate-y-1/2 p-1 text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 rounded-md transition-colors"
+                title="Clear topic"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            )}
+          </div>
+
+          {loading && onStop && (
+            <button
+              type="button"
+              onClick={onStop}
+              className="flex items-center justify-center gap-1.5 px-4 py-3 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-bold text-xs shadow-xs transition-all hover:scale-102 cursor-pointer shrink-0"
+              title="Stop topic generation"
+            >
+              <Square className="w-3.5 h-3.5 fill-current" />
+              <span>Stop</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            onClick={onGenerate}
+            disabled={loading}
+            className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-[#8A3FFC]/25 transition-all hover:scale-102 active:scale-98 disabled:opacity-50 disabled:pointer-events-none cursor-pointer shrink-0 w-full sm:w-auto"
+          >
+            {loading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                <span>
+                  {keyword.trim()
+                    ? "Analyzing Domain & CTR Data..."
+                    : "Analyzing Viral Data..."}
+                </span>
+              </>
+            ) : (
+              <>
+                <Sparkles className="w-4 h-4" />
+                <span>
+                  {keyword.trim()
+                    ? "Analyze & Prioritize 5 Angles"
+                    : "Generate & Prioritize 5 Angles"}
+                </span>
+              </>
+            )}
+          </button>
         </div>
 
-        <button
-          type="button"
-          onClick={onGenerate}
-          disabled={loading}
-          className="flex items-center justify-center gap-2 px-6 py-3 rounded-xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-bold text-xs shadow-lg shadow-[#8A3FFC]/25 transition-all hover:scale-102 active:scale-98 disabled:opacity-50 disabled:pointer-events-none cursor-pointer shrink-0 w-full sm:w-auto"
-        >
-          {loading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              <span>Analyzing Viral Data...</span>
-            </>
+        <div className="flex items-center justify-between text-[11px] text-slate-500 dark:text-slate-400 px-1">
+          {keyword.trim() ? (
+            <p className="flex items-center gap-1.5 text-purple-600 dark:text-purple-400 font-medium">
+              <span className="w-1.5 h-1.5 rounded-full bg-purple-500 animate-pulse" />
+              Domain Target: AI will correct grammar, analyze this subject, and
+              extract 5 high-CTR viral angles.
+            </p>
           ) : (
-            <>
-              <Sparkles className="w-4 h-4" />
-              <span>Generate & Prioritize 5 Angles</span>
-            </>
+            <p className="text-slate-400 dark:text-slate-500">
+              Leave input empty to generate 5 fresh survival & evolutionary
+              topics across ancient history.
+            </p>
           )}
-        </button>
+        </div>
       </div>
 
       {error && (

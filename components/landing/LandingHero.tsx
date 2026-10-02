@@ -8,12 +8,14 @@ import { PipelineMockup } from "./PipelineMockup";
 
 interface HeroProps {
   user: User | null | undefined;
+  isPending?: boolean;
   activePipelineTab: number;
   onTabChange: (n: number) => void;
 }
 
 export function LandingHero({
   user,
+  isPending,
   activePipelineTab,
   onTabChange,
 }: HeroProps) {
@@ -50,14 +52,18 @@ export function LandingHero({
 
         {/* CTA */}
         <div className="flex flex-col sm:flex-row items-center justify-center gap-2.5 sm:gap-4 pt-2 w-full">
-          <Link
-            href={user ? "/dashboard" : "/register"}
-            className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-8 py-3.5 rounded-2xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-extrabold text-sm shadow-xl shadow-[#8A3FFC]/30 hover:scale-[1.02] transition-all cursor-pointer"
-          >
-            <Sparkles className="w-4 h-4 shrink-0" />
-            <span>Launch Video Studio</span>
-            <ArrowRight className="w-4 h-4 shrink-0" />
-          </Link>
+          {isPending ? (
+            <div className="w-full sm:w-56 h-12 rounded-2xl bg-slate-200 dark:bg-slate-800 animate-pulse" />
+          ) : (
+            <Link
+              href={user ? "/dashboard" : "/register"}
+              className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-8 py-3.5 rounded-2xl bg-linear-to-r from-[#58E6F7] via-[#8A3FFC] to-[#E51FD1] hover:brightness-110 text-white font-extrabold text-sm shadow-xl shadow-[#8A3FFC]/30 hover:scale-[1.02] transition-all cursor-pointer"
+            >
+              <Sparkles className="w-4 h-4 shrink-0" />
+              <span>Launch Video Studio</span>
+              <ArrowRight className="w-4 h-4 shrink-0" />
+            </Link>
+          )}
           <a
             href="#pipeline"
             className="w-full sm:w-auto flex items-center justify-center gap-2 px-5 sm:px-6 py-3.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-800 border-slate-200 dark:bg-white/5 dark:hover:bg-white/10 dark:text-foreground dark:border-white/10 font-semibold text-sm border transition-colors cursor-pointer"

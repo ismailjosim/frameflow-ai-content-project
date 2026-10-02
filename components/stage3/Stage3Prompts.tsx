@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Loader2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
 import { sound } from "@/lib/sound";
@@ -23,6 +23,7 @@ export function Stage3Prompts({
   scriptText = "",
 }: Stage3PromptsProps) {
   const [isRunning, setIsRunning] = useState(false);
+  const [isPaused, setIsPaused] = useState(false);
   const [currentBatch, setCurrentBatch] = useState(0);
   const [totalBatches, setTotalBatches] = useState(0);
   const [failedBatchIndex, setFailedBatchIndex] = useState<number | null>(null);
@@ -30,6 +31,10 @@ export function Stage3Prompts({
   const [error, setError] = useState<string | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const batchSize = 20;
+
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const isPausedRef = useRef(false);
+  const isStoppedRef = useRef(false);
 
   // Auto-populate timestamp input with calculated continuous timestamps if empty
   useEffect(() => {
@@ -89,6 +94,9 @@ export function Stage3Prompts({
         return;
       }
 
+      isPausedRef.current = false;
+      isStoppedRef.current = false;
+      setIsPaused(false);
       setIsRunning(true);
       setError(null);
 
@@ -103,12 +111,29 @@ export function Stage3Prompts({
 
       try {
         for (let i = fromBatchIndex; i < chunks.length; i++) {
+          if (isPausedRef.current) {
+            setFailedBatchIndex(i);
+            setIsRunning(false);
+            setIsPaused(true);
+            return;
+          }
+          if (isStoppedRef.current) {
+            setIsRunning(false);
+            setIsPaused(false);
+            setFailedBatchIndex(null);
+            return;
+          }
+
           setCurrentBatch(i + 1);
           const chunk = chunks[i];
+
+          const controller = new AbortController();
+          abortControllerRef.current = controller;
 
           const res = await fetch("/api/generate/stage3-batch", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
+            signal: controller.signal,
             body: JSON.stringify({
               projectId,
               batchLines: chunk,
@@ -136,6 +161,15 @@ export function Stage3Prompts({
         sound.playStepComplete();
         toast.success("All Midjourney image prompts generated successfully!");
       } catch (err: unknown) {
+        if (
+          isStoppedRef.current ||
+          (err instanceof Error && err.name === "AbortError")
+        ) {
+          return;
+        }
+        if (isPausedRef.current) {
+          return;
+        }
         const msg =
           err instanceof Error
             ? err.message
@@ -143,7 +177,9 @@ export function Stage3Prompts({
         setError(msg);
         toast.error(msg);
       } finally {
-        setIsRunning(false);
+        if (!isPausedRef.current) {
+          setIsRunning(false);
+        }
       }
     },
     [
@@ -155,6 +191,35 @@ export function Stage3Prompts({
       selectedModel,
       onPromptsChange,
     ],
+  );
+
+  const handlePauseQueue = useCallback(() => {
+    isPausedRef.current = true;
+    setIsPaused(true);
+    abortControllerRef.current?.abort();
+    sound.playNotification();
+    toast.info("Prompt queue paused.");
+  }, []);
+
+  const handleStopQueue = useCallback(() => {
+    isStoppedRef.current = true;
+    isPausedRef.current = false;
+    abortControllerRef.current?.abort();
+    setIsRunning(false);
+    setIsPaused(false);
+    setFailedBatchIndex(null);
+    sound.playNotification();
+    toast.info("Batch generation stopped. Existing prompts preserved.");
+  }, []);
+
+  const handleResumeQueue = useCallback(
+    (fromIndex: number) => {
+      isPausedRef.current = false;
+      isStoppedRef.current = false;
+      setIsPaused(false);
+      startBatchQueue(fromIndex);
+    },
+    [startBatchQueue],
   );
 
   useEffect(() => {
@@ -202,6 +267,7 @@ export function Stage3Prompts({
       {/* Intro & Batch Controls */}
       <Stage3BatchControl
         isRunning={isRunning}
+        isPaused={isPaused}
         linesCount={lines.length}
         promptsExist={!!promptsText}
         currentBatch={currentBatch}
@@ -210,7 +276,9 @@ export function Stage3Prompts({
         timestampInput={timestampInput}
         onTimestampChange={onTimestampChange}
         onStartQueue={() => startBatchQueue(0)}
-        onResumeQueue={(batchIdx) => startBatchQueue(batchIdx)}
+        onPauseQueue={handlePauseQueue}
+        onStopQueue={handleStopQueue}
+        onResumeQueue={handleResumeQueue}
         failedBatchIndex={failedBatchIndex}
         onRecalculateTimestamps={handleRecalculateTimestamps}
         estimatedRuntime={timingStats.formattedRuntime}

@@ -6,6 +6,7 @@ import type { Stage2MetricsBarProps } from "./stage2.types";
 export function Stage2MetricsBar({
   stats,
   scriptText,
+  isScriptComplete,
   copied,
   onCopy,
   onDownload,
@@ -39,6 +40,20 @@ export function Stage2MetricsBar({
             {stats.longLines}
           </span>
         </div>
+        {scriptText && (
+          <div>
+            <span className="text-slate-500 dark:text-slate-400">Status: </span>
+            <span
+              className={`font-semibold ${
+                isScriptComplete
+                  ? "text-emerald-600 dark:text-emerald-400"
+                  : "text-amber-600 dark:text-amber-400"
+              }`}
+            >
+              {isScriptComplete ? "Complete" : "Incomplete"}
+            </span>
+          </div>
+        )}
       </div>
 
       <div className="flex items-center gap-2 shrink-0">

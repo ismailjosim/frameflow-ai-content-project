@@ -12,7 +12,13 @@ interface UserNavMenuProps {
 }
 
 export function UserNavMenu({ user, isPending, onLogout }: UserNavMenuProps) {
-  if (isPending) return null;
+  if (isPending) {
+    return (
+      <div className="hidden md:flex items-center gap-1.5 animate-pulse">
+        <div className="h-8 w-28 rounded-xl bg-slate-200 dark:bg-slate-800" />
+      </div>
+    );
+  }
 
   if (user) {
     return (

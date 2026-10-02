@@ -75,12 +75,18 @@ TASK:
 Resume and continue the voiceover narration script immediately following the last sentence above until the full documentary concludes.
 Do NOT re-write or repeat any sentences that are already in the partial script above.
 Output ONLY the new subsequent lines.
-Rules: Strictly format one sentence per line, with each line under 90 characters.`
+Rules: Strictly format one sentence per line, with each line under 90 characters.
+
+COMPLETION INSTRUCTION:
+When the narration has reached the final concluding scene and the entire documentary is finished, append "[SCRIPT_COMPLETE]" on a new line at the very end. If the narrative is cut off or not yet fully concluded, do NOT include this tag.`
       : `TOPIC: "${topic.title}"
 SURVIVAL CONFLICT / HOOK: "${topic.conflict || topic.title}"
 FORMULA: "${topic.formula || "Documentary"}"
 
-Write the complete narration voiceover script following all line-break and character-limit rules strictly.`;
+Write the complete narration voiceover script from the opening hook through to the final conclusion, following all line-break and character-limit rules strictly.
+
+COMPLETION INSTRUCTION:
+When the entire narration has concluded and the documentary is finished, append "[SCRIPT_COMPLETE]" on a new line at the very end. If the narrative is cut off or not yet fully concluded, do NOT include this tag.`;
 
     const result = await executeAIRequest(
       userId,
@@ -93,13 +99,56 @@ Write the complete narration voiceover script following all line-break and chara
       model || project?.modelSelected || "auto",
     );
 
+    const rawResultText = result.text.trim();
+
+    // Check for explicit completion marker from LLM
+    const completionMarkerRegex =
+      /\[(SCRIPT_COMPLETE|END_OF_SCRIPT|SCRIPT COMPLETE|END OF SCRIPT)\]/i;
+    const hasCompletionTag = completionMarkerRegex.test(rawResultText);
+
+    // Clean out any completion marker tag from the script content
+    const cleanedNewAddition = rawResultText
+      .replace(completionMarkerRegex, "")
+      .trim();
+
     const fullScriptText = isContinuing
-      ? `${continueFromScript.trim()}\n${result.text.trim()}`
-      : result.text.trim();
+      ? `${continueFromScript.trim()}\n${cleanedNewAddition}`
+      : cleanedNewAddition;
+
+    // Analyze finish status
+    const finishReasonLower = (result.finishReason || "").toLowerCase();
+    const isTruncated = ["length", "max_tokens"].includes(finishReasonLower);
+    const endsWithTerminalPunctuation = /[.!?]["'”’]?\s*$/.test(
+      cleanedNewAddition,
+    );
+    const fullScriptWords = fullScriptText.split(/\s+/).filter(Boolean).length;
+    const fullScriptLines = fullScriptText
+      .split("\n")
+      .filter((l) => l.trim().length > 0).length;
+
+    let isComplete = false;
+    if (hasCompletionTag) {
+      isComplete = true;
+    } else if (isTruncated) {
+      isComplete = false;
+    } else if (!endsWithTerminalPunctuation) {
+      // Ends mid-sentence, clearly incomplete
+      isComplete = false;
+    } else if (fullScriptWords >= 2000 || fullScriptLines >= 160) {
+      // Reached documentary scale and finished sentence naturally
+      isComplete = true;
+    } else if (
+      !isContinuing &&
+      (finishReasonLower === "stop" || finishReasonLower === "end_turn")
+    ) {
+      // Natural stop on first attempt with terminal punctuation
+      isComplete = true;
+    }
 
     // Save into project if projectId provided
     if (projectId && project) {
       project.stageData.scriptText = fullScriptText;
+      project.stageData.isScriptComplete = isComplete;
       project.stageData.topic = topic.title;
       project.stageData.topicDetails = {
         title: topic.title,
@@ -115,7 +164,8 @@ Write the complete narration voiceover script following all line-break and chara
     return NextResponse.json({
       success: true,
       scriptText: fullScriptText,
-      newAddition: result.text.trim(),
+      newAddition: cleanedNewAddition,
+      isComplete,
       modelUsed: result.modelUsed,
       provider: result.provider,
       logs: result.logs,

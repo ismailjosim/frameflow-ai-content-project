@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
 import { sound } from "@/lib/sound";
@@ -8,6 +8,7 @@ import { PackagingActions } from "./PackagingActions";
 import { PackagingCards } from "./PackagingCards";
 import { Stage4Header } from "./Stage4Header";
 import type { Stage4PackagingProps } from "./stage4.types";
+import { ThumbnailCanvasStudio } from "./ThumbnailCanvasStudio";
 
 export function Stage4Packaging({
   projectId,
@@ -28,6 +29,7 @@ export function Stage4Packaging({
   const [error, setError] = useState<string | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [modelUsed, setModelUsed] = useState<string>("");
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const generatePackaging = useCallback(async () => {
     if (!topicTitle) {
@@ -38,10 +40,14 @@ export function Stage4Packaging({
 
     setLoading(true);
     setError(null);
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       const res = await fetch("/api/generate/stage4", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           projectId,
           topicTitle,
@@ -61,6 +67,9 @@ export function Stage4Packaging({
       sound.playTaskSuccess();
       toast.success("Viral YouTube SEO & Packaging generated successfully!");
     } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") {
+        return;
+      }
       const msg =
         err instanceof Error ? err.message : "Unknown generation error";
       setError(msg);
@@ -69,6 +78,13 @@ export function Stage4Packaging({
       setLoading(false);
     }
   }, [projectId, topicTitle, scriptSummary, selectedModel, onPackagingChange]);
+
+  const handleStopPackaging = useCallback(() => {
+    abortControllerRef.current?.abort();
+    setLoading(false);
+    sound.playNotification();
+    toast.info("Packaging generation stopped.");
+  }, []);
 
   useEffect(() => {
     if (autoStart && !packagingText && topicTitle && !loading) {
@@ -201,6 +217,7 @@ FILES IN THIS BUNDLE:
         modelUsed={modelUsed}
         error={error}
         onGenerate={generatePackaging}
+        onStop={handleStopPackaging}
       />
 
       {/* Failover Logs */}
@@ -220,14 +237,24 @@ FILES IN THIS BUNDLE:
       {/* Interactive Loading Skeleton while generating */}
       {loading && <GenerationSkeleton stage="packaging" />}
 
+      {/* Interactive 16:9 Thumbnail Canvas Studio & Mobile Feed Simulator */}
+      {!loading && topicTitle && (
+        <ThumbnailCanvasStudio
+          topicTitle={topicTitle}
+          thumbnailPrompt={parsedPackaging?.thumbnailPrompt}
+          viralTitle={parsedPackaging?.viralTitle}
+        />
+      )}
+
       {/* Packaging Cards & Actions */}
       {!loading && packagingText && (
-        <div className="space-y-4">
+        <div className="space-y-6">
           <PackagingCards
             topicTitle={topicTitle}
             parsedPackaging={parsedPackaging}
             copiedField={copiedField}
             onCopyText={copyText}
+            timestampInput={timestampInput}
           />
 
           <PackagingActions

@@ -5,6 +5,8 @@ export interface Stage2ScriptProps {
   topicFormula?: string;
   selectedModel: string;
   scriptText: string;
+  isScriptComplete?: boolean;
+  onScriptCompleteChange?: (complete: boolean) => void;
   onScriptChange: (newScript: string) => void;
   onProceedToStage3: () => void;
   autoStart?: boolean;
@@ -19,6 +21,7 @@ export interface ScriptStats {
 export interface Stage2MetricsBarProps {
   stats: ScriptStats;
   scriptText: string;
+  isScriptComplete?: boolean;
   copied: boolean;
   onCopy: () => void;
   onDownload: () => void;

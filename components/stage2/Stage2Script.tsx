@@ -1,7 +1,7 @@
 "use client";
 
 import { ArrowRight, Loader2 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { toast } from "sonner";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
 import { sound } from "@/lib/sound";
@@ -16,6 +16,8 @@ export function Stage2Script({
   topicFormula,
   selectedModel,
   scriptText,
+  isScriptComplete = false,
+  onScriptCompleteChange,
   onScriptChange,
   onProceedToStage3,
   autoStart = false,
@@ -25,6 +27,7 @@ export function Stage2Script({
   const [error, setError] = useState<string | null>(null);
   const [logs, setLogs] = useState<string[]>([]);
   const [modelUsed, setModelUsed] = useState<string>("");
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   const stats = useMemo(() => {
     if (!scriptText) return { lines: 0, words: 0, longLines: 0 };
@@ -44,10 +47,14 @@ export function Stage2Script({
 
       setLoading(true);
       setError(null);
+      const controller = new AbortController();
+      abortControllerRef.current = controller;
+
       try {
         const res = await fetch("/api/generate/stage2", {
           method: "POST",
           headers: { "Content-Type": "application/json" },
+          signal: controller.signal,
           body: JSON.stringify({
             projectId,
             topic: {
@@ -69,15 +76,32 @@ export function Stage2Script({
         }
 
         onScriptChange(data.scriptText || "");
+        if (typeof data.isComplete === "boolean") {
+          onScriptCompleteChange?.(data.isComplete);
+        }
         setModelUsed(data.modelUsed || selectedModel);
         if (data.logs) setLogs(data.logs);
         sound.playStepComplete();
-        toast.success(
-          continueExisting
-            ? "Voiceover narration script continued successfully!"
-            : "Voiceover narration script generated successfully!",
-        );
+
+        if (data.isComplete) {
+          toast.success(
+            continueExisting
+              ? "Narration script continued and reached full completion!"
+              : "Voiceover narration script fully completed on first attempt!",
+          );
+        } else {
+          const nextLine =
+            (data.scriptText
+              ?.split("\n")
+              .filter((l: string) => l.trim().length > 0).length || 0) + 1;
+          toast.info(
+            `Partial script generated. Click 'Continue from Line ${nextLine}' to generate the remaining lines.`,
+          );
+        }
       } catch (err: unknown) {
+        if (err instanceof Error && err.name === "AbortError") {
+          return;
+        }
         const msg =
           err instanceof Error ? err.message : "Unknown generation error";
         setError(msg);
@@ -94,6 +118,7 @@ export function Stage2Script({
       selectedModel,
       scriptText,
       onScriptChange,
+      onScriptCompleteChange,
     ],
   );
 
@@ -134,6 +159,13 @@ export function Stage2Script({
     toast.success("Script downloaded as text file!");
   };
 
+  const handleStopScript = useCallback(() => {
+    abortControllerRef.current?.abort();
+    setLoading(false);
+    sound.playNotification();
+    toast.info("Script generation stopped. Your current script is preserved.");
+  }, []);
+
   return (
     <div className="space-y-6">
       {/* Intro Header & Continuation Controls */}
@@ -144,10 +176,15 @@ export function Stage2Script({
         modelUsed={modelUsed}
         scriptText={scriptText}
         statsLines={stats.lines}
+        isScriptComplete={isScriptComplete}
+        onToggleScriptComplete={() =>
+          onScriptCompleteChange?.(!isScriptComplete)
+        }
         loading={loading}
         error={error}
         onContinueScript={() => generateScript(true)}
         onGenerateScript={() => generateScript(false)}
+        onStopScript={handleStopScript}
       />
 
       {/* Orchestrator Logs */}
@@ -173,6 +210,7 @@ export function Stage2Script({
           <Stage2MetricsBar
             stats={stats}
             scriptText={scriptText}
+            isScriptComplete={isScriptComplete}
             copied={copied}
             onCopy={copyToClipboard}
             onDownload={downloadScriptTxt}

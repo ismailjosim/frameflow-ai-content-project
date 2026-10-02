@@ -1,7 +1,7 @@
 "use client";
 
 import { Lightbulb } from "lucide-react";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import GenerationSkeleton from "@/components/GenerationSkeleton";
 import { sound } from "@/lib/sound";
@@ -29,6 +29,7 @@ export function Stage1Topic({
   const [modelUsed, setModelUsed] = useState<string>("");
   const [ignoredTopics, setIgnoredTopics] = useState<IgnoredTopicItem[]>([]);
   const [showIgnoredList, setShowIgnoredList] = useState(false);
+  const abortControllerRef = useRef<AbortController | null>(null);
 
   // Fetch creator's ignored topics list
   const fetchIgnoredTopics = useCallback(async () => {
@@ -65,10 +66,14 @@ export function Stage1Topic({
   const generateTopics = async () => {
     setLoading(true);
     setError(null);
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
     try {
       const res = await fetch("/api/generate/stage1", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           projectId,
           nicheOrKeyword: keyword,
@@ -86,8 +91,15 @@ export function Stage1Topic({
       if (data.logs) setLogs(data.logs);
       await fetchIgnoredTopics();
       sound.playStepComplete();
-      toast.success("5 viral topic concepts generated and prioritized!");
+      toast.success(
+        keyword.trim()
+          ? `Analyzed "${keyword.trim()}" and generated 5 high-CTR viral angles!`
+          : "5 viral topic concepts generated and prioritized!",
+      );
     } catch (err: unknown) {
+      if (err instanceof Error && err.name === "AbortError") {
+        return;
+      }
       const msg =
         err instanceof Error ? err.message : "Unknown generation error";
       setError(msg);
@@ -95,6 +107,13 @@ export function Stage1Topic({
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleStopTopic = () => {
+    abortControllerRef.current?.abort();
+    setLoading(false);
+    sound.playNotification();
+    toast.info("Topic generation stopped.");
   };
 
   const handleSelectTopic = (cand: TopicCandidate) => {
@@ -160,6 +179,7 @@ export function Stage1Topic({
         error={error}
         modelUsed={modelUsed}
         onGenerate={generateTopics}
+        onStop={handleStopTopic}
         ignoredCount={ignoredTopics.length}
         onToggleIgnoredList={() => setShowIgnoredList((p) => !p)}
       />

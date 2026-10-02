@@ -23,6 +23,7 @@ export interface TopicInputHeaderProps {
   error: string | null;
   modelUsed: string;
   onGenerate: () => void;
+  onStop?: () => void;
   ignoredCount?: number;
   onToggleIgnoredList?: () => void;
 }

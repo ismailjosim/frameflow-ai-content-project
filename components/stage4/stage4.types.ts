@@ -21,6 +21,7 @@ export interface PackagingCardsProps {
   parsedPackaging: ParsedPackaging;
   copiedField: string | null;
   onCopyText: (text: string, fieldName: string) => void;
+  timestampInput?: string;
 }
 
 export interface PackagingActionsProps {

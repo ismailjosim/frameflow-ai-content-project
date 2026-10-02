@@ -1,6 +1,12 @@
 "use client";
 
-import { AlertCircle, Loader2, RotateCcw, Sparkles } from "lucide-react";
+import {
+  AlertCircle,
+  Loader2,
+  RotateCcw,
+  Sparkles,
+  Square,
+} from "lucide-react";
 
 interface Stage4HeaderProps {
   loading: boolean;
@@ -8,6 +14,7 @@ interface Stage4HeaderProps {
   modelUsed: string;
   error: string | null;
   onGenerate: () => void;
+  onStop?: () => void;
 }
 
 export function Stage4Header({
@@ -16,6 +23,7 @@ export function Stage4Header({
   modelUsed,
   error,
   onGenerate,
+  onStop,
 }: Stage4HeaderProps) {
   return (
     <div className="glass-panel p-4 sm:p-6 rounded-2xl border border-slate-200 dark:border-slate-800 space-y-4 bg-white/80 dark:bg-slate-900/60 transition-colors">
@@ -36,6 +44,18 @@ export function Stage4Header({
         </div>
 
         <div className="flex flex-wrap items-center gap-2">
+          {loading && onStop && (
+            <button
+              type="button"
+              onClick={onStop}
+              className="flex items-center justify-center gap-1.5 px-3.5 py-2.5 rounded-xl bg-rose-500/10 hover:bg-rose-500/20 text-rose-600 dark:text-rose-400 border border-rose-500/30 font-bold text-xs shadow-xs transition-all hover:scale-102 cursor-pointer shrink-0"
+              title="Stop packaging generation"
+            >
+              <Square className="w-3.5 h-3.5 fill-current" />
+              <span>Stop</span>
+            </button>
+          )}
+
           <button
             type="button"
             onClick={onGenerate}
